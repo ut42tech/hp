@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# portfolio
 
-## Getting Started
+情報系の大学院生による個人ポートフォリオサイト。名刺代わり・就活・研究発表・技術コミュニティ向けの発信を 1 つのサイトに集約する。
 
-First, run the development server:
+公開 URL: <https://ut42tech.com>
+
+## 技術スタック
+
+- **Next.js 16** (App Router, Turbopack)
+- **React 19** / **TypeScript** (strict)
+- **Tailwind CSS v4** (`@theme` によるトークンベース設計)
+- **shadcn/ui** + **lucide-react**
+- **motion** (旧 framer-motion)
+- **next-themes** (light / dark / system)
+- **LINE Seed JP** (`next/font/google`)
+- **Biome** (lint / format)
+- **pnpm**
+- デプロイ: **Vercel**
+
+初期実装は **日本語のみ**。多言語対応は将来 **next-intl** を使って別タスクで導入する予定(詳細は [docs/architecture.md](./docs/architecture.md) の「言語と将来の i18n 戦略」を参照)。
+
+## ローカル実行
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<http://localhost:3000> でトップページが表示される。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## スクリプト
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| コマンド | 用途 |
+|---|---|
+| `pnpm dev` | 開発サーバ起動 (Turbopack) |
+| `pnpm build` | 本番ビルド |
+| `pnpm start` | ビルド済みアプリを起動 |
+| `pnpm lint` | Biome でチェック |
+| `pnpm format` | Biome でフォーマット |
 
-## Learn More
+## ドキュメント
 
-To learn more about Next.js, take a look at the following resources:
+実装方針・要件・デザインの詳細は [`docs/`](./docs/) に集約している。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [docs/requirements.md](./docs/requirements.md) — 目的・読者像・機能要件・非機能要件・コンタクト・デプロイ
+- [docs/architecture.md](./docs/architecture.md) — 技術スタック・Next.js 16 の注意点・i18n 戦略・ディレクトリ構成・コーディング規約
+- [docs/design.md](./docs/design.md) — Bento × Apple 風方針・カラートークン・タイポグラフィ・Bento レイアウト・モーション・アクセシビリティ
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+実装中に判断に迷ったらまず `docs/` を参照する。
