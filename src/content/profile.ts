@@ -107,4 +107,9 @@ export const profile: Profile = {
       description: "東京都出身。",
     },
   ],
+  photos: [
+    { src: "/photos/placeholder-1.svg", alt: "プレースホルダ画像 1" },
+    { src: "/photos/placeholder-2.svg", alt: "プレースホルダ画像 2" },
+    { src: "/photos/placeholder-3.svg", alt: "プレースホルダ画像 3" },
+  ],
 };

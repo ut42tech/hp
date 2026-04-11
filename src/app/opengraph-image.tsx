@@ -49,7 +49,7 @@ export default function Image() {
             background: "#818cf8",
           }}
         />
-        Portfolio
+        {site.url.replace("https://", "")}
       </div>
 
       <div
@@ -89,7 +89,7 @@ export default function Image() {
           color: "#8b8ba7",
         }}
       >
-        <span>{site.url.replace("https://", "")}</span>
+        <span>About · Works · Contact</span>
         <span>Projects · OSS · Research · Experience</span>
       </div>
     </div>,

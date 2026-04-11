@@ -5,7 +5,7 @@ export const site = {
   url: "https://ut42tech.com",
   name: "Takuya Uehara",
   description:
-    "情報系大学院生 Takuya Uehara のポートフォリオ。個人開発・OSS・研究・登壇などを 1 つのサイトにまとめています。",
+    "情報系大学院生 Takuya Uehara のパーソナルサイト。個人開発・OSS・研究・登壇などの活動を 1 つのサイトにまとめています。",
   locale: "ja_JP",
   ogImage: "/opengraph-image",
 } as const;

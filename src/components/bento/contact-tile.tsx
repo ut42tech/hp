@@ -1,24 +1,26 @@
 import {
-  Briefcase,
-  Github,
-  Globe,
-  NotebookPen,
-  Twitter,
-  Youtube,
-} from "lucide-react";
-import type { ComponentType } from "react";
+  SiGithub,
+  SiNote,
+  SiWantedly,
+  SiX,
+  SiYoutube,
+} from "@icons-pack/react-simple-icons";
+import { Globe } from "lucide-react";
+import type { ComponentType, SVGProps } from "react";
 
 import { Card } from "@/components/ui/card";
 import { profile } from "@/content/profile";
 import type { SocialIcon } from "@/content/types";
 import { cn } from "@/lib/utils";
 
-const iconMap: Record<SocialIcon, ComponentType<{ className?: string }>> = {
-  github: Github,
-  x: Twitter,
-  youtube: Youtube,
-  wantedly: Briefcase,
-  note: NotebookPen,
+type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
+
+const iconMap: Record<SocialIcon, IconComponent> = {
+  github: SiGithub as IconComponent,
+  x: SiX as IconComponent,
+  youtube: SiYoutube as IconComponent,
+  wantedly: SiWantedly as IconComponent,
+  note: SiNote as IconComponent,
   other: Globe,
 };
 

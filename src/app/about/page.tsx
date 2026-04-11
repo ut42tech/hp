@@ -18,7 +18,7 @@ export default function AboutPage() {
       <FadeIn>
         <header className="mb-12 flex flex-col gap-6 md:flex-row md:items-center">
           {profile.image ? (
-            <div className="relative size-24 shrink-0 overflow-hidden rounded-full border border-border shadow-md md:size-32">
+            <div className="relative size-24 shrink-0 overflow-hidden rounded-full border border-border md:size-32">
               <Image
                 src={profile.image}
                 alt={profile.name}

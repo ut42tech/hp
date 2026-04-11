@@ -76,6 +76,13 @@ export interface TimelineEntry {
   location?: string;
 }
 
+export interface PhotoEntry {
+  /** public/ からの相対パス */
+  src: string;
+  /** アクセシビリティ用の代替テキスト */
+  alt: string;
+}
+
 export interface Profile {
   name: string;
   /** 役職や肩書き(例: "情報系大学院生 / フロントエンド エンジニア") */
@@ -91,4 +98,6 @@ export interface Profile {
   techStack: string[];
   /** About ページのタイムラインに表示する経歴・出来事 */
   timeline: TimelineEntry[];
+  /** ホームの Photos タイルに表示する写真 */
+  photos: PhotoEntry[];
 }
