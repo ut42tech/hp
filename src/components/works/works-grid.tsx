@@ -29,10 +29,10 @@ export function WorksGrid({ works }: WorksGridProps) {
           該当する Works はありません。
         </p>
       ) : (
-        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 md:auto-rows-fr lg:grid-cols-3">
           {filtered.map((work) => (
-            <li key={work.slug}>
-              <WorkCard work={work} />
+            <li key={work.slug} className="flex">
+              <WorkCard work={work} className="w-full" />
             </li>
           ))}
         </ul>

@@ -1,4 +1,11 @@
-import { Github, Globe, Linkedin, Mail, Twitter } from "lucide-react";
+import {
+  Briefcase,
+  Github,
+  Globe,
+  NotebookPen,
+  Twitter,
+  Youtube,
+} from "lucide-react";
 import type { ComponentType } from "react";
 
 import { Card } from "@/components/ui/card";
@@ -9,8 +16,9 @@ import { cn } from "@/lib/utils";
 const iconMap: Record<SocialIcon, ComponentType<{ className?: string }>> = {
   github: Github,
   x: Twitter,
-  linkedin: Linkedin,
-  mail: Mail,
+  youtube: Youtube,
+  wantedly: Briefcase,
+  note: NotebookPen,
   other: Globe,
 };
 

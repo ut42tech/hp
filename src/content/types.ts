@@ -37,12 +37,43 @@ export interface Work {
   featured?: boolean;
 }
 
-export type SocialIcon = "github" | "x" | "linkedin" | "mail" | "other";
+export type SocialIcon =
+  | "github"
+  | "x"
+  | "youtube"
+  | "wantedly"
+  | "note"
+  | "other";
 
 export interface SocialLink {
   label: string;
   href: string;
   icon: SocialIcon;
+}
+
+/**
+ * 自己紹介タイムラインのカテゴリ。アイコンと色分けに用いる。
+ * - life: 誕生、人生の節目
+ * - education: 入学・卒業などの学歴
+ * - work: アルバイト・インターン・就業
+ * - event: 登壇、受賞、ハッカソン等のイベント
+ * - other: それ以外
+ */
+export type TimelineCategory =
+  | "life"
+  | "education"
+  | "work"
+  | "event"
+  | "other";
+
+export interface TimelineEntry {
+  /** YYYY-MM または YYYY-MM-DD 形式 */
+  date: string;
+  category: TimelineCategory;
+  title: string;
+  description?: string;
+  /** 所属先や場所(任意) */
+  location?: string;
 }
 
 export interface Profile {
@@ -53,7 +84,11 @@ export interface Profile {
   affiliation: string;
   /** Bento About タイルで表示する自己紹介本文 */
   bio: string;
+  /** プロフィール画像のパス(public/ からの相対パス) */
+  image?: string;
   social: SocialLink[];
   /** Tech Stack タイルに表示する技術名。アイコンは使わず名前のみ */
   techStack: string[];
+  /** About ページのタイムラインに表示する経歴・出来事 */
+  timeline: TimelineEntry[];
 }
