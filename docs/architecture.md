@@ -10,7 +10,7 @@
 | ランタイム | **React** | 19.2.4 | Server Components 中心、Client Components は最小限 |
 | 言語 | **TypeScript** | 5.x | `strict: true`、`moduleResolution: "bundler"` |
 | スタイリング | **Tailwind CSS** | v4 | `@theme` でデザイントークン定義 |
-| UI プリミティブ | **shadcn/ui** | 最新 | `button`, `card`, `badge`, `tabs`, `dropdown-menu`, `separator` |
+| UI プリミティブ | **shadcn/ui** | 最新(`base-nova` preset) | `button`, `card`, `badge`, `tabs`, `dropdown-menu`, `separator`。内部では `@base-ui/react`(Radix の後継)を使用 |
 | アイコン | **lucide-react** | 最新 | 他のアイコンライブラリは使わない |
 | アニメーション | **motion** | 最新 | 旧 framer-motion、import は `motion/react` |
 | テーマ切替 | **next-themes** | 最新 | `class` 戦略、`suppressHydrationWarning` 必須 |
@@ -232,7 +232,8 @@ export interface Profile {
 
 - 新しい UI パーツが必要になったら **まず shadcn/ui** に該当コンポーネントがないか確認する
 - shadcn にあるものは `pnpm dlx shadcn@latest add <name>` で追加
-- Radix UI / Headless UI / MUI / Mantine / daisyUI など他の UI ライブラリは導入しない
+- shadcn は `base-nova` preset(`@base-ui/react`)で初期化済み。生成ファイルは `@base-ui/react/*` を直接 import する
+- `@base-ui/react` / `@radix-ui/*` を shadcn 経由以外で直接追加しない。Headless UI / MUI / Mantine / daisyUI など他の UI ライブラリも導入しない
 
 ### アイコン
 

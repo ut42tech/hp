@@ -35,7 +35,9 @@
 | `--accent` | `oklch(0.585 0.233 277)` | **Indigo アクセント** |
 | `--accent-foreground` | `oklch(0.985 0 0)` | アクセント上のテキスト |
 | `--ring` | `oklch(0.585 0.233 277)` | フォーカスリング |
-| `--radius` | `1rem` | 基準半径(`rounded-card` 等に紐付け) |
+| `--radius` | `0.75rem` | 基準半径。shadcn の scale で `--radius-sm/md/lg/xl/2xl/3xl` が `0.6x / 0.8x / 1x / 1.4x / 1.8x / 2.2x` と派生する |
+
+`--primary` は shadcn 規約に従いモノクロ基調(light は near-black、dark は near-white)を維持する。ボタンなどデフォルトの主操作色として機能させ、indigo は `--accent` と `--ring` だけに留める。
 
 ### Dark モード(`.dark`)
 
@@ -54,57 +56,90 @@
 
 ### `globals.css` スケルトン
 
+実際のファイルは [`src/app/globals.css`](../src/app/globals.css) を参照。shadcn init が生成するスケルトンをベースに、本ドキュメントのカラー値と `--radius` を上書きする形で維持する。骨格は以下:
+
 ```css
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme inline {
+  /* shadcn が使う全セマンティックトークンを --color-* として公開 */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-sans);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.45 0 0);
-  --border: oklch(0.92 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
-  --accent: oklch(0.585 0.233 277);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.145 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.45 0 0);
+  --accent: oklch(0.585 0.233 277);      /* indigo */
   --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.92 0 0);
+  --input: oklch(0.92 0 0);
   --ring: oklch(0.585 0.233 277);
-  --radius: 1rem;
+  --radius: 0.75rem;
 }
 
 .dark {
-  --background: oklch(0.14 0.01 270);
+  --background: oklch(0.14 0.01 270);     /* 純黒ではない near-black */
   --foreground: oklch(0.96 0 0);
-  --muted: oklch(0.2 0.01 270);
-  --muted-foreground: oklch(0.7 0 0);
-  --border: oklch(0.25 0.01 270);
   --card: oklch(0.17 0.01 270);
   --card-foreground: oklch(0.96 0 0);
-  --accent: oklch(0.68 0.19 277);
+  --popover: oklch(0.17 0.01 270);
+  --popover-foreground: oklch(0.96 0 0);
+  --primary: oklch(0.96 0 0);
+  --primary-foreground: oklch(0.14 0.01 270);
+  --secondary: oklch(0.2 0.01 270);
+  --secondary-foreground: oklch(0.96 0 0);
+  --muted: oklch(0.2 0.01 270);
+  --muted-foreground: oklch(0.7 0 0);
+  --accent: oklch(0.68 0.19 277);         /* dark 側は少し明るく */
   --accent-foreground: oklch(0.14 0.01 270);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(0.25 0.01 270);
+  --input: oklch(0.28 0.01 270);
   --ring: oklch(0.68 0.19 277);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-border: var(--border);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-ring: var(--ring);
-  --font-sans: var(--font-sans);
-  --radius-card: var(--radius);
-}
-
 @layer base {
-  * { @apply border-border; }
-  body { @apply bg-background text-foreground font-sans antialiased; }
+  * { @apply border-border outline-ring/50; }
+  html { @apply font-sans antialiased; }
+  body { @apply bg-background text-foreground; }
 }
 ```
 
@@ -194,7 +229,7 @@ rounded-3xl border border-border bg-card p-6 md:p-8
 
 要素別の補足:
 
-- **半径**: `rounded-3xl`(= `1.5rem`)で Apple 風の深めの角丸
+- **半径**: `rounded-3xl` で Apple 風の深めの角丸。shadcn の scale により `--radius(0.75rem) × 2.2 ≈ 1.65rem`
 - **ボーダー**: `border border-border` で極薄の 1px
 - **背景**: `bg-card`(light では白、dark では bg より微妙に明るい near-black)
 - **パディング**: mobile `p-6`、desktop `p-8`
