@@ -81,6 +81,8 @@ export interface PhotoEntry {
   src: string;
   /** アクセシビリティ用の代替テキスト */
   alt: string;
+  /** クリック時にオーバーレイで表示するキャプション(任意) */
+  caption?: string;
 }
 
 export interface Profile {

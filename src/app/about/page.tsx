@@ -3,7 +3,8 @@ import Image from "next/image";
 
 import { Timeline } from "@/components/about/timeline";
 import { FadeIn } from "@/components/motion/fade-in";
-import { Badge } from "@/components/ui/badge";
+import { SocialLinks } from "@/components/shared/social-links";
+import { TechStackList } from "@/components/shared/tech-stack-list";
 import { profile } from "@/content/profile";
 
 export const metadata: Metadata = {
@@ -44,27 +45,30 @@ export default function AboutPage() {
       </FadeIn>
 
       <FadeIn delay={0.05}>
-        <div className="mb-12 flex flex-col gap-4">
-          <p className="text-sm leading-relaxed text-foreground md:text-base">
-            {profile.bio}
-          </p>
-          <ul className="flex flex-wrap gap-2">
-            {profile.techStack.map((tech) => (
-              <li key={tech}>
-                <Badge variant="secondary" className="font-medium">
-                  {tech}
-                </Badge>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <p className="mb-12 text-sm leading-relaxed text-foreground md:text-base">
+          {profile.bio}
+        </p>
       </FadeIn>
 
       <FadeIn delay={0.1}>
-        <div className="flex flex-col gap-6">
+        <section className="mb-12 flex flex-col gap-4">
+          <h2 className="text-xl font-bold tracking-tight">Tech Stack</h2>
+          <TechStackList />
+        </section>
+      </FadeIn>
+
+      <FadeIn delay={0.15}>
+        <section className="mb-12 flex flex-col gap-4">
+          <h2 className="text-xl font-bold tracking-tight">Contact</h2>
+          <SocialLinks />
+        </section>
+      </FadeIn>
+
+      <FadeIn delay={0.2}>
+        <section className="flex flex-col gap-6">
           <h2 className="text-2xl font-extrabold tracking-tight">Timeline</h2>
           <Timeline entries={profile.timeline} />
-        </div>
+        </section>
       </FadeIn>
     </section>
   );
