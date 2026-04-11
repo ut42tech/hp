@@ -1,0 +1,59 @@
+/**
+ * ポートフォリオが扱うコンテンツの型定義。
+ * 初期実装は日本語のみのため、文言は全てプレーンな string で書く。
+ * 多言語化は後続タスクで next-intl に移行する前提。
+ */
+
+export type WorkCategory = "project" | "oss" | "research" | "experience";
+
+export type LinkKind =
+  | "github"
+  | "demo"
+  | "paper"
+  | "slide"
+  | "article"
+  | "other";
+
+export interface WorkLink {
+  label: string;
+  href: string;
+  kind: LinkKind;
+}
+
+export interface Work {
+  /** URL に使う識別子。言語不問(単一言語でも命名規約は統一) */
+  slug: string;
+  category: WorkCategory;
+  title: string;
+  summary: string;
+  /** プレーンテキスト段落の配列。Markdown パーサは使わない */
+  body?: string[];
+  /** YYYY-MM-DD 形式 */
+  date: string;
+  tags: string[];
+  thumbnail?: string;
+  links: WorkLink[];
+  /** true の場合、Bento ホームの Featured タイルに表示される */
+  featured?: boolean;
+}
+
+export type SocialIcon = "github" | "x" | "linkedin" | "mail" | "other";
+
+export interface SocialLink {
+  label: string;
+  href: string;
+  icon: SocialIcon;
+}
+
+export interface Profile {
+  name: string;
+  /** 役職や肩書き(例: "情報系大学院生 / フロントエンド エンジニア") */
+  role: string;
+  /** 所属(例: "〇〇大学院 情報理工学系研究科") */
+  affiliation: string;
+  /** Bento About タイルで表示する自己紹介本文 */
+  bio: string;
+  social: SocialLink[];
+  /** Tech Stack タイルに表示する技術名。アイコンは使わず名前のみ */
+  techStack: string[];
+}

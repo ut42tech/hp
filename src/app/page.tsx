@@ -1,23 +1,33 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { site } from "@/lib/site";
+import { AboutTile } from "@/components/bento/about-tile";
+import { ContactTile } from "@/components/bento/contact-tile";
+import { FeaturedTile } from "@/components/bento/featured-tile";
+import { HeroTile } from "@/components/bento/hero-tile";
+import { TechStackTile } from "@/components/bento/tech-stack-tile";
+import {
+  BentoMotionContainer,
+  BentoTileMotion,
+} from "@/components/motion/bento-tile-motion";
 
 export default function Home() {
   return (
     <section className="mx-auto max-w-6xl px-6 py-16">
-      <Card className="rounded-3xl border-border bg-card p-6 md:p-8">
-        <CardHeader className="p-0">
-          <CardTitle className="text-3xl font-extrabold tracking-tight md:text-5xl">
-            {site.name}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0 pt-4">
-          <p className="text-base text-muted-foreground">{site.description}</p>
-          <p className="mt-6 text-sm text-muted-foreground">
-            Phase B placeholder — Bento グリッドと About / Works
-            は以降のフェーズで実装します。
-          </p>
-        </CardContent>
-      </Card>
+      <BentoMotionContainer className="grid grid-cols-1 gap-4 md:grid-cols-6 md:grid-rows-4">
+        <BentoTileMotion className="md:col-span-6 md:row-span-2">
+          <HeroTile className="h-full" />
+        </BentoTileMotion>
+        <BentoTileMotion className="md:col-span-4 md:row-span-2">
+          <AboutTile className="h-full" />
+        </BentoTileMotion>
+        <BentoTileMotion className="md:col-span-2 md:row-span-1">
+          <TechStackTile className="h-full" />
+        </BentoTileMotion>
+        <BentoTileMotion className="md:col-span-2 md:row-span-1">
+          <ContactTile className="h-full" />
+        </BentoTileMotion>
+        <BentoTileMotion className="md:col-span-6 md:row-span-1">
+          <FeaturedTile className="h-full" />
+        </BentoTileMotion>
+      </BentoMotionContainer>
     </section>
   );
 }
