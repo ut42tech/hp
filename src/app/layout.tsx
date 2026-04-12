@@ -58,6 +58,14 @@ export default function RootLayout({
       <body className="flex min-h-dvh flex-col">
         <ThemeProvider>
           <TooltipProvider>
+            {site.underConstruction ? (
+              <div className="bg-accent text-center text-sm font-medium text-accent-foreground">
+                <p className="px-6 py-4">
+                  Sorry! This site is currently under construction. <br />
+                  （現在このサイトは工事中です。）
+                </p>
+              </div>
+            ) : null}
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
