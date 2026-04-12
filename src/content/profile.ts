@@ -113,16 +113,19 @@ export const profile: Profile = {
       alt: "プレースホルダ画像 1",
       caption:
         "DevFest Tokyo 2025 で Next.js 16 について話したときの登壇写真(差し替え予定)。",
+      date: "2025-11-15",
     },
     {
       src: "/photos/placeholder-2.svg",
       alt: "プレースホルダ画像 2",
       caption: "研究室でプロトタイピングしているときのスナップ(差し替え予定)。",
+      date: "2025-10-03",
     },
     {
       src: "/photos/placeholder-3.svg",
       alt: "プレースホルダ画像 3",
       caption: "Hack U 2025 でチーム開発をしていたときの様子(差し替え予定)。",
+      date: "2025-09-20",
     },
   ],
 };

@@ -83,6 +83,8 @@ export interface PhotoEntry {
   alt: string;
   /** クリック時にオーバーレイで表示するキャプション(任意) */
   caption?: string;
+  /** 撮影日や日付。YYYY-MM-DD 形式(任意) */
+  date?: string;
 }
 
 export interface Profile {
