@@ -1,3 +1,5 @@
+"use client";
+
 import {
   SiGithub,
   SiNote,
@@ -8,6 +10,11 @@ import {
 import { Globe } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { profile } from "@/content/profile";
 import type { SocialIcon } from "@/content/types";
 import { cn } from "@/lib/utils";
@@ -49,18 +56,26 @@ export function SocialLinks({ size = "default", className }: SocialLinksProps) {
         const Icon = iconMap[link.icon];
         return (
           <li key={link.label}>
-            <a
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={link.label}
-              className={cn(
-                "inline-flex items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                wrapper,
-              )}
-            >
-              <Icon className={icon} />
-            </a>
+            <Tooltip>
+              <TooltipTrigger
+                render={(props) => (
+                  <a
+                    {...props}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={link.label}
+                    className={cn(
+                      "inline-flex items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                      wrapper,
+                    )}
+                  >
+                    <Icon className={icon} />
+                  </a>
+                )}
+              />
+              <TooltipContent>{link.label}</TooltipContent>
+            </Tooltip>
           </li>
         );
       })}

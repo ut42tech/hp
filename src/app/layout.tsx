@@ -4,6 +4,7 @@ import { LINE_Seed_JP } from "next/font/google";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { site } from "@/lib/site";
 
 import "./globals.css";
@@ -56,9 +57,11 @@ export default function RootLayout({
     <html lang="ja" suppressHydrationWarning className={fontSans.variable}>
       <body className="flex min-h-dvh flex-col">
         <ThemeProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <TooltipProvider>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>
