@@ -33,7 +33,7 @@ export function Footer() {
             </div>
             <div className="flex flex-col gap-3 md:items-end">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Connect
+                Contact
               </p>
               <SocialLinks size="sm" />
             </div>

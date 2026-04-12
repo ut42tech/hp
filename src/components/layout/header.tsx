@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { buttonVariants } from "@/components/ui/button";
 import { navItems } from "@/lib/navigation";
 import { site } from "@/lib/site";
 
@@ -22,7 +23,10 @@ export function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className="inline-flex h-8 items-center rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className={buttonVariants({
+                variant: "link",
+                size: "default",
+              })}
             >
               {item.label}
             </Link>

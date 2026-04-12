@@ -11,7 +11,7 @@ export const size = {
 export const contentType = "image/png";
 
 /**
- * サイト全体の OG 画像。indigo グラデーション背景にプロフィール情報を載せる。
+ * サイト全体の OG 画像。green グラデーション背景にプロフィール情報を載せる。
  * 外部フォントは読まず ImageResponse デフォルトの sans を使う(日本語もレンダリング可能)。
  */
 export default function Image() {
@@ -25,7 +25,7 @@ export default function Image() {
         justifyContent: "space-between",
         padding: "80px",
         background:
-          "linear-gradient(135deg, #0b0b12 0%, #15162c 45%, #1e1b4b 100%)",
+          "linear-gradient(135deg, #0a120d 0%, #0f261a 45%, #163b28 100%)",
         color: "#f5f5f7",
         fontFamily: "sans-serif",
       }}
@@ -38,7 +38,7 @@ export default function Image() {
           fontSize: 28,
           letterSpacing: "0.2em",
           textTransform: "uppercase",
-          color: "#a5b4fc",
+          color: "#7ee787",
         }}
       >
         <span
@@ -46,7 +46,7 @@ export default function Image() {
             width: "16px",
             height: "16px",
             borderRadius: "999px",
-            background: "#818cf8",
+            background: "#3fb950",
           }}
         />
         {site.url.replace("https://", "")}
@@ -72,7 +72,7 @@ export default function Image() {
         <div
           style={{
             fontSize: 40,
-            color: "#c7d2fe",
+            color: "#aff5b4",
             fontWeight: 500,
           }}
         >
@@ -86,7 +86,7 @@ export default function Image() {
           justifyContent: "space-between",
           alignItems: "flex-end",
           fontSize: 28,
-          color: "#8b8ba7",
+          color: "#7d8b80",
         }}
       >
         <span>About · Works · Contact</span>

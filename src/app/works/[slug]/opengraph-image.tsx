@@ -33,7 +33,7 @@ export default async function Image({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#0b0b12",
+          background: "#0a120d",
           color: "#f5f5f7",
           fontSize: 64,
           fontFamily: "sans-serif",
@@ -55,7 +55,7 @@ export default async function Image({
         justifyContent: "space-between",
         padding: "80px",
         background:
-          "linear-gradient(135deg, #0b0b12 0%, #15162c 45%, #1e1b4b 100%)",
+          "linear-gradient(135deg, #0a120d 0%, #0f261a 45%, #163b28 100%)",
         color: "#f5f5f7",
         fontFamily: "sans-serif",
       }}
@@ -68,7 +68,7 @@ export default async function Image({
           fontSize: 28,
           letterSpacing: "0.2em",
           textTransform: "uppercase",
-          color: "#a5b4fc",
+          color: "#7ee787",
         }}
       >
         <span
@@ -76,7 +76,7 @@ export default async function Image({
             width: "16px",
             height: "16px",
             borderRadius: "999px",
-            background: "#818cf8",
+            background: "#3fb950",
           }}
         />
         {work.category}
@@ -102,7 +102,7 @@ export default async function Image({
         <div
           style={{
             fontSize: 32,
-            color: "#c7d2fe",
+            color: "#aff5b4",
             lineHeight: 1.4,
             maxWidth: "900px",
           }}
@@ -117,7 +117,7 @@ export default async function Image({
           justifyContent: "space-between",
           alignItems: "flex-end",
           fontSize: 24,
-          color: "#8b8ba7",
+          color: "#7d8b80",
         }}
       >
         <span>ut42tech.com/works/{work.slug}</span>

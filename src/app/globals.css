@@ -54,8 +54,8 @@
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.45 0 0);
 
-  /* Accent = indigo (the single brand touchpoint) */
-  --accent: oklch(0.585 0.233 277);
+  /* Accent = GitHub-like green (the single brand touchpoint) */
+  --accent: oklch(0.52 0.17 152);
   --accent-foreground: oklch(0.985 0 0);
 
   --destructive: oklch(0.577 0.245 27.325);
@@ -63,42 +63,42 @@
   --border: oklch(0.92 0 0);
   --input: oklch(0.92 0 0);
 
-  /* Focus ring = indigo */
-  --ring: oklch(0.585 0.233 277);
+  /* Focus ring = green */
+  --ring: oklch(0.52 0.17 152);
 
   --radius: 0.75rem;
 }
 
 .dark {
-  /* Near-black with a faint cool tint — not pure #000 */
-  --background: oklch(0.14 0.01 270);
+  /* Near-black with a faint green tint — GitHub dark feel */
+  --background: oklch(0.14 0.008 155);
   --foreground: oklch(0.96 0 0);
 
-  --card: oklch(0.17 0.01 270);
+  --card: oklch(0.17 0.008 155);
   --card-foreground: oklch(0.96 0 0);
 
-  --popover: oklch(0.17 0.01 270);
+  --popover: oklch(0.17 0.008 155);
   --popover-foreground: oklch(0.96 0 0);
 
   --primary: oklch(0.96 0 0);
-  --primary-foreground: oklch(0.14 0.01 270);
+  --primary-foreground: oklch(0.14 0.008 155);
 
-  --secondary: oklch(0.2 0.01 270);
+  --secondary: oklch(0.2 0.008 155);
   --secondary-foreground: oklch(0.96 0 0);
 
-  --muted: oklch(0.2 0.01 270);
+  --muted: oklch(0.2 0.008 155);
   --muted-foreground: oklch(0.7 0 0);
 
-  /* Indigo is slightly lighter in dark for contrast */
-  --accent: oklch(0.68 0.19 277);
-  --accent-foreground: oklch(0.14 0.01 270);
+  /* Green is slightly brighter in dark for contrast */
+  --accent: oklch(0.65 0.19 150);
+  --accent-foreground: oklch(0.14 0.008 155);
 
   --destructive: oklch(0.704 0.191 22.216);
 
-  --border: oklch(0.25 0.01 270);
-  --input: oklch(0.28 0.01 270);
+  --border: oklch(0.25 0.008 155);
+  --input: oklch(0.28 0.008 155);
 
-  --ring: oklch(0.68 0.19 277);
+  --ring: oklch(0.65 0.19 150);
 }
 
 @layer base {
