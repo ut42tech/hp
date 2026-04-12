@@ -56,7 +56,7 @@ export function WorkDetail({ work }: WorkDetailProps) {
           <ul className="flex flex-wrap gap-1.5">
             {work.tags.map((tag) => (
               <li key={tag}>
-                <Badge variant="outline" className="text-[10px]">
+                <Badge variant="outline" className="text-xs">
                   {tag}
                 </Badge>
               </li>

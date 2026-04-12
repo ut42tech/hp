@@ -4,6 +4,7 @@ import { LINE_Seed_JP } from "next/font/google";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { site } from "@/lib/site";
 
 import "./globals.css";
@@ -56,9 +57,19 @@ export default function RootLayout({
     <html lang="ja" suppressHydrationWarning className={fontSans.variable}>
       <body className="flex min-h-dvh flex-col">
         <ThemeProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <TooltipProvider>
+            {site.underConstruction ? (
+              <div className="bg-accent text-center text-sm font-medium text-accent-foreground">
+                <p className="px-6 py-4">
+                  Sorry! This site is currently under construction. <br />
+                  （現在このサイトは工事中です。）
+                </p>
+              </div>
+            ) : null}
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

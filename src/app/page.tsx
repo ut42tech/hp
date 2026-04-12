@@ -2,16 +2,20 @@ import { AboutTile } from "@/components/bento/about-tile";
 import { ContactTile } from "@/components/bento/contact-tile";
 import { FeaturedTile } from "@/components/bento/featured-tile";
 import { HeroTile } from "@/components/bento/hero-tile";
+import { PhotoTile } from "@/components/bento/photo-tile";
 import { TechStackTile } from "@/components/bento/tech-stack-tile";
 import {
   BentoMotionContainer,
   BentoTileMotion,
 } from "@/components/motion/bento-tile-motion";
+import { profile } from "@/content/profile";
 
 export default function Home() {
+  const [photoLarge, photoMedium1, photoMedium2] = profile.photos;
+
   return (
     <section className="mx-auto max-w-6xl px-6 py-16">
-      <BentoMotionContainer className="grid grid-cols-1 gap-4 md:grid-cols-6 md:grid-rows-4">
+      <BentoMotionContainer className="grid grid-cols-1 gap-4 md:grid-cols-6 md:grid-flow-row-dense">
         <BentoTileMotion className="md:col-span-6 md:row-span-2">
           <HeroTile className="h-full" />
         </BentoTileMotion>
@@ -24,6 +28,21 @@ export default function Home() {
         <BentoTileMotion className="md:col-span-2 md:row-span-1">
           <ContactTile className="h-full" />
         </BentoTileMotion>
+        {photoMedium1 ? (
+          <BentoTileMotion className="md:col-span-2 md:row-span-1">
+            <PhotoTile photo={photoMedium1} className="h-full" />
+          </BentoTileMotion>
+        ) : null}
+        {photoLarge ? (
+          <BentoTileMotion className="md:col-span-4 md:row-span-2">
+            <PhotoTile photo={photoLarge} className="h-full" />
+          </BentoTileMotion>
+        ) : null}
+        {photoMedium2 ? (
+          <BentoTileMotion className="md:col-span-2 md:row-span-1">
+            <PhotoTile photo={photoMedium2} className="h-full" />
+          </BentoTileMotion>
+        ) : null}
         <BentoTileMotion className="md:col-span-6 md:row-span-1">
           <FeaturedTile className="h-full" />
         </BentoTileMotion>

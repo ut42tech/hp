@@ -7,7 +7,7 @@
 - **Bento UI × Apple 風**
 - サイズの異なる角丸タイル(Bento)を 1 画面にまとめ、情報の優先度をタイルサイズで表現する
 - Apple の製品ページ(AirPods, Apple Watch 等)や Raycast / Linear の Bento セクションを参考
-- **モノクロ基調**(オフホワイトと near-black)に **Indigo アクセント**を 1 点使い
+- **モノクロ基調**(オフホワイトと near-black)に **GitHub Green アクセント**を 1 点使い
 - 余白は大きめ、ボーダーは極薄、角丸は深め(`rounded-3xl`)、ホバー時の反応は控えめ
 
 ### 避けるもの
@@ -32,27 +32,27 @@
 | `--border` | `oklch(0.92 0 0)` | ボーダー(極薄) |
 | `--card` | `oklch(1 0 0)` | Bento タイル背景 |
 | `--card-foreground` | `oklch(0.145 0 0)` | タイル内テキスト |
-| `--accent` | `oklch(0.585 0.233 277)` | **Indigo アクセント** |
+| `--accent` | `oklch(0.52 0.17 152)` | **GitHub Green アクセント** |
 | `--accent-foreground` | `oklch(0.985 0 0)` | アクセント上のテキスト |
-| `--ring` | `oklch(0.585 0.233 277)` | フォーカスリング |
+| `--ring` | `oklch(0.52 0.17 152)` | フォーカスリング |
 | `--radius` | `0.75rem` | 基準半径。shadcn の scale で `--radius-sm/md/lg/xl/2xl/3xl` が `0.6x / 0.8x / 1x / 1.4x / 1.8x / 2.2x` と派生する |
 
-`--primary` は shadcn 規約に従いモノクロ基調(light は near-black、dark は near-white)を維持する。ボタンなどデフォルトの主操作色として機能させ、indigo は `--accent` と `--ring` だけに留める。
+`--primary` は shadcn 規約に従いモノクロ基調(light は near-black、dark は near-white)を維持する。ボタンなどデフォルトの主操作色として機能させ、green は `--accent` と `--ring` だけに留める。
 
 ### Dark モード(`.dark`)
 
 | トークン | OKLCH | 備考 |
 |---|---|---|
-| `--background` | `oklch(0.14 0.01 270)` | near-black(純黒ではない) |
+| `--background` | `oklch(0.14 0.008 155)` | near-black（緑味の微かなティント） |
 | `--foreground` | `oklch(0.96 0 0)` | ほぼ白 |
-| `--muted` | `oklch(0.2 0.01 270)` | 副次背景 |
+| `--muted` | `oklch(0.2 0.008 155)` | 副次背景 |
 | `--muted-foreground` | `oklch(0.7 0 0)` | 控えめテキスト |
-| `--border` | `oklch(0.25 0.01 270)` | 極薄ボーダー |
-| `--card` | `oklch(0.17 0.01 270)` | タイル背景(bg より微妙に明るい) |
+| `--border` | `oklch(0.25 0.008 155)` | 極薄ボーダー |
+| `--card` | `oklch(0.17 0.008 155)` | タイル背景(bg より微妙に明るい) |
 | `--card-foreground` | `oklch(0.96 0 0)` | タイル内テキスト |
-| `--accent` | `oklch(0.68 0.19 277)` | Indigo(dark では少し明るく) |
-| `--accent-foreground` | `oklch(0.14 0.01 270)` | near-black |
-| `--ring` | `oklch(0.68 0.19 277)` | フォーカスリング |
+| `--accent` | `oklch(0.65 0.19 150)` | Green（dark では少し明るく） |
+| `--accent-foreground` | `oklch(0.14 0.008 155)` | near-black |
+| `--ring` | `oklch(0.65 0.19 150)` | フォーカスリング |
 
 ### `globals.css` スケルトン
 
@@ -106,34 +106,34 @@
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.45 0 0);
-  --accent: oklch(0.585 0.233 277);      /* indigo */
+  --accent: oklch(0.52 0.17 152);        /* GitHub green */
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.92 0 0);
   --input: oklch(0.92 0 0);
-  --ring: oklch(0.585 0.233 277);
+  --ring: oklch(0.52 0.17 152);
   --radius: 0.75rem;
 }
 
 .dark {
-  --background: oklch(0.14 0.01 270);     /* 純黒ではない near-black */
+  --background: oklch(0.14 0.008 155);    /* near-black with green tint */
   --foreground: oklch(0.96 0 0);
-  --card: oklch(0.17 0.01 270);
+  --card: oklch(0.17 0.008 155);
   --card-foreground: oklch(0.96 0 0);
-  --popover: oklch(0.17 0.01 270);
+  --popover: oklch(0.17 0.008 155);
   --popover-foreground: oklch(0.96 0 0);
   --primary: oklch(0.96 0 0);
-  --primary-foreground: oklch(0.14 0.01 270);
-  --secondary: oklch(0.2 0.01 270);
+  --primary-foreground: oklch(0.14 0.008 155);
+  --secondary: oklch(0.2 0.008 155);
   --secondary-foreground: oklch(0.96 0 0);
-  --muted: oklch(0.2 0.01 270);
+  --muted: oklch(0.2 0.008 155);
   --muted-foreground: oklch(0.7 0 0);
-  --accent: oklch(0.68 0.19 277);         /* dark 側は少し明るく */
-  --accent-foreground: oklch(0.14 0.01 270);
+  --accent: oklch(0.65 0.19 150);         /* dark 側は少し明るく */
+  --accent-foreground: oklch(0.14 0.008 155);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(0.25 0.01 270);
-  --input: oklch(0.28 0.01 270);
-  --ring: oklch(0.68 0.19 277);
+  --border: oklch(0.25 0.008 155);
+  --input: oklch(0.28 0.008 155);
+  --ring: oklch(0.65 0.19 150);
 }
 
 @layer base {

@@ -1,6 +1,5 @@
-import { Badge } from "@/components/ui/badge";
+import { TechStackList } from "@/components/shared/tech-stack-list";
 import { Card } from "@/components/ui/card";
-import { profile } from "@/content/profile";
 import { cn } from "@/lib/utils";
 
 interface TechStackTileProps {
@@ -16,15 +15,7 @@ export function TechStackTile({ className }: TechStackTileProps) {
       )}
     >
       <h2 className="text-lg font-bold">Tech Stack</h2>
-      <ul className="flex flex-wrap gap-2">
-        {profile.techStack.map((tech) => (
-          <li key={tech}>
-            <Badge variant="secondary" className="font-medium">
-              {tech}
-            </Badge>
-          </li>
-        ))}
-      </ul>
+      <TechStackList />
     </Card>
   );
 }

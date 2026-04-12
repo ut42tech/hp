@@ -5,6 +5,11 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -30,15 +35,23 @@ export function ThemeToggle() {
 
   const isDark = resolvedTheme === "dark";
   const nextTheme = isDark ? "light" : "dark";
+  const label = isDark ? "ライトモードに切り替え" : "ダークモードに切り替え";
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      aria-label={isDark ? "ライトモードに切り替え" : "ダークモードに切り替え"}
-      onClick={() => setTheme(nextTheme)}
-    >
-      {isDark ? <Moon className="size-4" /> : <Sun className="size-4" />}
-    </Button>
+    <Tooltip>
+      <TooltipTrigger
+        render={
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label={label}
+            onClick={() => setTheme(nextTheme)}
+          />
+        }
+      >
+        {isDark ? <Moon className="size-4" /> : <Sun className="size-4" />}
+      </TooltipTrigger>
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
   );
 }
