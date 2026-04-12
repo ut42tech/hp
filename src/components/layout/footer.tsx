@@ -2,13 +2,8 @@ import Link from "next/link";
 
 import { SocialLinks } from "@/components/shared/social-links";
 import { Separator } from "@/components/ui/separator";
+import { navItems } from "@/lib/navigation";
 import { site } from "@/lib/site";
-
-const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/works", label: "Works" },
-] as const;
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -29,7 +24,7 @@ export function Footer() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm"
+                    className="rounded-sm text-sm text-muted-foreground transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     {item.label}
                   </Link>
@@ -43,12 +38,9 @@ export function Footer() {
               <SocialLinks size="sm" />
             </div>
           </div>
-          <div className="flex flex-col items-start justify-between gap-2 text-xs text-muted-foreground md:flex-row md:items-center">
-            <p>
-              © {year} {site.name}
-            </p>
-            <p>Built with Next.js, Tailwind CSS, shadcn/ui</p>
-          </div>
+          <p className="text-center text-xs text-muted-foreground">
+            © {year} {site.name}
+          </p>
         </div>
       </div>
     </footer>
