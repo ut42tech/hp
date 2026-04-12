@@ -12,19 +12,19 @@ export const profile: Profile = {
   image: "/profile.jpg",
   social: [
     {
-      label: "GitHub",
-      href: "https://github.com/ut42tech",
-      icon: "github",
-    },
-    {
       label: "X",
       href: "https://x.com/ut42tech",
       icon: "x",
     },
     {
-      label: "Wantedly",
-      href: "https://www.wantedly.com/id/ut42tech",
-      icon: "wantedly",
+      label: "GitHub",
+      href: "https://github.com/ut42tech",
+      icon: "github",
+    },
+    {
+      label: "note",
+      href: "https://note.com/ut42tech",
+      icon: "note",
     },
     {
       label: "YouTube",
@@ -32,9 +32,9 @@ export const profile: Profile = {
       icon: "youtube",
     },
     {
-      label: "note",
-      href: "https://note.com/ut42tech",
-      icon: "note",
+      label: "Wantedly",
+      href: "https://www.wantedly.com/id/tuehara",
+      icon: "wantedly",
     },
   ],
   techStack: [

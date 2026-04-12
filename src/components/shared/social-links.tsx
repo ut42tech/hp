@@ -15,11 +15,11 @@ import { cn } from "@/lib/utils";
 type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
 const iconMap: Record<SocialIcon, IconComponent> = {
-  github: SiGithub as IconComponent,
   x: SiX as IconComponent,
+  github: SiGithub as IconComponent,
+  note: SiNote as IconComponent,
   youtube: SiYoutube as IconComponent,
   wantedly: SiWantedly as IconComponent,
-  note: SiNote as IconComponent,
   other: Globe,
 };
 
