@@ -70,6 +70,20 @@ export const profile: Profile = {
       title: "長崎大学 情報データ科学部 卒業",
     },
     {
+      date: "2025-11",
+      category: "event",
+      title: "「長崎のWA!」インタビュー掲載",
+      description: "長崎市シティプロモーションのインタビュー記事に掲載。",
+    },
+    {
+      date: "2025-08",
+      category: "education",
+      title: "高校生アプリ開発講座 メンター",
+      description:
+        "長崎県内の高校生を対象としたアプリ開発講座のメンターを務める。Unityを用いたゲーム開発を指導。加えて、講義動画の制作も担当。",
+      location: "長崎",
+    },
+    {
       date: "2025-04",
       category: "event",
       title: "学生エンジニアコミュニティChoTechを設立",
@@ -93,17 +107,32 @@ export const profile: Profile = {
       location: "インド・ニューデリー",
     },
     {
+      date: "2024-08",
+      category: "work",
+      title: "ゼンリン R&D部門 インターン",
+      description:
+        "道路標識検出用 OSS OCR モデルの性能比較を行い、3人チームのリーダーを務めた。",
+    },
+    {
+      date: "2024-07",
+      category: "work",
+      title: "長崎大学ジュニアドクター育成塾 メンター",
+      description: "中学生のアプリ開発支援に携わる。",
+    },
+    {
+      date: "2024-06",
+      category: "work",
+      title: "テクノバながさき 学生メンター",
+      description:
+        "子ども向けクリエイティブ活動支援メンター。特にシステム&デザイン担当としてチェックインシステムを開発とポスター等の制作も担う。",
+      location: "長崎",
+    },
+    {
       date: "2024-05",
       category: "work",
       title: "N Code Labo プログラミング講師",
       description:
         "角川ドワンゴ学園でオンライン家庭教師として Unity / Python / Swift 等を指導。",
-    },
-    {
-      date: "2024-04",
-      category: "work",
-      title: "長崎大学ジュニアドクター育成塾 メンター",
-      description: "中学生のアプリ開発支援に携わる。",
     },
     {
       date: "2024-03",
@@ -112,6 +141,12 @@ export const profile: Profile = {
       description:
         "多言語コミュニケーション支援AIの研究で、学部2年で最年少受賞。",
       location: "熊本大学",
+    },
+    {
+      date: "2024-01",
+      category: "event",
+      title: "技育CAMP ハッカソン Vol.20 出場",
+      description: "「MapChat」を開発。",
     },
     {
       date: "2023-09",
@@ -124,10 +159,17 @@ export const profile: Profile = {
     {
       date: "2023-05",
       category: "work",
-      title: "BrightJ Inc. 学生インターン",
+      title: "BrightJ Inc.（旧:ユニコネクト株式会社） 学生インターン",
       description:
-        "上流工程エンジニア & UI/UX Designer として UI デザインと技術ドキュメント作成を担当。",
+        "スカウトにより飲食店から転職。上流工程エンジニア & UI/UX Designer としてデザインと企画・保守運用を担当した。",
       location: "東京（リモート）",
+    },
+    {
+      date: "2022-05",
+      category: "work",
+      title: "飲食店のアルバイトを始める",
+      description: "浜勝（とんかつ屋）でホールスタッフとして勤務",
+      location: "長崎",
     },
     {
       date: "2022-04",
@@ -139,7 +181,45 @@ export const profile: Profile = {
       category: "education",
       title: "高校卒業",
       description:
-        "弓道部・茶道部・写真部に所属。弓道初段、表千家入門のお免状を取得。",
+        "生徒会執行部、弓道部・茶道部・写真部に所属。弓道初段、表千家入門のお免状を取得。",
+    },
+    {
+      date: "2019-04",
+      category: "education",
+      title: "高校入学",
+      description:
+        "長崎県立長崎北陽台高校普通科に入学。大学進学のため、好きだった制作活動は我慢し、学業に向き合うことにした。",
+    },
+    {
+      date: "2016-04",
+      category: "life",
+      title: "3DCGや映像制作に没頭",
+      description:
+        "MinecraftのCGアニメーションやモーショングラフィックスを制作。YouTubeなどで公開したり、制作物は有名なYouTuberに使用されたりするなど、早くからクリエイティブな活動を行う。",
+    },
+    {
+      date: "2015-04",
+      category: "life",
+      title: "自作PCとソフトウェア開発に興味を持つ",
+      description:
+        "MinecraftのMOD（改造プログラム）やサーバープラグインの開発に挑戦。家のPCを改造し始めるなど、ハードウェアへの関心も深まる。",
+    },
+    {
+      date: "2014-04",
+      category: "life",
+      title: "プログラミングとの出会い",
+      description:
+        "小学4年生の頃、Minecraft PE サーバーを運営するために PHP を独学。自宅のポートを開放してサーバーを公開するなど、ネットワーク知識も自力で習得。",
+    },
+    {
+      date: "2012-04",
+      category: "life",
+      title: "長崎へUターン",
+    },
+    {
+      date: "2010-04",
+      category: "life",
+      title: "小学校入学時に横浜へ引っ越す",
     },
     {
       date: "2003-04",
