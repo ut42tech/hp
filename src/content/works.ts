@@ -1,181 +1,222 @@
 import type { Work, WorkCategory } from "./types";
 
-/**
- * Works のダミーデータ。各カテゴリに 2〜3 件ずつ登録。
- * 実データに差し替える際はこのファイルを直接編集する。
- */
 export const works: Work[] = [
   // ─── project ─────────────────────────────────────────────
   {
-    slug: "bento-dashboard",
+    slug: "coto2-ba",
     category: "project",
-    title: "Bento Dashboard",
-    summary: "研究室のメトリクスを Bento UI で一望できるダッシュボード。",
+    title: "コトコトバ",
+    summary:
+      "ガバイソン 2026 春 グランプリ＋追加賞受賞作品。チーム「じげもんテック」で開発。",
     body: [
-      "共同研究プロジェクトで扱う複数のデータソース(Slack, GitHub, 実験ログ)を 1 枚の Bento グリッドに集約し、週次レビューの所要時間を 30 分から 5 分に短縮した。",
-      "フロントエンドは Next.js + Tailwind、バックエンドは Cloudflare Workers で軽量に。データ鮮度とプライバシーを両立する小さな取り組み。",
+      "ガバイソン 2026 春でグランプリおよび追加賞を受賞した作品。チーム「じげもんテック」（上原拓也 + 西山依吹）として開発した。",
+      "長崎の地域課題をテクノロジーで解決するコンセプトで、企画からデザイン・実装まで一貫して担当。",
     ],
-    date: "2025-11-20",
-    tags: ["Next.js", "TypeScript", "Cloudflare Workers", "Dashboard"],
+    date: "2026-03-15",
+    tags: ["Award", "Hackathon", "Team"],
     links: [
       {
-        label: "GitHub",
-        href: "https://github.com/ut42tech/bento-dashboard",
-        kind: "github",
+        label: "Demo",
+        href: "https://coto2-ba.ut42tech.com",
+        kind: "demo",
       },
       {
-        label: "Demo",
-        href: "https://bento-dashboard.example.com",
-        kind: "demo",
+        label: "GitHub",
+        href: "https://github.com/nu-chotech/coto2-ba",
+        kind: "github",
       },
     ],
     featured: true,
   },
   {
-    slug: "kaidan-memo",
+    slug: "muse-port",
     category: "project",
-    title: "階段メモ",
-    summary: "1 日の思考を 5 段階でメモする、最小限のジャーナルアプリ。",
+    title: "MUSE PORT",
+    summary:
+      "クリエイティブサークル向けのポートフォリオ投稿 Web アプリ。開発リーダーとして設計・実装を主導。",
     body: [
-      "シンプルな日次ジャーナル。1 日を 5 段の階段に見立て、各段に一行だけ文章を残す。継続の摩擦を極限まで減らす設計に振り切った。",
-      "個人利用のために作ったが、公開してから予想外に反応があり、少しずつ機能追加している。",
+      "マルチメディア研究部のメンバーが作品を投稿・閲覧できるポートフォリオプラットフォーム。",
+      "Next.js + FastAPI + AWS（Lambda / DynamoDB / S3）のサーバーレス構成で、開発リーダーとして設計からデプロイまでを担当した。",
     ],
-    date: "2025-07-04",
-    tags: ["React Native", "Expo", "SQLite"],
+    date: "2024-06-01",
+    tags: ["Next.js", "FastAPI", "AWS", "Team"],
     links: [
       {
         label: "GitHub",
-        href: "https://github.com/ut42tech/kaidan-memo",
+        href: "https://github.com/nu-multimedia-lab/muse_port",
         kind: "github",
       },
     ],
   },
   {
-    slug: "paperlens",
+    slug: "emodialog",
     category: "project",
-    title: "PaperLens",
-    summary: "PDF 論文を読みながら用語の定義にフォーカスできるリーダー。",
-    date: "2025-03-18",
-    tags: ["Next.js", "pdf.js", "LLM"],
+    title: "EmoDialog",
+    summary:
+      "LLM 搭載の感情分析日記アプリ。日記を AI が分析し、パーソナライズされた応答と感情の可視化を提供。",
+    body: [
+      "ユーザーの日記を LLM が分析し、パーソナライズされた応答を返す Web アプリケーション。",
+      "Flask + OpenAI API + Matplotlib + Bootstrap で構成。感情の推移を Matplotlib でグラフ化する機能を実装した。",
+    ],
+    date: "2024-02-01",
+    tags: ["Flask", "OpenAI API", "Python", "Matplotlib"],
     links: [
       {
-        label: "Demo",
-        href: "https://paperlens.example.com",
-        kind: "demo",
+        label: "GitHub",
+        href: "https://github.com/ut42univ/EmoDialog-Flask",
+        kind: "github",
       },
     ],
-    featured: true,
+  },
+  {
+    slug: "technova-checkin",
+    category: "project",
+    title: "テクノバチェックインシステム",
+    summary:
+      "テクノバながさきの DX 担当として開発した、子ども向けイベントの受付・管理 Web アプリ。",
+    body: [
+      "テクノバながさきで開催される子ども向けクリエイティブイベントの受付・管理を効率化するシステム。",
+      "DX 担当として企画から開発・運用まで一貫して担当。テクノバフェス 2025 では 400 名以上の来場者受付に活用された。",
+    ],
+    date: "2025-05-01",
+    tags: ["Web", "DX"],
+    links: [],
   },
   // ─── oss ─────────────────────────────────────────────────
   {
-    slug: "tw-bento-preset",
+    slug: "tangi",
     category: "oss",
-    title: "tw-bento-preset",
-    summary: "Tailwind CSS v4 向けの Bento グリッドプリセット。",
+    title: "tangi",
+    summary:
+      "物理的な「触れるインターフェース」を Web で扱うための tangible UI SDK。研究室での趣味プロジェクトとして開発中。",
     body: [
-      "Bento UI を Tailwind 標準スケールだけで組めるように、@theme のセマンティックトークンとユーティリティをまとめた軽量プリセット。",
-      "arbitrary value を書かずに Bento レイアウトを表現することをコンセプトにしている。",
+      "Web 上で tangible（触知可能な）UI を実現するための OSS SDK。",
+      "物理デバイスとブラウザの橋渡しを行い、直感的なインタラクションを提供することを目指している。現在開発中。",
     ],
-    date: "2025-10-02",
-    tags: ["Tailwind CSS", "OSS", "Design System"],
-    links: [
-      {
-        label: "GitHub",
-        href: "https://github.com/ut42tech/tw-bento-preset",
-        kind: "github",
-      },
-    ],
-  },
-  {
-    slug: "next-og-ja",
-    category: "oss",
-    title: "next-og-ja",
-    summary: "日本語フォントに強い Next.js OG 画像ヘルパー。",
-    date: "2025-05-10",
-    tags: ["Next.js", "OGP", "next/og"],
-    links: [
-      {
-        label: "GitHub",
-        href: "https://github.com/ut42tech/next-og-ja",
-        kind: "github",
-      },
-    ],
+    date: "2026-01-15",
+    tags: ["OSS", "TypeScript", "SDK", "Tangible UI"],
+    links: [],
   },
   // ─── research ────────────────────────────────────────────
   {
-    slug: "dialog-eval-2025",
+    slug: "llmeta",
     category: "research",
-    title: "対話インターフェースの主観評価尺度の再検討",
-    summary: "既存の対話 UX 尺度の日本語版を再設計し、被験者実験で検証した。",
+    title: "LLMeta",
+    summary:
+      "LLM による文脈理解と視覚化機能を備えたメタバースコミュニケーション基盤。卒業研究としてフルスクラッチ開発。",
     body: [
-      "既存の対話 UX 評価尺度(SASSI 等)は英語圏の被験者を前提としている。これを日本語母語話者向けに再翻訳・再構成し、質問項目の因子構造を確認した。",
-      "プレリミナリな結果として、3 因子構造が日本語版でも保たれることを確認。詳細は学内発表会で報告。",
+      "AI 搭載メタバースプラットフォームのプロトタイプ。会話文脈の LLM 解析・感情視覚化、音声認識、3D 空間への情報投影、AI エージェントによる要約・質問応答・画像生成などの機能を実装。",
+      "TypeScript / Next.js / 独自 3D・WebXR 基盤 / OpenAI API / Deepgram / LiveKit / Three.js で構成。大学生 20 名（10 ペア）の実験で SUS 81.0（優れた使いやすさ）、AI 要約の有用性 M=4.80/5.00 を記録した。",
     ],
-    date: "2025-12-05",
-    tags: ["HCI", "UX Research", "心理測定"],
-    links: [
-      {
-        label: "発表スライド",
-        href: "https://speakerdeck.com/ut42tech/dialog-eval-2025",
-        kind: "slide",
-      },
-    ],
+    date: "2026-03-01",
+    tags: ["Metaverse", "LLM", "Three.js", "WebXR", "TypeScript"],
+    links: [],
     featured: true,
   },
   {
-    slug: "bento-ux-survey",
+    slug: "multilingual-ai",
     category: "research",
-    title: "Bento UI の情報設計に関する予備調査",
-    summary: "Bento 型レイアウトの読解順序と視線移動を定性的に調査。",
-    date: "2025-06-22",
-    tags: ["HCI", "Information Design"],
-    links: [
-      {
-        label: "技術ブログ",
-        href: "https://zenn.dev/ut42tech/articles/bento-ux-survey",
-        kind: "article",
-      },
+    title: "多言語コミュニケーション支援 対話型 AI",
+    summary:
+      "生成 AI を利用した多言語コミュニケーション支援アプリ。JSET 2024 で学生セッション優秀発表賞を受賞。",
+    body: [
+      "OpenAI（Whisper / GPT / DALL-E）を活用した LINE Bot ベースの多言語コミュニケーション支援システム。",
+      "タイ・バンコクの泰日工業大学（TNI）で 34 名からフィードバックを取得し、実地評価を実施。AWS Lambda + DynamoDB + LINE Messaging API で構成。",
     ],
-  },
-  // ─── experience ──────────────────────────────────────────
-  {
-    slug: "hack-u-2025",
-    category: "experience",
-    title: "Hack U 2025 出場",
-    summary: "学生向けハッカソンで対話型学習アプリを開発し、優秀賞を受賞。",
-    date: "2025-09-14",
-    tags: ["Hackathon", "Award"],
-    links: [
-      {
-        label: "イベントレポート",
-        href: "https://hacku.example.com/2025/report",
-        kind: "article",
-      },
-    ],
-  },
-  {
-    slug: "intern-frontend-2025",
-    category: "experience",
-    title: "Web 系スタートアップでのフロントエンドインターン",
-    summary: "3 ヶ月間、管理画面の再設計と A/B テスト基盤の整備を担当。",
-    date: "2025-08-30",
-    tags: ["Internship", "Next.js", "A/B Testing"],
+    date: "2024-03-01",
+    tags: ["OpenAI API", "AWS", "LINE Bot", "多言語"],
     links: [],
   },
   {
-    slug: "devfest-tokyo-2025",
-    category: "experience",
-    title: "DevFest Tokyo 2025 登壇",
-    summary: "Next.js 16 の Proxy と Cache Components について話した。",
-    date: "2025-11-02",
-    tags: ["Talk", "Next.js"],
-    links: [
-      {
-        label: "発表スライド",
-        href: "https://speakerdeck.com/ut42tech/devfest-tokyo-2025",
-        kind: "slide",
-      },
+    slug: "lidar-vision",
+    category: "research",
+    title: "LiDAR Vision",
+    summary:
+      "視覚障がい者向けの空間認識支援アプリ。IIIT-Delhi 短期留学中に開発。",
+    body: [
+      "深度センサと触覚フィードバックにより、視覚を使わずにモバイル端末で空間認識を可能にするアプリケーション。",
+      "インド IIIT-Delhi の Winter Program で Richa Gupta 先生の指導のもと開発した。",
     ],
+    date: "2025-03-01",
+    tags: ["LiDAR", "Accessibility", "Mobile"],
+    links: [],
+  },
+  // ─── experience ──────────────────────────────────────────
+  {
+    slug: "nagasaki-univ-award",
+    category: "experience",
+    title: "長崎大学 学長賞 受賞",
+    summary: "学術研究活動分野で長崎大学学長賞を受賞。",
+    date: "2026-03-23",
+    tags: ["Award", "Academic"],
+    links: [],
+    featured: true,
+  },
+  {
+    slug: "chotech",
+    category: "experience",
+    title: "学生エンジニアコミュニティ ChoTech 設立",
+    summary:
+      "長崎の学生エンジニアコミュニティを設立し、代表として LT 会やワークショップを運営。",
+    body: [
+      "2025 年 4 月に設立。NUTIC（長崎スタジアムシティ 4F）を拠点に、LT 会、ワークショップ、技術知識共有などの活動を展開。",
+    ],
+    date: "2025-04-01",
+    tags: ["Community", "Leadership"],
+    links: [],
+  },
+  {
+    slug: "iiit-delhi-exchange",
+    category: "experience",
+    title: "IIIT-Delhi 短期留学",
+    summary:
+      "インド IIIT-Delhi で約 1 ヶ月間の Winter Program に参加。LiDAR Vision を開発。",
+    date: "2025-02-21",
+    tags: ["Study Abroad", "India"],
+    links: [],
+  },
+  {
+    slug: "n-code-labo",
+    category: "experience",
+    title: "N Code Labo プログラミング講師",
+    summary:
+      "角川ドワンゴ学園でオンライン家庭教師として Unity / Python / Swift 等のプログラミング指導。",
+    date: "2024-05-01",
+    tags: ["Teaching", "Programming"],
+    links: [],
+  },
+  {
+    slug: "jset-2024",
+    category: "experience",
+    title: "JSET 2024 学生セッション優秀発表賞",
+    summary:
+      "日本教育工学会 2024 年春季全国大会で学生セッション優秀発表賞を受賞。学部 2 年で最年少。",
+    date: "2024-03-20",
+    tags: ["Award", "Academic"],
+    links: [],
+  },
+  {
+    slug: "tni-summer-school",
+    category: "experience",
+    title: "タイ TNI Summer School Intern",
+    summary:
+      "タイ・バンコクの泰日工業大学で 12 日間の PBL プログラムに参加。多言語 AI の実地テストを実施。",
+    date: "2023-09-01",
+    tags: ["Study Abroad", "Thailand"],
+    links: [],
+  },
+  {
+    slug: "brightj-internship",
+    category: "experience",
+    title: "BrightJ Inc. インターン",
+    summary:
+      "東京の IT 企業で Upstream Engineer & UI/UX Designer として約 10 ヶ月間のリモートインターン。",
+    body: [
+      "Adobe XD を用いたワイヤーフレーム・プロトタイプ・UI デザイン、要件分析、技術ドキュメント作成を担当。",
+    ],
+    date: "2023-05-01",
+    tags: ["Internship", "UI/UX Design"],
+    links: [],
   },
 ];
 
