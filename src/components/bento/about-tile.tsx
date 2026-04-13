@@ -28,9 +28,13 @@ export function AboutTile({ className }: AboutTileProps) {
         </Link>
       </div>
       <p className="text-xs text-muted-foreground">{profile.affiliation}</p>
-      <p className="text-sm leading-relaxed text-foreground md:text-base">
-        {profile.bio}
-      </p>
+      <div className="flex flex-col gap-3 text-sm leading-relaxed text-foreground md:text-base">
+        {(Array.isArray(profile.bio) ? profile.bio : [profile.bio]).map(
+          (paragraph) => (
+            <p key={paragraph.slice(0, 20)}>{paragraph}</p>
+          ),
+        )}
+      </div>
     </Card>
   );
 }

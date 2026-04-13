@@ -7,9 +7,9 @@ export const works: Work[] = [
     category: "project",
     title: "コトコトバ",
     summary:
-      "ガバイソン 2026 春 グランプリ＋追加賞受賞作品。チーム「じげもんテック」で開発。",
+      "ガバイソン2026春 最優秀賞&特別賞受賞作品。チーム「じげもんテック」で開発。",
     body: [
-      "ガバイソン 2026 春でグランプリおよび追加賞を受賞した作品。チーム「じげもんテック」（上原拓也 + 西山依吹）として開発した。",
+      "佐賀のハッカソン「ガバイソン2026春」にて最優秀賞と特別賞のダブル受賞を果たした作品。2人チーム「じげもんテック」（上原拓也 + 西山依吹）として開発。",
       "長崎の地域課題をテクノロジーで解決するコンセプトで、企画からデザイン・実装まで一貫して担当。",
     ],
     date: "2026-03-15",
@@ -49,6 +49,15 @@ export const works: Work[] = [
     ],
   },
   {
+    slug: "mapchat",
+    category: "project",
+    title: "MapChat",
+    summary: "技育CAMP ハッカソン Vol.20 出場作品。",
+    date: "2024-01-01",
+    tags: ["Hackathon"],
+    links: [],
+  },
+  {
     slug: "emodialog",
     category: "project",
     title: "EmoDialog",
@@ -73,13 +82,27 @@ export const works: Work[] = [
     category: "project",
     title: "テクノバチェックインシステム",
     summary:
-      "テクノバながさきの DX 担当として開発した、子ども向けイベントの受付・管理 Web アプリ。",
+      "テクノバながさきのシステム&デザイン担当として開発した、子ども向けイベントの受付・管理 Web アプリ。",
     body: [
       "テクノバながさきで開催される子ども向けクリエイティブイベントの受付・管理を効率化するシステム。",
-      "DX 担当として企画から開発・運用まで一貫して担当。テクノバフェス 2025 では 400 名以上の来場者受付に活用された。",
+      "システム&デザイン担当として企画から開発・運用・ポスター制作まで一貫して担当。テクノバフェス 2025 では 400 名以上の来場者受付に活用された。",
     ],
     date: "2025-05-01",
     tags: ["Web", "DX"],
+    links: [],
+  },
+  {
+    slug: "zenrin-ocr",
+    category: "project",
+    title: "道路標識 OCR モデル比較",
+    summary:
+      "ゼンリン R&D 部門インターンにて、道路標識検出用 OSS OCR モデルの性能比較を実施。3 人チームリーダー。",
+    body: [
+      "EasyOCR と PaddleOCR を中心に、道路標識画像に対する OSS OCR モデルの認識精度を比較評価した。",
+      "1 週間のハッカソン形式インターンで、3 人チームのリーダーとして方針策定・実装・発表までを担当。",
+    ],
+    date: "2024-08-01",
+    tags: ["Python", "EasyOCR", "PaddleOCR", "Internship"],
     links: [],
   },
   // ─── oss ─────────────────────────────────────────────────
@@ -159,7 +182,7 @@ export const works: Work[] = [
     summary:
       "長崎の学生エンジニアコミュニティを設立し、代表として LT 会やワークショップを運営。",
     body: [
-      "2025 年 4 月に設立。NUTIC（長崎スタジアムシティ 4F）を拠点に、LT 会、ワークショップ、技術知識共有などの活動を展開。",
+      "2025 年 4 月に設立。NUTIC（長崎スタジアムシティ）を拠点に、LT 会、ワークショップ、技術知識共有などの活動を展開。",
     ],
     date: "2025-04-01",
     tags: ["Community", "Leadership"],
@@ -173,6 +196,16 @@ export const works: Work[] = [
       "インド IIIT-Delhi で約 1 ヶ月間の Winter Program に参加。LiDAR Vision を開発。",
     date: "2025-02-21",
     tags: ["Study Abroad", "India"],
+    links: [],
+  },
+  {
+    slug: "zenrin-internship",
+    category: "experience",
+    title: "ゼンリン R&D 部門 インターン",
+    summary:
+      "1 週間のハッカソン形式インターン。道路標識検出用 OSS OCR モデルの性能比較を行い、3 人チームのリーダーを務めた。",
+    date: "2024-08-01",
+    tags: ["Internship", "Python", "OCR"],
     links: [],
   },
   {
@@ -208,11 +241,11 @@ export const works: Work[] = [
   {
     slug: "brightj-internship",
     category: "experience",
-    title: "BrightJ Inc. インターン",
+    title: "BrightJ Inc.（旧: ユニコネクト）インターン",
     summary:
-      "東京の IT 企業で Upstream Engineer & UI/UX Designer として約 10 ヶ月間のリモートインターン。",
+      "スカウトにより飲食店から転職。上流工程エンジニア & UI/UX Designer として約 10 ヶ月間のリモートインターン。",
     body: [
-      "Adobe XD を用いたワイヤーフレーム・プロトタイプ・UI デザイン、要件分析、技術ドキュメント作成を担当。",
+      "Adobe XD を用いたワイヤーフレーム・プロトタイプ・UI デザイン、要件分析・企画、保守運用を担当。",
     ],
     date: "2023-05-01",
     tags: ["Internship", "UI/UX Design"],

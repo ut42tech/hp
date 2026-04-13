@@ -45,9 +45,13 @@ export default function AboutPage() {
       </FadeIn>
 
       <FadeIn delay={0.05}>
-        <p className="mb-12 text-sm leading-relaxed text-foreground md:text-base">
-          {profile.bio}
-        </p>
+        <div className="mb-12 flex flex-col gap-4 text-sm leading-relaxed text-foreground md:text-base">
+          {(Array.isArray(profile.bio) ? profile.bio : [profile.bio]).map(
+            (paragraph) => (
+              <p key={paragraph.slice(0, 20)}>{paragraph}</p>
+            ),
+          )}
+        </div>
       </FadeIn>
 
       <FadeIn delay={0.1}>
