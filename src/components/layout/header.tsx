@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { MobileNav } from "@/components/layout/mobile-nav";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { navItems } from "@/lib/navigation";
@@ -11,13 +12,14 @@ export function Header() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-6">
         <Link
           href="/"
-          className="text-base font-bold tracking-tight transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm"
+          className="rounded-sm text-base font-bold tracking-tight transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           {site.name}
         </Link>
+        {/* デスクトップナビ */}
         <nav
           aria-label="グローバルナビゲーション"
-          className="flex items-center gap-1"
+          className="hidden items-center gap-1 md:flex"
         >
           {navItems.map((item) => (
             <Link
@@ -35,6 +37,10 @@ export function Header() {
             <ThemeToggle />
           </div>
         </nav>
+        {/* モバイルナビ */}
+        <div className="md:hidden">
+          <MobileNav />
+        </div>
       </div>
     </header>
   );
