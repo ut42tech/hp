@@ -16,8 +16,8 @@ export function HeroTile({ className }: HeroTileProps) {
         className,
       )}
     >
-      <div className="flex flex-col gap-4 text-center md:text-left">
-        <h1 className="text-5xl font-extrabold tracking-tight md:text-7xl">
+      <div className="flex flex-col gap-1 text-center md:text-left">
+        <h1 className="mb-4 text-5xl font-extrabold tracking-tight md:text-7xl">
           {profile.name}
         </h1>
         <p className="max-w-xl text-base text-muted-foreground md:text-lg">

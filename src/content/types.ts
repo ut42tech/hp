@@ -83,6 +83,8 @@ export interface PhotoEntry {
   alt: string;
   /** クリック時にオーバーレイで表示するキャプション(任意) */
   caption?: string;
+  /** 撮影日や日付。YYYY-MM-DD 形式(任意) */
+  date?: string;
 }
 
 export interface Profile {
@@ -91,8 +93,8 @@ export interface Profile {
   role: string;
   /** 所属(例: "〇〇大学院 情報理工学系研究科") */
   affiliation: string;
-  /** Bento About タイルで表示する自己紹介本文 */
-  bio: string;
+  /** Bento About タイルで表示する自己紹介本文。配列の場合は段落ごとに分割表示 */
+  bio: string | string[];
   /** プロフィール画像のパス(public/ からの相対パス) */
   image?: string;
   social: SocialLink[];

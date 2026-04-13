@@ -1,14 +1,15 @@
 import type { Profile } from "./types";
 
-/**
- * プロフィールのダミーデータ。実データに差し替える際は、このファイルを直接編集する。
- * i18n 導入時は UI 文言とともに messages/ja.json 等へ移植する想定。
- */
 export const profile: Profile = {
   name: "Takuya Uehara",
-  role: "情報系大学院生 / ソフトウェアエンジニア",
-  affiliation: "〇〇大学院 情報理工学系研究科",
-  bio: "ヒューマンコンピュータインタラクションと Web フロントエンドの接点に興味があります。普段は TypeScript と React でプロトタイピングをしながら、研究では対話インターフェースの評価手法を検討しています。",
+  role: "Creative Engineer",
+  affiliation: "長崎大学 大学院 総合生産科学研究科 修士課程 / Setozaki Lab.",
+  bio: [
+    "「デザインとテクノロジーで最高のユーザ体験を届けたい」がモットー。幼少期から好奇心旺盛な性格で、絵画や工作に没頭。小学生の頃にはPHPを独学しサーバーを自宅で運営。中学生の頃には自作PCやソフトウェア開発に興味を持ったり、3DCGアニメーションやモーショングラフィックスの映像制作など、つくることへの情熱は早くから芽生えていました。",
+    "高校では弓道・茶道・写真を通じて日本文化の様式美に触れ、その感覚はいまもデザインの根底にあります。",
+    "大学は長崎大学 情報データ科学に進学し、コンピュータサイエンスとデータサイエンスを学ぶ。学部2年次に日本教育工学会2024年春季全国大会の口頭発表にて、最年少で学生優秀賞を受賞。卒業研究では生成AIを用いたコミュニケーション支援メタバースプラットフォームをWeb技術をメインにフルスクラッチで開発。",
+    "タイやインドなどへの海外渡航経験や留学生との交流を通じて、言語や文化を超えたコミュニケーションの可能性にも強い関心を持っています。長崎のテックカルチャーを盛り上げたいという想いから、学生エンジニアコミュニティChoTechを創設し、地域の技術コミュニティの活性化にも取り組んでいます。",
+  ],
   image: "/profile.jpg",
   social: [
     {
@@ -38,91 +39,246 @@ export const profile: Profile = {
     },
   ],
   techStack: [
+    // Languages
     "TypeScript",
+    "Python",
+    "C#",
+    "Swift",
+    "Java",
+    // Web Frameworks
     "React",
     "Next.js",
+    "FastAPI",
+    "Flask",
     "Tailwind CSS",
-    "Node.js",
-    "Python",
-    "PyTorch",
+    "Three.js",
+    // Infra / Cloud
+    "AWS",
+    "GCP",
+    "Vercel",
+    "Supabase",
+    "Heroku",
+    "Cloudflare",
+    "Docker",
+    "Proxmox",
+    "Linux",
+    "Git",
+    // Creative
+    "Unity",
+    "Blender",
+    "Cinema 4D",
+    "After Effects",
+    "Premiere Pro",
+    "Photoshop",
+    "Adobe XD",
+    "Final Cut Pro",
     "Figma",
+    // Academic
+    "LaTeX",
+    "Typst",
   ],
   timeline: [
     {
+      date: "2026-04",
+      category: "education",
+      title: "長崎大学大学院 総合生産科学研究科に進学",
+      description: "瀬戸崎研究室に継続所属し、さらに高度な研究に取り組む予定。",
+    },
+    {
+      date: "2026-03",
+      category: "event",
+      title: "長崎大学 学長賞（学術研究活動分野）受賞",
+    },
+    {
+      date: "2026-03",
+      category: "event",
+      title: "ガバイソン2026春 最優秀賞&特別賞 受賞",
+      description:
+        "佐賀のハッカソンにて2人チーム「じげもんテック」として「コトコトバ」を開発し、最優秀賞と特別賞のダブル受賞を果たす。",
+    },
+    {
+      date: "2026-03",
+      category: "education",
+      title: "長崎大学 情報データ科学部 卒業",
+    },
+    {
       date: "2025-11",
       category: "event",
-      title: "DevFest Tokyo 2025 登壇",
-      description:
-        "Next.js 16 の Proxy と Cache Components について 20 分の発表を行った。",
-      location: "東京",
+      title: "「長崎のWA!」インタビュー掲載",
+      description: "長崎市シティプロモーションのインタビュー記事に掲載。",
     },
     {
-      date: "2025-09",
-      category: "event",
-      title: "Hack U 2025 出場",
-      description:
-        "学生向けハッカソンで対話型学習アプリを開発し、優秀賞を受賞。",
-    },
-    {
-      date: "2025-07",
-      category: "work",
-      title: "Web 系スタートアップでフロントエンドインターン",
-      description:
-        "3 ヶ月間、管理画面の再設計と A/B テスト基盤の整備を担当した。",
-      location: "東京",
-    },
-    {
-      date: "2024-04",
+      date: "2025-08",
       category: "education",
-      title: "大学院 修士課程に進学",
+      title: "高校生アプリ開発講座 メンター",
       description:
-        "情報理工学系研究科に進学し、ヒューマンコンピュータインタラクション研究室に所属。",
+        "長崎県内の高校生を対象としたアプリ開発講座のメンターを務める。Unityを用いたゲーム開発を指導。加えて、講義動画の制作も担当。",
+      location: "長崎",
     },
     {
-      date: "2023-10",
+      date: "2025-04",
+      category: "event",
+      title: "学生エンジニアコミュニティChoTechを設立",
+      description:
+        "長崎の学生エンジニアコミュニティを立ち上げ、代表を務める。NUTIC（長崎スタジアムシティ）を拠点に活動。",
+      location: "長崎",
+    },
+    {
+      date: "2025-04",
+      category: "education",
+      title: "瀬戸崎研究室に配属",
+      description:
+        "学部2年次から関わっていたものの、正式に研究室に配属される。",
+    },
+    {
+      date: "2025-02",
+      category: "education",
+      title: "インド情報技術大学へ短期留学",
+      description:
+        "IIIT-D（Indian Institutes of Information Technology Delhi）へ短期留学。Richa Gupta先生の指導のもと、深度センサと触覚フィードバックを活用した視覚障がい者向け空間認識支援アプリ（LiDAR Vision）を開発。",
+      location: "インド・ニューデリー",
+    },
+    {
+      date: "2024-08",
       category: "work",
-      title: "塾講師アルバイト開始",
-      description: "高校生向けに数学と情報を教えている。",
+      title: "ゼンリン R&D部門 インターン",
+      description:
+        "道路標識検出用 OSS OCR モデルの性能比較を行い、3人チームのリーダーを務めた。",
+    },
+    {
+      date: "2024-07",
+      category: "work",
+      title: "長崎大学ジュニアドクター育成塾 メンター",
+      description: "中学生のアプリ開発支援に携わる。",
+    },
+    {
+      date: "2024-06",
+      category: "work",
+      title: "テクノバながさき 学生メンター",
+      description:
+        "子ども向けクリエイティブ活動支援メンター。特にシステム&デザイン担当としてチェックインシステムを開発とポスター等の制作も担う。",
+      location: "長崎",
+    },
+    {
+      date: "2024-05",
+      category: "work",
+      title: "N Code Labo プログラミング講師",
+      description:
+        "角川ドワンゴ学園でオンライン家庭教師として Unity / Python / Swift 等を指導。",
     },
     {
       date: "2024-03",
-      category: "education",
-      title: "学士課程を卒業",
-      description: "情報系学部を卒業。卒業研究では対話 UI の予備調査を行った。",
+      category: "event",
+      title: "JSET 2024 学生セッション優秀発表賞",
+      description:
+        "多言語コミュニケーション支援AIの研究で、学部2年で最年少受賞。",
+      location: "熊本大学",
     },
     {
-      date: "2020-04",
-      category: "education",
-      title: "大学 学士課程に入学",
+      date: "2024-01",
+      category: "event",
+      title: "技育CAMP ハッカソン Vol.20 出場",
+      description: "「MapChat」を開発。",
     },
     {
-      date: "2020-03",
+      date: "2023-09",
       category: "education",
-      title: "高校を卒業",
+      title: "タイへ短期留学",
+      description:
+        "タイ・バンコクの泰日工業大学（Thai-Nichi Institute of Technology）へ短期留学。AIを活用した多言語コミュニケーション支援システムの実証実験を行い、現地の学生や教員と交流。",
+      location: "タイ・バンコク",
     },
     {
-      date: "2001-01",
+      date: "2023-05",
+      category: "work",
+      title: "BrightJ Inc.（旧:ユニコネクト株式会社） 学生インターン",
+      description:
+        "スカウトにより飲食店から転職。上流工程エンジニア & UI/UX Designer としてデザインと企画・保守運用を担当した。",
+      location: "東京（リモート）",
+    },
+    {
+      date: "2022-05",
+      category: "work",
+      title: "飲食店のアルバイトを始める",
+      description: "浜勝（とんかつ屋）でホールスタッフとして勤務",
+      location: "長崎",
+    },
+    {
+      date: "2022-04",
+      category: "education",
+      title: "長崎大学 情報データ科学部 入学",
+    },
+    {
+      date: "2022-03",
+      category: "education",
+      title: "高校卒業",
+      description:
+        "生徒会執行部、弓道部・茶道部・写真部に所属。弓道初段、表千家入門のお免状を取得。",
+    },
+    {
+      date: "2019-04",
+      category: "education",
+      title: "高校入学",
+      description:
+        "長崎県立長崎北陽台高校普通科に入学。大学進学のため、好きだった制作活動は我慢し、学業に向き合うことにした。",
+    },
+    {
+      date: "2016-04",
       category: "life",
-      title: "生まれる",
-      description: "東京都出身。",
+      title: "3DCGや映像制作に没頭",
+      description:
+        "MinecraftのCGアニメーションやモーショングラフィックスを制作。YouTubeなどで公開したり、制作物は有名なYouTuberに使用されたりするなど、早くからクリエイティブな活動を行う。",
+    },
+    {
+      date: "2015-04",
+      category: "life",
+      title: "自作PCとソフトウェア開発に興味を持つ",
+      description:
+        "MinecraftのMOD（改造プログラム）やサーバープラグインの開発に挑戦。家のPCを改造し始めるなど、ハードウェアへの関心も深まる。",
+    },
+    {
+      date: "2014-04",
+      category: "life",
+      title: "プログラミングとの出会い",
+      description:
+        "小学4年生の頃、Minecraft PE サーバーを運営するために PHP を独学。自宅のポートを開放してサーバーを公開するなど、ネットワーク知識も自力で習得。",
+    },
+    {
+      date: "2012-04",
+      category: "life",
+      title: "長崎へUターン",
+    },
+    {
+      date: "2010-04",
+      category: "life",
+      title: "小学校入学時に横浜へ引っ越す",
+    },
+    {
+      date: "2003-04",
+      category: "life",
+      title: "長崎県に生まれる",
     },
   ],
   photos: [
     {
       src: "/photos/placeholder-1.svg",
-      alt: "プレースホルダ画像 1",
+      alt: "ガバイソン 2026 春 表彰式",
       caption:
-        "DevFest Tokyo 2025 で Next.js 16 について話したときの登壇写真(差し替え予定)。",
+        "ガバイソン 2026 春でグランプリを受賞したときの一枚（差し替え予定）。",
+      date: "2026-03-15",
     },
     {
       src: "/photos/placeholder-2.svg",
-      alt: "プレースホルダ画像 2",
-      caption: "研究室でプロトタイピングしているときのスナップ(差し替え予定)。",
+      alt: "瀬戸崎研究室での開発風景",
+      caption: "研究室で LLMeta のプロトタイプを開発中（差し替え予定）。",
+      date: "2025-12-10",
     },
     {
       src: "/photos/placeholder-3.svg",
-      alt: "プレースホルダ画像 3",
-      caption: "Hack U 2025 でチーム開発をしていたときの様子(差し替え予定)。",
+      alt: "IIIT-Delhi にて",
+      caption:
+        "インド・IIIT-Delhi での短期留学プログラムにて（差し替え予定）。",
+      date: "2025-03-10",
     },
   ],
 };
