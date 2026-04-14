@@ -261,24 +261,21 @@ export const profile: Profile = {
   ],
   photos: [
     {
-      src: "/photos/placeholder-1.svg",
-      alt: "ガバイソン 2026 春 表彰式",
-      caption:
-        "ガバイソン 2026 春でグランプリを受賞したときの一枚（差し替え予定）。",
-      date: "2026-03-15",
+      src: "/photos/home/1.jpg",
+      alt: "タージ・マハル",
+      caption: "インド留学中に訪れたタージ・マハル",
+      date: "2025-02",
     },
     {
-      src: "/photos/placeholder-2.svg",
-      alt: "瀬戸崎研究室での開発風景",
-      caption: "研究室で LLMeta のプロトタイプを開発中（差し替え予定）。",
-      date: "2025-12-10",
+      src: "/photos/home/2.jpg",
+      alt: "富士山山頂からのご来光",
+      caption: "富士山山頂から眺めたご来光",
     },
     {
-      src: "/photos/placeholder-3.svg",
-      alt: "IIIT-Delhi にて",
-      caption:
-        "インド・IIIT-Delhi での短期留学プログラムにて（差し替え予定）。",
-      date: "2025-03-10",
+      src: "/photos/home/3.jpg",
+      alt: "アユタヤ ワット・マハタートにて",
+      caption: "タイ留学中に訪れたアユタヤの仏頭",
+      date: "2023-09",
     },
   ],
 };
