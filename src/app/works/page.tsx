@@ -1,8 +1,7 @@
+import { Construction } from "lucide-react";
 import type { Metadata } from "next";
 
 import { FadeIn } from "@/components/motion/fade-in";
-import { WorksGrid } from "@/components/works/works-grid";
-import { works } from "@/content/works";
 
 export const metadata: Metadata = {
   title: "Works",
@@ -12,22 +11,25 @@ export const metadata: Metadata = {
 };
 
 export default function WorksPage() {
-  const sorted = [...works].sort((a, b) => (a.date < b.date ? 1 : -1));
-
   return (
-    <section className="mx-auto max-w-6xl px-6 py-16">
+    <section className="mx-auto max-w-3xl px-6 py-32">
       <FadeIn>
-        <header className="mb-10 flex flex-col gap-3">
+        <div className="flex flex-col items-center gap-6 text-center">
+          <Construction className="size-12 text-muted-foreground" />
           <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">
             Works
           </h1>
-          <p className="max-w-2xl text-base text-muted-foreground">
-            個人開発・OSS・研究・登壇など、カテゴリごとにフィルタして一覧できます。
-          </p>
-        </header>
-      </FadeIn>
-      <FadeIn delay={0.1}>
-        <WorksGrid works={sorted} />
+          <div className="flex flex-col gap-2 text-sm text-muted-foreground md:text-base">
+            <p>
+              現在、CMS
+              対応に向けてこのページをリニューアル中です。しばらくお待ちください。
+            </p>
+            <p className="text-xs md:text-sm">
+              This page is currently being rebuilt for CMS integration. Please
+              check back soon.
+            </p>
+          </div>
+        </div>
       </FadeIn>
     </section>
   );
