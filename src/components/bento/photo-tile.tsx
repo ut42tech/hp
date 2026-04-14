@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 import { Card } from "@/components/ui/card";
@@ -18,7 +19,7 @@ export function PhotoTile({ photo, className }: PhotoTileProps) {
   return (
     <Card
       className={cn(
-        "relative aspect-photo overflow-hidden rounded-3xl border-border p-0 md:aspect-auto",
+        "relative aspect-photo overflow-hidden rounded-3xl border-border p-0",
         className,
       )}
     >
@@ -32,13 +33,12 @@ export function PhotoTile({ photo, className }: PhotoTileProps) {
         disabled={!hasCaption}
         className="group relative block size-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset disabled:cursor-default"
       >
-        {/* biome-ignore lint/performance/noImgElement: SVG プレースホルダのため next/image を使わない */}
-        <img
+        <Image
           src={photo.src}
           alt={photo.alt}
-          className="size-full object-cover"
-          loading="lazy"
-          decoding="async"
+          fill
+          sizes="(min-width: 768px) 50vw, 100vw"
+          className="object-cover"
         />
         {hasCaption ? (
           <div

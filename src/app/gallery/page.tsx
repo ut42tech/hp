@@ -1,8 +1,7 @@
+import { Construction } from "lucide-react";
 import type { Metadata } from "next";
 
-import { GalleryCard } from "@/components/gallery/gallery-card";
 import { FadeIn } from "@/components/motion/fade-in";
-import { galleryPhotos } from "@/content/gallery";
 
 export const metadata: Metadata = {
   title: "Gallery",
@@ -11,28 +10,24 @@ export const metadata: Metadata = {
 };
 
 export default function GalleryPage() {
-  const sorted = [...galleryPhotos].sort((a, b) => {
-    if (!a.date || !b.date) return 0;
-    return a.date < b.date ? 1 : -1;
-  });
-
   return (
-    <section className="mx-auto max-w-6xl px-6 py-16">
+    <section className="mx-auto max-w-3xl px-6 py-32">
       <FadeIn>
-        <header className="mb-10 flex flex-col gap-3">
+        <div className="flex flex-col items-center gap-6 text-center">
+          <Construction className="size-12 text-muted-foreground" />
           <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">
             Gallery
           </h1>
-          <p className="max-w-2xl text-base text-muted-foreground">
-            日常や活動の様子を写真で紹介しています。写真をクリックすると日付とコメントが見られます。
-          </p>
-        </header>
-      </FadeIn>
-      <FadeIn delay={0.1}>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-          {sorted.map((photo) => (
-            <GalleryCard key={photo.src} photo={photo} />
-          ))}
+          <div className="flex flex-col gap-2 text-sm text-muted-foreground md:text-base">
+            <p>
+              現在、CMS
+              対応に向けてこのページをリニューアル中です。しばらくお待ちください。
+            </p>
+            <p className="text-xs md:text-sm">
+              This page is currently being rebuilt for CMS integration. Please
+              check back soon.
+            </p>
+          </div>
         </div>
       </FadeIn>
     </section>
