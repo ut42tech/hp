@@ -93,8 +93,8 @@ export interface Profile {
   role: string;
   /** 所属(例: "〇〇大学院 情報理工学系研究科") */
   affiliation: string;
-  /** Bento About タイルで表示する自己紹介本文。配列の場合は段落ごとに分割表示 */
-  bio: string | string[];
+  /** Bento About タイルで表示する自己紹介本文。段落ごとに分割した配列 */
+  bio: string[];
   /** プロフィール画像のパス(public/ からの相対パス) */
   image?: string;
   social: SocialLink[];

@@ -23,7 +23,7 @@ export function FeaturedTile({ className }: FeaturedTileProps) {
         <h2 className="text-lg font-bold">Featured Works</h2>
         <Link
           href="/works"
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm"
+          className="inline-flex items-center gap-1 rounded-sm text-sm text-muted-foreground transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           View all
           <ArrowUpRight className="size-4" />

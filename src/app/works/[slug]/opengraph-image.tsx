@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 
 import { getWorkBySlug, works } from "@/content/works";
+import { ogColors, site } from "@/lib/site";
 
 export const alt = "Work";
 export const size = {
@@ -33,8 +34,8 @@ export default async function Image({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#0a120d",
-          color: "#f5f5f7",
+          background: ogColors.bgSolid,
+          color: ogColors.fg,
           fontSize: 64,
           fontFamily: "sans-serif",
         }}
@@ -54,9 +55,8 @@ export default async function Image({
         flexDirection: "column",
         justifyContent: "space-between",
         padding: "80px",
-        background:
-          "linear-gradient(135deg, #0a120d 0%, #0f261a 45%, #163b28 100%)",
-        color: "#f5f5f7",
+        background: ogColors.bg,
+        color: ogColors.fg,
         fontFamily: "sans-serif",
       }}
     >
@@ -68,7 +68,7 @@ export default async function Image({
           fontSize: 28,
           letterSpacing: "0.2em",
           textTransform: "uppercase",
-          color: "#7ee787",
+          color: ogColors.accent,
         }}
       >
         <span
@@ -76,7 +76,7 @@ export default async function Image({
             width: "16px",
             height: "16px",
             borderRadius: "999px",
-            background: "#3fb950",
+            background: ogColors.accentDot,
           }}
         />
         {work.category}
@@ -102,7 +102,7 @@ export default async function Image({
         <div
           style={{
             fontSize: 32,
-            color: "#aff5b4",
+            color: ogColors.accentLight,
             lineHeight: 1.4,
             maxWidth: "900px",
           }}
@@ -117,10 +117,12 @@ export default async function Image({
           justifyContent: "space-between",
           alignItems: "flex-end",
           fontSize: 24,
-          color: "#7d8b80",
+          color: ogColors.muted,
         }}
       >
-        <span>ut42tech.com/works/{work.slug}</span>
+        <span>
+          {site.url.replace("https://", "")}/works/{work.slug}
+        </span>
         <span>{work.date}</span>
       </div>
     </div>,
