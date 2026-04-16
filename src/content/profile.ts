@@ -146,6 +146,12 @@ export const profile: Profile = {
       location: "インド・ニューデリー",
     },
     {
+      date: "2025-01",
+      category: "event",
+      title: "技育CAMP ハッカソン Vol.20 出場",
+      description: "「MapChat」を開発。",
+    },
+    {
       date: "2024-08",
       category: "work",
       title: "ゼンリン R&D部門 インターン",
@@ -156,14 +162,15 @@ export const profile: Profile = {
       date: "2024-07",
       category: "work",
       title: "長崎大学ジュニアドクター育成塾 メンター",
-      description: "中学生のアプリ開発支援に携わる。",
+      description:
+        "中学生のアプリ開発支援に携わり始める。主にUnityを用いたゲーム開発を指導。",
     },
     {
       date: "2024-06",
       category: "work",
       title: "テクノバながさき 学生メンター",
       description:
-        "子ども向けクリエイティブ活動支援メンター。特にシステム&デザイン担当としてチェックインシステムを開発とポスター等の制作も担う。",
+        "子ども向けクリエイティブ活動支援を行う大学生メンター。特にシステム&デザイン担当としてチェックインシステムを開発とポスター等の制作も担う。",
       location: "長崎",
     },
     {
@@ -176,16 +183,11 @@ export const profile: Profile = {
     {
       date: "2024-03",
       category: "event",
-      title: "JSET 2024 学生セッション優秀発表賞",
+      title:
+        "日本教育工学会（JSET）2024年春季全国大会 学生セッション優秀発表賞",
       description:
-        "多言語コミュニケーション支援AIの研究で、学部2年で最年少受賞。",
+        "多言語コミュニケーション支援AIの研究で、学部2年次に論文を執筆。口頭発表を行い、最年少で優秀賞を受賞。",
       location: "熊本大学",
-    },
-    {
-      date: "2024-01",
-      category: "event",
-      title: "技育CAMP ハッカソン Vol.20 出場",
-      description: "「MapChat」を開発。",
     },
     {
       date: "2023-09",
