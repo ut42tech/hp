@@ -60,11 +60,15 @@ export function Timeline({ entries, className }: TimelineProps) {
 
   return (
     <div className={cn("flex flex-col gap-6", className)}>
-      <div className="flex flex-wrap gap-2">
+      <fieldset
+        aria-label="タイムラインのカテゴリフィルター"
+        className="flex flex-wrap gap-2 border-none p-0"
+      >
         {filters.map((f) => (
           <button
             key={f.value}
             type="button"
+            aria-pressed={activeFilter === f.value}
             onClick={() => setActiveFilter(f.value)}
           >
             <Badge
@@ -75,8 +79,8 @@ export function Timeline({ entries, className }: TimelineProps) {
             </Badge>
           </button>
         ))}
-      </div>
-      <ol className="flex flex-col">
+      </fieldset>
+      <ol aria-live="polite" className="flex flex-col">
         {filtered.map((entry, index) => {
           const config = categoryConfig[entry.category];
           const Icon = config.icon;

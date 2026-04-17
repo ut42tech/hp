@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 import { profile } from "@/content/profile";
-import { site } from "@/lib/site";
+import { ogColors, site } from "@/lib/site";
 
 export const alt = `${site.name} — ${site.description}`;
 export const size = {
@@ -24,9 +24,8 @@ export default function Image() {
         flexDirection: "column",
         justifyContent: "space-between",
         padding: "80px",
-        background:
-          "linear-gradient(135deg, #0a120d 0%, #0f261a 45%, #163b28 100%)",
-        color: "#f5f5f7",
+        background: ogColors.bg,
+        color: ogColors.fg,
         fontFamily: "sans-serif",
       }}
     >
@@ -38,7 +37,7 @@ export default function Image() {
           fontSize: 28,
           letterSpacing: "0.2em",
           textTransform: "uppercase",
-          color: "#7ee787",
+          color: ogColors.accent,
         }}
       >
         <span
@@ -46,7 +45,7 @@ export default function Image() {
             width: "16px",
             height: "16px",
             borderRadius: "999px",
-            background: "#3fb950",
+            background: ogColors.accentDot,
           }}
         />
         {site.url.replace("https://", "")}
@@ -72,7 +71,7 @@ export default function Image() {
         <div
           style={{
             fontSize: 40,
-            color: "#aff5b4",
+            color: ogColors.accentLight,
             fontWeight: 500,
           }}
         >
@@ -86,7 +85,7 @@ export default function Image() {
           justifyContent: "space-between",
           alignItems: "flex-end",
           fontSize: 28,
-          color: "#7d8b80",
+          color: ogColors.muted,
         }}
       >
         <span>About · Works · Contact</span>

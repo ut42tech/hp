@@ -10,12 +10,20 @@ import {
 } from "@/components/motion/bento-tile-motion";
 import { profile } from "@/content/profile";
 
-export default function Home() {
-  const [photoLarge, photoMedium1, photoMedium2] = profile.photos;
+/**
+ * photos 配列のレイアウト契約:
+ *   [0] → 4-col 大サイズ, [1] → 2-col 中サイズ, [2] → 2-col 中サイズ
+ */
+const PHOTO_LAYOUT = [
+  { index: 1, span: "md:col-span-2 md:row-span-1" },
+  { index: 0, span: "md:col-span-4 md:row-span-2" },
+  { index: 2, span: "md:col-span-2 md:row-span-1" },
+] as const;
 
+export default function Home() {
   return (
     <section className="mx-auto max-w-6xl px-6 py-16">
-      <BentoMotionContainer className="grid grid-cols-1 gap-4 md:grid-cols-6 md:grid-flow-row-dense">
+      <BentoMotionContainer className="grid grid-cols-1 gap-4 md:grid-flow-row-dense md:grid-cols-6">
         <BentoTileMotion className="md:col-span-6 md:row-span-2">
           <HeroTile className="h-full" />
         </BentoTileMotion>
@@ -28,21 +36,15 @@ export default function Home() {
         <BentoTileMotion className="md:col-span-2 md:row-span-1">
           <ContactTile className="h-full" />
         </BentoTileMotion>
-        {photoMedium1 ? (
-          <BentoTileMotion className="md:col-span-2 md:row-span-1">
-            <PhotoTile photo={photoMedium1} className="h-full" />
-          </BentoTileMotion>
-        ) : null}
-        {photoLarge ? (
-          <BentoTileMotion className="md:col-span-4 md:row-span-2">
-            <PhotoTile photo={photoLarge} className="h-full" />
-          </BentoTileMotion>
-        ) : null}
-        {photoMedium2 ? (
-          <BentoTileMotion className="md:col-span-2 md:row-span-1">
-            <PhotoTile photo={photoMedium2} className="h-full" />
-          </BentoTileMotion>
-        ) : null}
+        {PHOTO_LAYOUT.map(({ index, span }) => {
+          const photo = profile.photos.at(index);
+          if (!photo) return null;
+          return (
+            <BentoTileMotion key={photo.src} className={span}>
+              <PhotoTile photo={photo} className="h-full" />
+            </BentoTileMotion>
+          );
+        })}
         <BentoTileMotion className="md:col-span-6 md:row-span-1">
           <FeaturedTile className="h-full" />
         </BentoTileMotion>

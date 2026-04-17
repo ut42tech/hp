@@ -8,7 +8,7 @@ import {
   SiYoutube,
 } from "@icons-pack/react-simple-icons";
 import { Globe } from "lucide-react";
-import type { ComponentType, SVGProps } from "react";
+import type { ComponentType } from "react";
 
 import {
   Tooltip,
@@ -19,14 +19,14 @@ import { profile } from "@/content/profile";
 import type { SocialIcon } from "@/content/types";
 import { cn } from "@/lib/utils";
 
-type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
+type IconComponent = ComponentType<{ className?: string }>;
 
 const iconMap: Record<SocialIcon, IconComponent> = {
-  x: SiX as IconComponent,
-  github: SiGithub as IconComponent,
-  note: SiNote as IconComponent,
-  youtube: SiYoutube as IconComponent,
-  wantedly: SiWantedly as IconComponent,
+  x: SiX,
+  github: SiGithub,
+  note: SiNote,
+  youtube: SiYoutube,
+  wantedly: SiWantedly,
   other: Globe,
 };
 

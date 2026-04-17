@@ -26,45 +26,45 @@ import {
   SiUnity,
   SiVercel,
 } from "@icons-pack/react-simple-icons";
-import type { ComponentType, SVGProps } from "react";
+import type { ComponentType } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { profile } from "@/content/profile";
 import { cn } from "@/lib/utils";
 
-type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
+type IconComponent = ComponentType<{ className?: string }>;
 
 /**
  * Tech 名 → simple-icons のブランドアイコンのマッピング。
  * プロフィールに追加した技術名がここに無い場合は、アイコンなしでテキストのみ表示される。
  */
 const techIconMap: Record<string, IconComponent> = {
-  TypeScript: SiTypescript as IconComponent,
-  Python: SiPython as IconComponent,
-  "C#": SiDotnet as IconComponent,
-  Swift: SiSwift as IconComponent,
-  Java: SiOpenjdk as IconComponent,
-  React: SiReact as IconComponent,
-  "Next.js": SiNextdotjs as IconComponent,
-  FastAPI: SiFastapi as IconComponent,
-  Flask: SiFlask as IconComponent,
-  "Tailwind CSS": SiTailwindcss as IconComponent,
-  "Three.js": SiThreedotjs as IconComponent,
-  GCP: SiGooglecloud as IconComponent,
-  Vercel: SiVercel as IconComponent,
-  Supabase: SiSupabase as IconComponent,
-  Cloudflare: SiCloudflare as IconComponent,
-  Docker: SiDocker as IconComponent,
-  Proxmox: SiProxmox as IconComponent,
-  Linux: SiLinux as IconComponent,
-  Git: SiGit as IconComponent,
-  Unity: SiUnity as IconComponent,
-  Blender: SiBlender as IconComponent,
-  "Cinema 4D": SiCinema4d as IconComponent,
-  Figma: SiFigma as IconComponent,
-  "Final Cut Pro": SiApple as IconComponent,
-  LaTeX: SiLatex as IconComponent,
-  Typst: SiTypst as IconComponent,
+  TypeScript: SiTypescript,
+  Python: SiPython,
+  "C#": SiDotnet,
+  Swift: SiSwift,
+  Java: SiOpenjdk,
+  React: SiReact,
+  "Next.js": SiNextdotjs,
+  FastAPI: SiFastapi,
+  Flask: SiFlask,
+  "Tailwind CSS": SiTailwindcss,
+  "Three.js": SiThreedotjs,
+  GCP: SiGooglecloud,
+  Vercel: SiVercel,
+  Supabase: SiSupabase,
+  Cloudflare: SiCloudflare,
+  Docker: SiDocker,
+  Proxmox: SiProxmox,
+  Linux: SiLinux,
+  Git: SiGit,
+  Unity: SiUnity,
+  Blender: SiBlender,
+  "Cinema 4D": SiCinema4d,
+  Figma: SiFigma,
+  "Final Cut Pro": SiApple,
+  LaTeX: SiLatex,
+  Typst: SiTypst,
 };
 
 interface TechStackListProps {

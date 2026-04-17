@@ -58,16 +58,24 @@ export default function RootLayout({
       <body className="flex min-h-dvh flex-col">
         <ThemeProvider>
           <TooltipProvider>
+            <a
+              href="#main"
+              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:shadow-lg focus:ring-2 focus:ring-ring"
+            >
+              メインコンテンツへスキップ
+            </a>
             {site.underConstruction ? (
-              <div className="bg-accent text-center text-sm font-medium text-accent-foreground">
+              <output className="block bg-accent text-center text-sm font-medium text-accent-foreground">
                 <p className="px-6 py-4">
                   Sorry! This site is currently under construction. <br />
                   （現在このサイトは工事中です。）
                 </p>
-              </div>
+              </output>
             ) : null}
             <Header />
-            <main className="flex-1">{children}</main>
+            <main id="main" className="flex-1">
+              {children}
+            </main>
             <Footer />
           </TooltipProvider>
         </ThemeProvider>
