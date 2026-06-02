@@ -2,7 +2,12 @@ import { XMLParser } from "fast-xml-parser";
 
 import { BLOG_REVALIDATE_SECONDS, blogHandles } from "./config";
 import type { BlogPlatform, BlogPost } from "./types";
-import { extractThumbnail, toIso, toPlainExcerpt } from "./utils";
+import {
+  decodeHtmlEntities,
+  extractThumbnail,
+  toIso,
+  toPlainExcerpt,
+} from "./utils";
 
 const parser = new XMLParser({
   ignoreAttributes: false,
@@ -30,12 +35,13 @@ export function parseRssItems(xml: string, platform: BlogPlatform): BlogPost[] {
   };
   const items = toArray<RssItem>(feed?.rss?.channel?.item);
   return items
-    .filter((it): it is RssItem & { title: string; link: string } =>
-      Boolean(it.title && it.link),
+    .filter(
+      (it): it is RssItem & { title: string; link: string } =>
+        Boolean(it.title && it.link) && typeof it.link === "string",
     )
     .map((it) => ({
       platform,
-      title: String(it.title),
+      title: decodeHtmlEntities(String(it.title)),
       url: String(it.link),
       publishedAt: toIso(it.pubDate ?? ""),
       excerpt: it.description ? toPlainExcerpt(it.description) : undefined,

@@ -1,10 +1,28 @@
 import type { BlogPost } from "./types";
 
-/** HTML/Markdown 由来の文字列からプレーンな抜粋を作る。タグ除去・空白圧縮・最大長で切る。 */
+/** HTML エンティティ（名前付き・数値・16進数値）を対応文字にデコードする。 */
+export function decodeHtmlEntities(text: string): string {
+  // 数値エンティティ（10進: &#NNN; / 16進: &#xHH;）を先にデコード
+  const withNumeric = text
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) =>
+      String.fromCodePoint(Number.parseInt(hex, 16)),
+    )
+    .replace(/&#([0-9]+);/g, (_, dec) =>
+      String.fromCodePoint(Number.parseInt(dec, 10)),
+    );
+  // 名前付きエンティティをデコード（&amp; は二重デコードを防ぐため最後）
+  return withNumeric
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&");
+}
+
+/** HTML/Markdown 由来の文字列からプレーンな抜粋を作る。タグ除去・エンティティデコード・空白圧縮・最大長で切る。 */
 export function toPlainExcerpt(input: string, max = 120): string {
-  const text = input
-    .replace(/<[^>]*>/g, " ")
-    .replace(/&[a-z]+;/gi, " ")
+  const text = decodeHtmlEntities(input.replace(/<[^>]*>/g, " "))
     .replace(/\s+/g, " ")
     .trim();
   if (text.length <= max) return text;
