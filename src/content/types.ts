@@ -33,8 +33,6 @@ export interface Work {
   tags: string[];
   thumbnail?: string;
   links: WorkLink[];
-  /** true の場合、Bento ホームの Featured タイルに表示される */
-  featured?: boolean;
 }
 
 export type SocialIcon =

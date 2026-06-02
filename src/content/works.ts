@@ -27,7 +27,6 @@ export const works: Work[] = [
         kind: "github",
       },
     ],
-    featured: true,
   },
   {
     slug: "muse-port",
@@ -135,7 +134,6 @@ export const works: Work[] = [
     date: "2026-03-01",
     tags: ["Metaverse", "LLM", "Three.js", "WebXR", "TypeScript"],
     links: [],
-    featured: true,
   },
   {
     slug: "multilingual-ai",
@@ -174,7 +172,6 @@ export const works: Work[] = [
     date: "2026-03-23",
     tags: ["Award", "Academic"],
     links: [],
-    featured: true,
   },
   {
     slug: "chotech",
