@@ -89,21 +89,46 @@ export interface PhotoEntry {
   date?: string;
 }
 
+/** Keywords タイルに表示する人物像キーワード。 */
+export interface Keyword {
+  label: string;
+  /** 重要度＝大きさ・中心への寄り。xl(主役) > lg > md > sm */
+  size: "xl" | "lg" | "md" | "sm";
+  /** true で accent（緑）バッジになる */
+  accent?: boolean;
+}
+
+/** Press エントリの種別。バッジ表示に使う。 */
+export type PressType = "interview" | "feature" | "award" | "event" | "media";
+
+/** 自分が取り上げられた Web 記事（手動キュレーション）。 */
+export interface PressItem {
+  title: string;
+  /** 媒体名（例: 長崎のWA!（長崎市）） */
+  outlet: string;
+  url: string;
+  /** YYYY-MM または YYYY-MM-DD */
+  date: string;
+  type: PressType;
+  thumbnail?: string;
+  excerpt?: string;
+}
+
 export interface Profile {
   name: string;
-  /** 役職や肩書き(例: "情報系大学院生 / フロントエンド エンジニア") */
+  /** 肩書き（例: "学生エンジニア / フルスタック"） */
   role: string;
-  /** 所属(例: "〇〇大学院 情報理工学系研究科") */
+  /** 所属（例: "M1 Student · Nagasaki University"） */
   affiliation: string;
-  /** Bento About タイルで表示する自己紹介本文。段落ごとに分割した配列 */
-  bio: string[];
-  /** プロフィール画像のパス(public/ からの相対パス) */
+  /** 研究室。Hero でリンク表示する */
+  lab: { name: string; url: string };
+  /** Hero で語るモットー */
+  motto: string;
+  /** 旧 About 本文。ホームでは未使用（データは保持可） */
+  bio?: string[];
   image?: string;
   social: SocialLink[];
-  /** Tech Stack タイルに表示する技術名。アイコンは使わず名前のみ */
   techStack: string[];
-  /** About ページのタイムラインに表示する経歴・出来事 */
   timeline: TimelineEntry[];
-  /** ホームの Photos タイルに表示する写真 */
   photos: PhotoEntry[];
 }
