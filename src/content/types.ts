@@ -42,6 +42,8 @@ export type SocialIcon =
   | "x"
   | "youtube"
   | "wantedly"
+  | "qiita"
+  | "zenn"
   | "note"
   | "other";
 

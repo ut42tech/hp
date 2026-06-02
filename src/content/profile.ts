@@ -23,6 +23,16 @@ export const profile: Profile = {
       icon: "github",
     },
     {
+      label: "Qiita",
+      href: "https://qiita.com/ut42tech",
+      icon: "qiita",
+    },
+    {
+      label: "Zenn",
+      href: "https://zenn.dev/ut42tech",
+      icon: "zenn",
+    },
+    {
       label: "note",
       href: "https://note.com/ut42tech",
       icon: "note",
@@ -78,6 +88,22 @@ export const profile: Profile = {
     "Typst",
   ],
   timeline: [
+    {
+      date: "2026-05-24",
+      category: "event",
+      title: "Engineer Guild Hackathon 2026 参加",
+      description:
+        "東京・メルカリ本社で開催された3日間のハッカソンに参加。音楽のすれ違い通信アプリ「Melo Link」を制作。",
+      location: "東京（メルカリ本社）",
+    },
+    {
+      date: "2026-05-08",
+      category: "education",
+      title: "Unity Sprint 2026 企画・運営",
+      description:
+        "Unity & Git講座として、研究室のメンバーやUnityを使ったゲーム制作に興味がある学生を対象とした勉強会を企画・運営した。",
+      location: "長崎大学",
+    },
     {
       date: "2026-04",
       category: "education",

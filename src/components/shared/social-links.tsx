@@ -3,9 +3,11 @@
 import {
   SiGithub,
   SiNote,
+  SiQiita,
   SiWantedly,
   SiX,
   SiYoutube,
+  SiZenn,
 } from "@icons-pack/react-simple-icons";
 import { Globe } from "lucide-react";
 import type { ComponentType } from "react";
@@ -24,6 +26,8 @@ type IconComponent = ComponentType<{ className?: string }>;
 const iconMap: Record<SocialIcon, IconComponent> = {
   x: SiX,
   github: SiGithub,
+  qiita: SiQiita,
+  zenn: SiZenn,
   note: SiNote,
   youtube: SiYoutube,
   wantedly: SiWantedly,
