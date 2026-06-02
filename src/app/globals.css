@@ -112,3 +112,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Keywords タイルのバッジの微ドリフト（translate のみ・回転なし） */
+@keyframes kw-drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+.kw-drift {
+  animation-name: kw-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .kw-drift { animation: none !important; }
+}
