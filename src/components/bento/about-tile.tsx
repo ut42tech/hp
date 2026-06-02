@@ -19,7 +19,7 @@ export function AboutTile({ className }: AboutTileProps) {
       </div>
       <p className="text-xs text-muted-foreground">{profile.affiliation}</p>
       <div className="flex flex-col gap-3 text-sm leading-relaxed text-foreground md:text-base">
-        {profile.bio.map((paragraph) => (
+        {profile.bio?.map((paragraph) => (
           <p key={paragraph}>{paragraph}</p>
         ))}
       </div>

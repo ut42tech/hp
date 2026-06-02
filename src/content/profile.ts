@@ -2,8 +2,10 @@ import type { Profile } from "./types";
 
 export const profile: Profile = {
   name: "Takuya Uehara",
-  role: "Creative Engineer",
-  affiliation: "長崎大学 大学院 総合生産科学研究科 修士課程 / Setozaki Lab.",
+  role: "学生エンジニア / フルスタック",
+  affiliation: "M1 Student · Nagasaki University",
+  lab: { name: "Setozaki Lab.", url: "https://www.setozakilab.com" },
+  motto: "デザインとテクノロジーで、最高のユーザ体験を。",
   bio: [
     "「デザインとテクノロジーで最高のユーザ体験を届けたい」がモットー。幼少期から好奇心旺盛な性格で、絵画や工作に没頭。小学生の頃にはPHPを独学しサーバーを自宅で運営。中学生の頃には自作PCやソフトウェア開発に興味を持ったり、3DCGアニメーションやモーショングラフィックスの映像制作など、つくることへの情熱は早くから芽生えていました。",
     "高校では弓道・茶道・写真を通じて日本文化の様式美に触れ、その感覚はいまもデザインの根底にあります。",
