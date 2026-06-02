@@ -52,7 +52,7 @@ export function ProjectCard({ work }: { work: Work }) {
               target="_blank"
               rel="noreferrer"
               aria-label={`${work.title} のデプロイ先`}
-              className="inline-flex size-8 items-center justify-center rounded-full bg-accent text-accent-foreground backdrop-blur transition-opacity hover:opacity-90"
+              className="inline-flex size-8 items-center justify-center rounded-full bg-background/85 text-foreground backdrop-blur transition-colors hover:bg-accent hover:text-accent-foreground"
             >
               <LinkIcon className="size-4" />
             </a>
