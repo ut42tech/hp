@@ -43,16 +43,27 @@ export default async function Home() {
           <AboutTile className="h-full" />
         </BentoTileMotion>
 
-        <BentoTileMotion className="col-span-1 md:col-span-2">
+        {/*
+          Tech Stack はバッジが多く、モバイルで半幅にすると極端に縦長になり、
+          隣の Contact が h-full で引き伸ばされて巨大な空白になる。
+          そのためモバイルでは全幅にしてバッジを自然に折り返す。
+        */}
+        <BentoTileMotion className="col-span-2 md:col-span-2">
           <TechStackTile className="h-full" />
         </BentoTileMotion>
+
+        {/*
+          モバイルは Contact + 写真3枚を 2×2 のクワッドに並べる。
+          すべて col-span-1 + 写真は本来の 4:3 のまま表示するので、
+          以前のように富士山だけ縦長(row-span-2)に強クロップされて
+          突き出ることがなくなり、高さの揃った整然としたモザイクになる。
+          デスクトップ(md:)では Contact + 写真3枚が 6 列に並ぶ従来構成のまま。
+        */}
         <BentoTileMotion className="col-span-1 md:col-span-2">
           <ContactTile className="h-full" />
         </BentoTileMotion>
-
-        {/* Journey 写真: モバイルは富士山を縦長(row-span-2)にして非対称 Bento を作る */}
         {fuji ? (
-          <BentoTileMotion className="col-span-1 row-span-2 md:col-span-2 md:row-span-1">
+          <BentoTileMotion className="col-span-1 md:col-span-2 md:row-span-1">
             <PhotoTile photo={fuji} className="h-full" />
           </BentoTileMotion>
         ) : null}
