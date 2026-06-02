@@ -1,4 +1,4 @@
-import type { Work, WorkCategory } from "./types";
+import type { Work } from "./types";
 
 export const works: Work[] = [
   // ─── project ─────────────────────────────────────────────
@@ -253,22 +253,6 @@ export const works: Work[] = [
   },
 ];
 
-export function getWorkBySlug(slug: string): Work | undefined {
-  return works.find((work) => work.slug === slug);
-}
-
 export function getFeaturedWorks(): Work[] {
   return works.filter((work) => work.featured === true);
 }
-
-export function getWorksByCategory(category: WorkCategory): Work[] {
-  return works.filter((work) => work.category === category);
-}
-
-/** カテゴリの表示順と日本語ラベル。UI のフィルタチップ等から参照する */
-export const workCategories: { value: WorkCategory; label: string }[] = [
-  { value: "project", label: "Projects" },
-  { value: "oss", label: "OSS" },
-  { value: "research", label: "Research" },
-  { value: "experience", label: "Experience" },
-];
