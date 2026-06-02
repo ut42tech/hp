@@ -303,8 +303,8 @@ export const profile: Profile = {
     },
     {
       src: "/photos/home/2.jpg",
-      alt: "富士山山頂からのご来光",
-      caption: "富士山山頂から眺めたご来光",
+      alt: "「長崎ハッカソン」会場に掲げられた横断幕",
+      caption: "学生団体として「長崎ハッカソン」の立ち上げに携わりました。",
     },
     {
       src: "/photos/home/3.jpg",

@@ -27,8 +27,8 @@ export const metadata: Metadata = {
 export default async function Home() {
   const latestPosts = await getLatestBlogPosts(3);
 
-  // photos: [0]=タージ・マハル, [1]=富士山, [2]=アユタヤ
-  const fuji = profile.photos.at(1);
+  // photos: [0]=タージ・マハル, [1]=長崎ハッカソン, [2]=アユタヤ
+  const hackathon = profile.photos.at(1);
   const taj = profile.photos.at(0);
   const ayutthaya = profile.photos.at(2);
 
@@ -53,18 +53,22 @@ export default async function Home() {
         </BentoTileMotion>
 
         {/*
-          モバイルは Contact + 写真3枚を 2×2 のクワッドに並べる。
-          すべて col-span-1 + 写真は本来の 4:3 のまま表示するので、
-          以前のように富士山だけ縦長(row-span-2)に強クロップされて
-          突き出ることがなくなり、高さの揃った整然としたモザイクになる。
+          以前は Contact + 写真を半幅で混在させ、可変高の Contact に
+          引っ張られて隣の写真が h-full で不揃いにクロップされ「ずれ」が
+          目立っていた。モバイルは次の縦積みに整理する:
+          - Contact … 全幅
+          - 長崎ハッカソン … 全幅で大きく
+          - タージ・マハル / アユタヤ … 半幅2列で並べる
+          写真同士は同じ 4:3 で高さが揃い、可変高の Contact と同じ行に
+          入らないので不揃いクロップ(ずれ)は起きない。
           デスクトップ(md:)では Contact + 写真3枚が 6 列に並ぶ従来構成のまま。
         */}
-        <BentoTileMotion className="col-span-1 md:col-span-2">
+        <BentoTileMotion className="col-span-2 md:col-span-2">
           <ContactTile className="h-full" />
         </BentoTileMotion>
-        {fuji ? (
-          <BentoTileMotion className="col-span-1 md:col-span-2 md:row-span-1">
-            <PhotoTile photo={fuji} className="h-full" />
+        {hackathon ? (
+          <BentoTileMotion className="col-span-2 md:col-span-2">
+            <PhotoTile photo={hackathon} className="h-full" />
           </BentoTileMotion>
         ) : null}
         {taj ? (
