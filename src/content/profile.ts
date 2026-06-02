@@ -23,6 +23,16 @@ export const profile: Profile = {
       icon: "github",
     },
     {
+      label: "Qiita",
+      href: "https://qiita.com/ut42tech",
+      icon: "qiita",
+    },
+    {
+      label: "Zenn",
+      href: "https://zenn.dev/ut42tech",
+      icon: "zenn",
+    },
+    {
       label: "note",
       href: "https://note.com/ut42tech",
       icon: "note",
