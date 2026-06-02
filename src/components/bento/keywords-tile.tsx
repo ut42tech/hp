@@ -14,7 +14,7 @@ export function KeywordsTile({ className }: { className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   // SSR / 初回描画用に既定サイズでレイアウトしておく（テキストがクロール可能）
   const [nodes, setNodes] = useState<KeywordNode[]>(() =>
-    computeKeywordLayout(keywords, { width: 600, height: 380 }),
+    computeKeywordLayout(keywords, { width: 600, height: 460 }),
   );
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export function KeywordsTile({ className }: { className?: string }) {
       )}
     >
       <h2 className="text-lg font-bold">Keywords</h2>
-      <div ref={ref} className="relative min-h-[360px] flex-1">
+      <div ref={ref} className="relative min-h-[460px] flex-1">
         {nodes.map((n, i) => (
           <span
             key={n.label}

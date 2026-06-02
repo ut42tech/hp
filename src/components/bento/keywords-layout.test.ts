@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { keywords } from "@/content/keywords";
 import type { Keyword } from "@/content/types";
 
 import { computeKeywordLayout } from "./keywords-layout";
@@ -52,6 +53,53 @@ describe("computeKeywordLayout", () => {
     for (const n of nodes) {
       expect(Number.isFinite(n.x)).toBe(true);
       expect(Number.isFinite(n.y)).toBe(true);
+    }
+  });
+
+  it("狭いコンテナでも全ピルが枠内に収まる（見切れ防止）", () => {
+    const W = 300;
+    const H = 400;
+    const nodes = computeKeywordLayout(sample, { width: W, height: H });
+    for (const n of nodes) {
+      expect(n.x - n.w / 2).toBeGreaterThanOrEqual(-0.5);
+      expect(n.x + n.w / 2).toBeLessThanOrEqual(W + 0.5);
+      expect(n.y - n.h / 2).toBeGreaterThanOrEqual(-0.5);
+      expect(n.y + n.h / 2).toBeLessThanOrEqual(H + 0.5);
+    }
+  });
+
+  it("実データ全件がモバイル幅でも重ならず枠内に収まる", () => {
+    const W = 300;
+    const H = 460;
+    const nodes = computeKeywordLayout(keywords, { width: W, height: H });
+    expect(nodes.length).toBe(keywords.length);
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        expect(rectsOverlap(nodes[i], nodes[j])).toBe(false);
+      }
+    }
+    for (const n of nodes) {
+      expect(n.x - n.w / 2).toBeGreaterThanOrEqual(-0.5);
+      expect(n.x + n.w / 2).toBeLessThanOrEqual(W + 0.5);
+      expect(n.y - n.h / 2).toBeGreaterThanOrEqual(-0.5);
+      expect(n.y + n.h / 2).toBeLessThanOrEqual(H + 0.5);
+    }
+  });
+
+  it("デスクトップ幅(等倍)でも重ならず枠内に収まる", () => {
+    const W = 680;
+    const H = 680;
+    const nodes = computeKeywordLayout(keywords, { width: W, height: H });
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        expect(rectsOverlap(nodes[i], nodes[j])).toBe(false);
+      }
+    }
+    for (const n of nodes) {
+      expect(n.x - n.w / 2).toBeGreaterThanOrEqual(-0.5);
+      expect(n.x + n.w / 2).toBeLessThanOrEqual(W + 0.5);
+      expect(n.y - n.h / 2).toBeGreaterThanOrEqual(-0.5);
+      expect(n.y + n.h / 2).toBeLessThanOrEqual(H + 0.5);
     }
   });
 });
