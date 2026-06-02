@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
 
-import { AboutTile } from "@/components/bento/about-tile";
 import { BlogTeaserTile } from "@/components/bento/blog-teaser-tile";
 import { ContactTile } from "@/components/bento/contact-tile";
 import { HeroTile } from "@/components/bento/hero-tile";
+import { KeywordsTile } from "@/components/bento/keywords-tile";
 import { PhotoTile } from "@/components/bento/photo-tile";
-import { SelectedWorksTile } from "@/components/bento/selected-works-tile";
+import { PressTeaserTile } from "@/components/bento/press-teaser-tile";
 import { TechStackTile } from "@/components/bento/tech-stack-tile";
 import { Timeline } from "@/components/home/timeline";
 import {
   BentoMotionContainer,
   BentoTileMotion,
 } from "@/components/motion/bento-tile-motion";
+import { ProjectsSection } from "@/components/projects/projects-section";
 import { Card } from "@/components/ui/card";
+import { getLatestPress } from "@/content/press";
 import { profile } from "@/content/profile";
 import { getLatestBlogPosts } from "@/lib/blog";
 
@@ -20,12 +22,13 @@ export const revalidate = 3600;
 
 export const metadata: Metadata = {
   description:
-    "Takuya Uehara の自己紹介。Creative Engineer として、デザインとテクノロジーで最高のユーザ体験を届けることをモットーに、ソフトウェア開発・HCI 研究・コミュニティ活動に取り組んでいます。経歴・技術スタック・代表作・写真をまとめています。",
+    "Takuya Uehara（上原拓也）の自己紹介。学生エンジニア / フルスタックとして、デザインとテクノロジーで最高のユーザ体験を届けることをモットーに、生成AI・空間コンピューティングの研究やプロダクト開発に取り組んでいます。キーワード・代表作・掲載記事・経歴をまとめています。",
   alternates: { canonical: "/" },
 };
 
 export default async function Home() {
   const latestPosts = await getLatestBlogPosts(3);
+  const latestPress = getLatestPress(3);
 
   // photos: [0]=タージ・マハル, [1]=長崎ハッカソン, [2]=アユタヤ
   const hackathon = profile.photos.at(1);
@@ -40,7 +43,7 @@ export default async function Home() {
         </BentoTileMotion>
 
         <BentoTileMotion className="col-span-2 md:col-span-4 md:row-span-2">
-          <AboutTile className="h-full" />
+          <KeywordsTile className="h-full" />
         </BentoTileMotion>
 
         {/*
@@ -83,10 +86,14 @@ export default async function Home() {
         ) : null}
 
         <BentoTileMotion className="col-span-2 md:col-span-4">
-          <SelectedWorksTile className="h-full" />
+          <PressTeaserTile items={latestPress} className="h-full" />
         </BentoTileMotion>
         <BentoTileMotion className="col-span-2 md:col-span-2">
           <BlogTeaserTile posts={latestPosts} className="h-full" />
+        </BentoTileMotion>
+
+        <BentoTileMotion className="col-span-2 md:col-span-6">
+          <ProjectsSection className="h-full" />
         </BentoTileMotion>
 
         <BentoTileMotion className="col-span-2 md:col-span-6">
