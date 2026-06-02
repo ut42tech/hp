@@ -19,14 +19,13 @@ export function BlogCard({ post }: { post: BlogPost }) {
     <a
       href={post.url}
       target="_blank"
-      rel="noreferrer"
+      rel="noopener noreferrer"
       className="group block h-full rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <Card className="flex h-full flex-col overflow-hidden rounded-2xl border-border bg-card transition-colors group-hover:border-accent">
         <div className="relative aspect-[1.91/1] w-full overflow-hidden">
           {post.thumbnail ? (
-            // 外部の可変ホストのため next/image ではなく素の img を使う
-            // eslint-disable-next-line @next/next/no-img-element
+            // biome-ignore lint/performance/noImgElement: 外部の可変ホスト（Zenn Cloudinary / note）のため next/image を使わない
             <img
               src={post.thumbnail}
               alt=""
@@ -54,7 +53,9 @@ export function BlogCard({ post }: { post: BlogPost }) {
             {post.title}
           </h3>
           <p className="text-xs text-muted-foreground">
-            {formatDate(post.publishedAt)}
+            <time dateTime={post.publishedAt}>
+              {formatDate(post.publishedAt)}
+            </time>
             {typeof post.likes === "number" ? ` ・ ♥ ${post.likes}` : ""}
           </p>
           {post.excerpt ? (

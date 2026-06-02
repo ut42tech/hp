@@ -43,7 +43,7 @@ export default async function BlogsPage() {
               <a
                 href={blogProfileUrls.qiita}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="text-accent hover:underline"
               >
                 Qiita
@@ -51,7 +51,7 @@ export default async function BlogsPage() {
               <a
                 href={blogProfileUrls.zenn}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="text-accent hover:underline"
               >
                 Zenn
@@ -59,7 +59,7 @@ export default async function BlogsPage() {
               <a
                 href={blogProfileUrls.note}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="text-accent hover:underline"
               >
                 note
