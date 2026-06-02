@@ -10,7 +10,7 @@ import type { ComponentType } from "react";
 
 import { Card } from "@/components/ui/card";
 import type { Work, WorkCategory } from "@/content/types";
-import { getFeaturedWorks } from "@/content/works";
+import { getProjects } from "@/content/works";
 import { cn } from "@/lib/utils";
 
 interface SelectedWorksTileProps {
@@ -40,7 +40,7 @@ function primaryLink(work: Work): string | undefined {
 }
 
 export function SelectedWorksTile({ className }: SelectedWorksTileProps) {
-  const works = getFeaturedWorks();
+  const works = getProjects();
 
   return (
     <Card
