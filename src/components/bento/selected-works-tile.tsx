@@ -1,8 +1,8 @@
 import { ArrowUpRight } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
-import { getFeaturedWorks } from "@/content/works";
 import type { Work } from "@/content/types";
+import { getFeaturedWorks } from "@/content/works";
 import { cn } from "@/lib/utils";
 
 interface SelectedWorksTileProps {
