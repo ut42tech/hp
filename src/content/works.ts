@@ -258,5 +258,7 @@ const PROJECT_CATEGORIES: WorkCategory[] = ["project", "oss", "research"];
 
 /** Projects セクション用：作品（project/oss/research）を日付降順で全件返す。 */
 export function getProjects(): Work[] {
-  return sortByDateDesc(works.filter((w) => PROJECT_CATEGORIES.includes(w.category)));
+  return sortByDateDesc(
+    works.filter((w) => PROJECT_CATEGORIES.includes(w.category)),
+  );
 }
