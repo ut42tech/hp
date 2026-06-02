@@ -50,11 +50,10 @@ export function SelectedWorksTile({ className }: SelectedWorksTileProps) {
                 <a
                   href={href}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="group flex h-full flex-col gap-2 rounded-2xl border border-border bg-background p-4 transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   <span className="flex items-center justify-between gap-2 text-muted-foreground">
-                    <span className="sr-only">{work.title}</span>
                     <ArrowUpRight className="ml-auto size-4" />
                   </span>
                   {inner}
