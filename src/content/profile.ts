@@ -2,7 +2,7 @@ import type { Profile } from "./types";
 
 export const profile: Profile = {
   name: "Takuya Uehara",
-  roleTags: ["学生エンジニア", "フルスタック", "デザイン"],
+  roleTags: ["学生エンジニア", "フルスタック", "デザイン", "INFJ"],
   affiliation: "M1 Student · Nagasaki University",
   lab: { name: "Setozaki Lab.", url: "https://www.setozakilab.com" },
   titles: [
