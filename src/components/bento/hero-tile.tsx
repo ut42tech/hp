@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { profile } from "@/content/profile";
 import { cn } from "@/lib/utils";
 
+import { ScrambleText } from "./scramble-text";
 import { Typewriter } from "./typewriter";
 
 interface HeroTileProps {
@@ -21,7 +22,7 @@ export function HeroTile({ className }: HeroTileProps) {
     >
       {/* メイン：あいさつ・名前・ハッシュタグ・モットー */}
       <div className="flex flex-1 flex-col gap-6 md:justify-center">
-        <div className="flex items-center gap-5">
+        <div className="hero-reveal flex items-center gap-5">
           {profile.image ? (
             <div className="relative size-16 shrink-0 overflow-hidden rounded-full border border-border ring-2 ring-border md:size-20">
               <Image
@@ -35,57 +36,78 @@ export function HeroTile({ className }: HeroTileProps) {
             </div>
           ) : null}
           <div className="flex flex-col">
-            <span className="text-sm font-medium text-muted-foreground duration-500 animate-in fade-in slide-in-from-bottom-1">
+            <span className="text-sm font-medium text-muted-foreground">
               Hello 👋
             </span>
             <h1 className="text-balance text-2xl font-extrabold tracking-tight md:text-4xl">
-              <Typewriter
-                texts={[`I'm ${profile.name}`]}
-                startDelayMs={350}
-                cursorClassName="bg-foreground"
-              />
+              <ScrambleText text={profile.name} />
             </h1>
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm font-bold text-accent">
+        <div
+          className="hero-reveal flex flex-wrap gap-x-4 gap-y-1 text-sm font-bold text-accent"
+          style={{ animationDelay: "100ms" }}
+        >
           {profile.roleTags.map((tag) => (
             <span key={tag}>#{tag}</span>
           ))}
         </div>
 
         {/* モットー：日本語⇄英語をタイピングでループ。
-            最長フレーズ（2行）ぶんの高さを確保し、ループ中に下の罫線が動かないようにする。 */}
-        <p className="flex min-h-[3.6em] items-center border-l-[3px] border-accent pl-5 text-xl font-bold leading-relaxed text-foreground md:text-2xl">
-          <Typewriter
-            texts={[profile.motto, profile.mottoEn]}
-            loop
-            holdMs={2000}
-            cursorClassName="bg-accent"
-          />
-        </p>
+            不可視サイザー（日英）をグリッドで重ね、常に高い方の高さに固定する。
+            これで Safari でも改行のたびにカード高さが変わらない。 */}
+        <div
+          className="hero-reveal grid grid-cols-1 border-l-[3px] border-accent pl-5 text-xl font-bold leading-relaxed text-foreground md:text-2xl [&>*]:col-start-1 [&>*]:row-start-1"
+          style={{ animationDelay: "200ms" }}
+        >
+          <span aria-hidden className="invisible select-none">
+            {profile.motto}
+          </span>
+          <span aria-hidden className="invisible select-none">
+            {profile.mottoEn}
+          </span>
+          <span className="self-center">
+            <Typewriter
+              texts={[profile.motto, profile.mottoEn]}
+              loop
+              holdMs={2000}
+              cursorClassName="bg-accent"
+            />
+          </span>
+        </div>
       </div>
 
       {/* サイドバー：所属・肩書き */}
-      <div className="flex flex-col gap-3 border-t border-border pt-6 md:w-72 md:shrink-0 md:border-t-0 md:border-l md:pt-1 md:pl-10">
-        <div className="space-y-0.5">
+      <div
+        className="hero-reveal flex flex-col gap-3 border-t border-border pt-6 md:w-72 md:shrink-0 md:border-t-0 md:border-l md:pt-1 md:pl-10"
+        style={{ animationDelay: "150ms" }}
+      >
+        <div>
           <p className="text-sm font-semibold text-foreground">
             {profile.affiliation.role}
           </p>
           <p className="text-sm text-muted-foreground">
             at {profile.affiliation.school}
           </p>
-          <a
-            href={profile.lab.url}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-accent hover:underline"
-          >
-            {profile.lab.name}
-            <LinkIcon className="size-3" />
-          </a>
         </div>
         <ul className="flex flex-col gap-1.5 text-xs leading-snug text-muted-foreground">
+          {/* 研究室は肩書き一覧の先頭にリンクとして置く（所属の折り返しを防ぐ） */}
+          <li className="flex items-start gap-2">
+            <span
+              aria-hidden
+              className="mt-[5px] size-1 shrink-0 rounded-full bg-accent/70"
+            />
+            <a
+              href={profile.lab.url}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 font-bold text-accent hover:underline"
+            >
+              {profile.lab.name}
+              <LinkIcon className="size-3" />
+            </a>
+          </li>
           {profile.titles.map((title) => (
             <li key={title} className="flex items-start gap-2">
               <span

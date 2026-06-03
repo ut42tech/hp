@@ -112,3 +112,23 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Hero テキストの登場：フェードイン＋わずかな上昇。
+   JS 無しでも CSS アニメーションは走り切るので最終的に必ず表示される。
+   prefers-reduced-motion 時はアニメーションを無効化（要素は通常表示）。 */
+@keyframes hero-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-reveal {
+    animation: hero-reveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
