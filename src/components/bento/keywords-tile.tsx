@@ -95,19 +95,21 @@ export function KeywordsTile({ className }: { className?: string }) {
       engine.gravity.y = 0;
 
       // 衝突ボックスはピルより少し大きく作り、ピル同士に余白を持たせる。
-      const SPACE = 10;
+      const SPACE = 18;
       const bodies = nodes.map((n) =>
         Bodies.rectangle(n.x, n.y, n.w + SPACE, n.h + SPACE, {
           chamfer: { radius: (Math.min(n.w, n.h) + SPACE) / 2 },
-          frictionAir: 0.06,
+          frictionAir: 0.08,
           friction: 0,
-          restitution: 0.6,
+          restitution: 0.5,
+          // 回転させない＝ピルは常に水平で読みやすく、配置も整って見える。
+          inertia: Number.POSITIVE_INFINITY,
         }),
       );
       if (!reduceMotion) {
         bodies.forEach((b, i) => {
           const a = i * 2.399963; // 黄金角で初速の向きを散らす
-          Body.setVelocity(b, { x: Math.cos(a) * 0.7, y: Math.sin(a) * 0.7 });
+          Body.setVelocity(b, { x: Math.cos(a) * 0.5, y: Math.sin(a) * 0.5 });
         });
       }
 
@@ -140,10 +142,15 @@ export function KeywordsTile({ className }: { className?: string }) {
         for (let i = 0; i < bodies.length; i++) {
           const b = bodies[i];
           if (!reduceMotion && b !== grabbed) {
-            // 微風だけ与えて“ふわふわ”させる（中心引力は入れない＝中央で団子にならない）。
-            const bx = (Math.random() - 0.5) * 0.00006 * b.mass;
-            const by = (Math.random() - 0.5) * 0.00006 * b.mass;
-            Body.applyForce(b, b.position, { x: bx, y: by });
+            // 微風（ふわふわ）＋中心へのごく弱い引力で、散らばらず中央にまとまった
+            // バランスの良い雲にする。間隔は SPACE の衝突ボックスが確保する。
+            const breeze = 0.00004 * b.mass;
+            const bx = (Math.random() - 0.5) * breeze;
+            const by = (Math.random() - 0.5) * breeze;
+            const pull = 0.0000006 * b.mass;
+            const gx = (cx - b.position.x) * pull;
+            const gy = (cy - b.position.y) * pull;
+            Body.applyForce(b, b.position, { x: bx + gx, y: by + gy });
           }
           const elp = pillRefs.current[i];
           if (elp) {
@@ -178,7 +185,7 @@ export function KeywordsTile({ className }: { className?: string }) {
       <h2 className="text-lg font-bold">Keywords</h2>
       <div
         ref={containerRef}
-        className="relative min-h-[460px] flex-1 overflow-hidden"
+        className="relative min-h-[500px] flex-1 overflow-hidden"
       >
         {nodes === null ? (
           // SSR / マウント前のフォールバック（座標計算なし＝ハイドレーション安全）。

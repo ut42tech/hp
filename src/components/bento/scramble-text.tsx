@@ -27,8 +27,8 @@ interface ScrambleTextProps {
 
 /**
  * Motion+ の ScrambleText を無料の motion で再現したもの。
- * 全文字を同時にランダムな記号へ化けさせ続け、最後に一斉に確定させる
- * （左→右の順次確定ではなく同時に終了）。毎フレーム差し替えて高速に明滅させる。
+ * 開始直後は全文字を記号へ化けさせ、先頭から順に1文字ずつ確定して
+ * 「頭から流れてくる」ように見せる。未確定の文字は毎フレーム差し替えて明滅させる。
  *
  * 表示は絶対配置のオーバーレイにし、不可視サイザーで幅・高さを確定テキストに固定する。
  * これによりスクランブル中も見出しがガタつかず、折り返しのちらつきも起きない。
@@ -36,7 +36,7 @@ interface ScrambleTextProps {
 export function ScrambleText({
   text,
   className,
-  durationMs = 850,
+  durationMs = 1000,
 }: ScrambleTextProps) {
   const [display, setDisplay] = useState(text);
 
@@ -46,13 +46,22 @@ export function ScrambleText({
       return;
     }
 
-    // 全文字を同時にスクランブルし続け、最後に一斉に確定させる。
+    // 先頭から順に確定させ「頭から流れてくる」ように見せる。
+    // 開始直後だけ全文字を化けさせる助走を 2 文字ぶん入れる。
+    const WARMUP = 2;
     const controls = animate(0, 1, {
       duration: durationMs / 1000,
       ease: "linear",
-      onUpdate: () => {
-        let out = "";
-        for (let i = 0; i < text.length; i += 1) {
+      onUpdate: (t) => {
+        const revealed = Math.max(
+          0,
+          Math.min(
+            text.length,
+            Math.floor(t * (text.length + WARMUP)) - WARMUP,
+          ),
+        );
+        let out = text.slice(0, revealed);
+        for (let i = revealed; i < text.length; i += 1) {
           // 空白は崩さず語の区切りを保つ。
           out += text[i] === " " ? " " : randomGlyph();
         }

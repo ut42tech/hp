@@ -29,6 +29,8 @@ const SIZE_RANK: Record<Keyword["size"], number> = {
 
 const PAD_X = 14;
 const PAD_Y = 7;
+// 初期シードの最小間隔。実際の見た目の余白は物理の SPACE が支配するため、
+// ここはモバイル幅でも全件が枠内に収まる範囲に抑える。
 const GAP = 12;
 /** フォント縮尺の基準幅。これ以上では等倍。 */
 const REF_WIDTH = 520;
@@ -147,23 +149,23 @@ export function computeKeywordLayout(
   const { width, height } = opts;
   const base = clamp(width / REF_WIDTH, MIN_SCALE, 1);
 
-  // 大きいスケールから順に試し、枠内に収まった最初のものを採用。
-  for (let i = 0; i <= 16; i++) {
-    const scale = base - i * 0.035;
-    if (scale < 0.36) break;
+  // 大きいスケールから順に、実寸の枠内に全件収まる最初（＝最大）のものを採用。
+  // 語数が多い・ラベルが長い場合でも枠外に溢れない（＝物理の壁の外に取り残されない）よう、
+  // 必要なら十分小さいスケールまで下げる。
+  for (let scale = base; scale >= 0.18; scale -= 0.03) {
     const result = tryLayout(keywords, width, height, scale);
     if (result) return result;
   }
 
   // 最後の手段：縦に十分な余裕を与えて必ず配置（通常の寸法では到達しない）。
-  const fallback = tryLayout(keywords, width, Math.max(height, 4000), 0.36);
+  const fallback = tryLayout(keywords, width, Math.max(height, 4000), 0.18);
   if (fallback) return fallback;
 
   // それでも無理なら中心に重ねて返す（実運用では発生しない）。
   const cx = width / 2;
   const cy = height / 2;
   return keywords.map((k) => {
-    const fontPx = Math.round(SIZE_FONT[k.size] * 0.36);
+    const fontPx = Math.round(SIZE_FONT[k.size] * 0.18);
     return {
       label: k.label,
       accent: Boolean(k.accent),
