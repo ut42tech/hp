@@ -5,7 +5,13 @@ export const profile: Profile = {
   roleTags: ["学生エンジニア", "フルスタック", "デザイン"],
   affiliation: "M1 Student · Nagasaki University",
   lab: { name: "Setozaki Lab.", url: "https://www.setozakilab.com" },
-  community: "長崎学生エンジニアコミュニティ ChoTech 代表",
+  titles: [
+    "長崎学生エンジニアコミュニティ ChoTech 代表",
+    "tec-nova Nagasaki 学生チーフメンター & デザイン・システム担当",
+    "角川ドワンゴ学園 N Code Labo プログラミング講師",
+    "長崎大学ジュニアドクター育成塾 メンター",
+    "Progate Path 学生アンバサダー",
+  ],
   motto: "デザインとテクノロジーで、最高のユーザ体験を届けたい。",
   bio: [
     "「デザインとテクノロジーで最高のユーザ体験を届けたい」がモットー。幼少期から好奇心旺盛な性格で、絵画や工作に没頭。小学生の頃にはPHPを独学しサーバーを自宅で運営。中学生の頃には自作PCやソフトウェア開発に興味を持ったり、3DCGアニメーションやモーショングラフィックスの映像制作など、つくることへの情熱は早くから芽生えていました。",

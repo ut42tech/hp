@@ -60,9 +60,11 @@ export function HeroTile({ className }: HeroTileProps) {
               @ {profile.lab.name}
               <LinkIcon className="size-3" />
             </a>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {profile.community}
-            </p>
+            <div className="mt-1.5 flex flex-col gap-0.5 text-xs leading-snug text-muted-foreground">
+              {profile.titles.map((title) => (
+                <p key={title}>{title}</p>
+              ))}
+            </div>
           </div>
         </div>
       </div>
