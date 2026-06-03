@@ -75,7 +75,7 @@ export default function Image() {
             fontWeight: 500,
           }}
         >
-          {profile.role}
+          {profile.roleTags.join(" / ")}
         </div>
       </div>
 

@@ -2,8 +2,18 @@ import type { Profile } from "./types";
 
 export const profile: Profile = {
   name: "Takuya Uehara",
-  role: "Creative Engineer",
-  affiliation: "長崎大学 大学院 総合生産科学研究科 修士課程 / Setozaki Lab.",
+  roleTags: ["学生エンジニア", "フルスタック", "デザイン", "INFJ"],
+  affiliation: { role: "Master's Student", school: "Nagasaki University" },
+  lab: { name: "Setozaki Lab", url: "https://www.setozakilab.com" },
+  titles: [
+    "長崎学生エンジニアコミュニティ ChoTech 代表",
+    "tec-nova Nagasaki 学生チーフメンター & デザイン・システム担当",
+    "角川ドワンゴ学園 N Code Labo プログラミング講師",
+    "長崎大学ジュニアドクター育成塾 メンター",
+    "Progate Path 学生アンバサダー",
+  ],
+  motto: "デザインとテクノロジーで、最高のユーザ体験を届けたい。",
+  mottoEn: "Delivering the best experiences with design & technology.",
   bio: [
     "「デザインとテクノロジーで最高のユーザ体験を届けたい」がモットー。幼少期から好奇心旺盛な性格で、絵画や工作に没頭。小学生の頃にはPHPを独学しサーバーを自宅で運営。中学生の頃には自作PCやソフトウェア開発に興味を持ったり、3DCGアニメーションやモーショングラフィックスの映像制作など、つくることへの情熱は早くから芽生えていました。",
     "高校では弓道・茶道・写真を通じて日本文化の様式美に触れ、その感覚はいまもデザインの根底にあります。",
@@ -303,8 +313,8 @@ export const profile: Profile = {
     },
     {
       src: "/photos/home/2.jpg",
-      alt: "富士山山頂からのご来光",
-      caption: "富士山山頂から眺めたご来光",
+      alt: "「長崎ハッカソン」会場に掲げられた横断幕",
+      caption: "学生団体として「長崎ハッカソン」の立ち上げに携わりました。",
     },
     {
       src: "/photos/home/3.jpg",

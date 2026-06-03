@@ -1,8 +1,12 @@
+import { Link as LinkIcon } from "lucide-react";
 import Image from "next/image";
 
 import { Card } from "@/components/ui/card";
 import { profile } from "@/content/profile";
 import { cn } from "@/lib/utils";
+
+import { ScrambleText } from "./scramble-text";
+import { Typewriter } from "./typewriter";
 
 interface HeroTileProps {
   className?: string;
@@ -12,31 +16,109 @@ export function HeroTile({ className }: HeroTileProps) {
   return (
     <Card
       className={cn(
-        "relative flex flex-col items-center gap-8 overflow-hidden rounded-3xl border-border bg-card p-8 md:flex-row md:items-center md:justify-between md:gap-12 md:p-12",
+        "flex flex-col gap-8 rounded-3xl border-border bg-card p-8 md:flex-row md:items-stretch md:gap-10 md:p-12",
         className,
       )}
     >
-      <div className="flex flex-col gap-1 text-center md:text-left">
-        <h1 className="mb-4 text-5xl font-extrabold tracking-tight md:text-7xl">
-          {profile.name}
-        </h1>
-        <p className="max-w-xl text-base text-muted-foreground md:text-lg">
-          {profile.role}
-        </p>
-        <p className="text-sm text-muted-foreground">{profile.affiliation}</p>
-      </div>
-      {profile.image ? (
-        <div className="relative size-32 shrink-0 overflow-hidden rounded-full border border-border md:size-52">
-          <Image
-            src={profile.image}
-            alt={profile.name}
-            fill
-            sizes="(min-width: 768px) 13rem, 8rem"
-            className="object-cover"
-            priority
-          />
+      {/* メイン：あいさつ・名前・ハッシュタグ・モットー */}
+      <div className="flex flex-1 flex-col gap-6 md:justify-center">
+        <div className="hero-reveal flex items-center gap-5">
+          {profile.image ? (
+            <div className="relative size-16 shrink-0 overflow-hidden rounded-full border border-border ring-2 ring-border md:size-20">
+              <Image
+                src={profile.image}
+                alt={profile.name}
+                fill
+                sizes="80px"
+                className="object-cover"
+                priority
+              />
+            </div>
+          ) : null}
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-muted-foreground">
+              Hello 👋
+            </span>
+            <h1 className="text-balance text-2xl font-extrabold tracking-tight md:text-4xl">
+              <ScrambleText text={profile.name} />
+            </h1>
+          </div>
         </div>
-      ) : null}
+
+        <div
+          className="hero-reveal flex flex-wrap gap-x-4 gap-y-1 text-sm font-bold text-accent"
+          style={{ animationDelay: "100ms" }}
+        >
+          {profile.roleTags.map((tag) => (
+            <span key={tag}>#{tag}</span>
+          ))}
+        </div>
+
+        {/* モットー：日本語⇄英語をタイピングでループ。
+            不可視サイザー（日英）をグリッドで重ね、常に高い方の高さに固定する。
+            これで Safari でも改行のたびにカード高さが変わらない。 */}
+        <div
+          className="hero-reveal grid grid-cols-1 border-l-[3px] border-accent pl-5 text-xl font-bold leading-relaxed text-foreground md:text-2xl [&>*]:col-start-1 [&>*]:row-start-1"
+          style={{ animationDelay: "200ms" }}
+        >
+          <span aria-hidden className="invisible select-none">
+            {profile.motto}
+          </span>
+          <span aria-hidden className="invisible select-none">
+            {profile.mottoEn}
+          </span>
+          <span className="self-center">
+            <Typewriter
+              texts={[profile.motto, profile.mottoEn]}
+              loop
+              holdMs={2000}
+              cursorClassName="bg-accent"
+            />
+          </span>
+        </div>
+      </div>
+
+      {/* サイドバー：所属・肩書き */}
+      <div
+        className="hero-reveal flex flex-col gap-3 border-t border-border pt-6 md:w-72 md:shrink-0 md:border-t-0 md:border-l md:pt-1 md:pl-10"
+        style={{ animationDelay: "150ms" }}
+      >
+        <div>
+          <p className="text-sm font-semibold text-foreground">
+            {profile.affiliation.role}
+          </p>
+          <p className="text-sm text-muted-foreground">
+            at {profile.affiliation.school}
+          </p>
+        </div>
+        <ul className="flex flex-col gap-1.5 text-xs leading-snug text-muted-foreground">
+          {/* 研究室は肩書き一覧の先頭にリンクとして置く（所属の折り返しを防ぐ） */}
+          <li className="flex items-start gap-2">
+            <span
+              aria-hidden
+              className="mt-[5px] size-1 shrink-0 rounded-full bg-accent/70"
+            />
+            <a
+              href={profile.lab.url}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 font-bold text-accent hover:underline"
+            >
+              {profile.lab.name}
+              <LinkIcon className="size-3" />
+            </a>
+          </li>
+          {profile.titles.map((title) => (
+            <li key={title} className="flex items-start gap-2">
+              <span
+                aria-hidden
+                className="mt-[5px] size-1 shrink-0 rounded-full bg-accent/70"
+              />
+              <span>{title}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </Card>
   );
 }

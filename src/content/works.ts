@@ -1,4 +1,5 @@
-import type { Work } from "./types";
+import { sortByDateDesc } from "@/lib/utils";
+import type { Work, WorkCategory } from "./types";
 
 export const works: Work[] = [
   // ─── project ─────────────────────────────────────────────
@@ -26,7 +27,6 @@ export const works: Work[] = [
         kind: "github",
       },
     ],
-    featured: true,
   },
   {
     slug: "muse-port",
@@ -134,7 +134,6 @@ export const works: Work[] = [
     date: "2026-03-01",
     tags: ["Metaverse", "LLM", "Three.js", "WebXR", "TypeScript"],
     links: [],
-    featured: true,
   },
   {
     slug: "multilingual-ai",
@@ -173,7 +172,6 @@ export const works: Work[] = [
     date: "2026-03-23",
     tags: ["Award", "Academic"],
     links: [],
-    featured: true,
   },
   {
     slug: "chotech",
@@ -253,6 +251,11 @@ export const works: Work[] = [
   },
 ];
 
-export function getFeaturedWorks(): Work[] {
-  return works.filter((work) => work.featured === true);
+const PROJECT_CATEGORIES: WorkCategory[] = ["project", "oss", "research"];
+
+/** Projects セクション用：作品（project/oss/research）を日付降順で全件返す。 */
+export function getProjects(): Work[] {
+  return sortByDateDesc(
+    works.filter((w) => PROJECT_CATEGORIES.includes(w.category)),
+  );
 }
