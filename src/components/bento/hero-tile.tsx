@@ -41,10 +41,12 @@ export function HeroTile({ className }: HeroTileProps) {
           </div>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <span className="inline-flex w-fit items-center rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-bold text-accent">
-            {profile.role}
-          </span>
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm font-bold text-accent">
+            {profile.roleTags.map((tag) => (
+              <span key={tag}>#{tag}</span>
+            ))}
+          </div>
           <div>
             <p className="text-sm font-semibold text-foreground">
               {profile.affiliation}
@@ -58,6 +60,9 @@ export function HeroTile({ className }: HeroTileProps) {
               @ {profile.lab.name}
               <LinkIcon className="size-3" />
             </a>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {profile.community}
+            </p>
           </div>
         </div>
       </div>

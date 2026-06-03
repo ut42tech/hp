@@ -94,9 +94,11 @@ export function KeywordsTile({ className }: { className?: string }) {
       engine.gravity.x = 0;
       engine.gravity.y = 0;
 
+      // 衝突ボックスはピルより少し大きく作り、ピル同士に余白を持たせる。
+      const SPACE = 10;
       const bodies = nodes.map((n) =>
-        Bodies.rectangle(n.x, n.y, n.w, n.h, {
-          chamfer: { radius: Math.min(n.w, n.h) / 2 },
+        Bodies.rectangle(n.x, n.y, n.w + SPACE, n.h + SPACE, {
+          chamfer: { radius: (Math.min(n.w, n.h) + SPACE) / 2 },
           frictionAir: 0.06,
           friction: 0,
           restitution: 0.6,
@@ -184,7 +186,10 @@ export function KeywordsTile({ className }: { className?: string }) {
             {keywords.map((k) => (
               <li key={k.label}>
                 <span
-                  className={cn(pillClass(Boolean(k.accent)), "text-sm")}
+                  className={cn(
+                    pillClass(Boolean(k.accent)),
+                    "text-sm font-bold",
+                  )}
                   style={{ padding: PAD }}
                 >
                   {k.label}
@@ -209,7 +214,7 @@ export function KeywordsTile({ className }: { className?: string }) {
                 style={{
                   fontSize: n.fontPx,
                   padding: PAD,
-                  fontWeight: n.size === "xl" || n.size === "lg" ? 700 : 500,
+                  fontWeight: 700,
                 }}
               >
                 {n.label}

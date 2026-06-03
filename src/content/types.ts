@@ -114,12 +114,14 @@ export interface PressItem {
 
 export interface Profile {
   name: string;
-  /** 肩書き（例: "学生エンジニア / フルスタック"） */
-  role: string;
+  /** 肩書きタグ（Hero でハッシュタグ表示。例: ["学生エンジニア", "フルスタック", "デザイン"]） */
+  roleTags: string[];
   /** 所属（例: "M1 Student · Nagasaki University"） */
   affiliation: string;
   /** 研究室。Hero でリンク表示する */
   lab: { name: string; url: string };
+  /** コミュニティ等の肩書き（例: "長崎学生エンジニアコミュニティ ChoTech 代表"） */
+  community: string;
   /** Hero で語るモットー */
   motto: string;
   /** 旧 About 本文。ホームでは未使用（データは保持可） */

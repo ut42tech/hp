@@ -29,7 +29,7 @@ const SIZE_RANK: Record<Keyword["size"], number> = {
 
 const PAD_X = 14;
 const PAD_Y = 7;
-const GAP = 7;
+const GAP = 12;
 /** フォント縮尺の基準幅。これ以上では等倍。 */
 const REF_WIDTH = 520;
 const MIN_SCALE = 0.62;
