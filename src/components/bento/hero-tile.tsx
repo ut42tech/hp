@@ -21,9 +21,9 @@ export function HeroTile({ className }: HeroTileProps) {
       )}
     >
       {/* メイン：あいさつ・名前・ハッシュタグ・モットー。
-          min-w-0：マーキー（w-max）が左カラムの min-content を押し広げ、
-          サイドバーを画面外へ押し出すのを防ぐ。 */}
-      <div className="flex min-w-0 flex-1 flex-col gap-6 md:justify-center">
+          min-w-0 + overflow-hidden でマーキー（w-max）が列を押し広げてサイドバーを
+          見切れさせるのを防ぐ。 */}
+      <div className="flex min-w-0 flex-1 flex-col gap-6 overflow-hidden md:justify-center">
         <div className="flex items-center gap-5">
           {profile.image ? (
             <div className="relative size-16 shrink-0 overflow-hidden rounded-full border border-border ring-2 ring-border md:size-20">
@@ -37,12 +37,21 @@ export function HeroTile({ className }: HeroTileProps) {
               />
             </div>
           ) : null}
-          <div className="flex flex-col">
+          {/* 名前 "Takuya Uehara" が Safari で 1↔2 行に揺れる問題への対策（2つで1組）:
+              1. テキスト列を min-w-0 flex-1 で残り幅いっぱいに広げる
+              2. 名前を block で組む（BlockReveal block）
+              これが無いと列も名前も固有幅(~300px)ぴったりに縮こまり、文字列が折り返し
+              閾値の真上に乗る。WebKit の inline-block サブピクセル丸めで 1↔2 行が不定に
+              揺れる。block＋余白なら折り返し判定がコンテナ幅で決まり、desktop は確定的に
+              1行、狭いモバイルは自然に2行になる。text-balance も付けない（同様に揺らす）。 */}
+          <div className="flex min-w-0 flex-1 flex-col">
             <span className="text-sm font-medium text-muted-foreground">
               Hello 👋
             </span>
-            <h1 className="text-balance text-2xl font-extrabold tracking-tight md:text-4xl">
-              <BlockReveal delay={0.12}>{profile.name}</BlockReveal>
+            <h1 className="text-2xl font-extrabold tracking-tight md:text-4xl">
+              <BlockReveal delay={0.12} block>
+                {profile.name}
+              </BlockReveal>
             </h1>
           </div>
         </div>
@@ -93,7 +102,7 @@ export function HeroTile({ className }: HeroTileProps) {
               className="inline-flex items-center gap-1 font-bold text-accent hover:underline"
             >
               {profile.lab.name}
-              <LinkIcon className="size-3" />
+              <LinkIcon size={12} className="size-3 shrink-0" />
             </a>
           </li>
           {profile.titles.map((title) => (

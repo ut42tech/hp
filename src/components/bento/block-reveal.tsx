@@ -22,6 +22,14 @@ interface BlockRevealProps {
   className?: string;
   /** マスクバーの色。既定はテキスト色（currentColor）に追従する。 */
   barClassName?: string;
+  /**
+   * block: コンテンツを inline-block でなく block（＝コンテナ幅いっぱい）で組む。
+   * 既定の inline-block はテキストの固有幅ぴったりに縮こまるため、文字列の幅が
+   * 整数ピクセル境界に乗ると WebKit のサブピクセル丸めで 1↔2 行が不定に揺れる
+   * （"Takuya Uehara" の折り返し問題）。block ならコンテナ幅で折り返し判定が
+   * 決まり、余白がある限り確定的に1行になる。長い見出し用。
+   */
+  block?: boolean;
 }
 
 /**
@@ -41,20 +49,22 @@ export function BlockReveal({
   delay = 0,
   className,
   barClassName,
+  block = false,
 }: BlockRevealProps) {
   const reduce = useReducedMotion();
+  const box = block ? "block" : "inline-block";
 
   if (reduce) {
-    return <span className={cn("inline-block", className)}>{children}</span>;
+    return <span className={cn(box, className)}>{children}</span>;
   }
 
   const transition = { duration: DURATION, delay, times: TIMES, ease: EASE };
 
   return (
-    <span className={cn("relative inline-block", className)}>
+    <span className={cn("relative", box, className)}>
       {/* 中身：覆われている間は隠し、マスクが抜けるのと同期して左→右に現れる。 */}
       <motion.span
-        className="inline-block"
+        className={box}
         initial={{ clipPath: CLIP_FROM_RIGHT }}
         animate={{
           clipPath: [

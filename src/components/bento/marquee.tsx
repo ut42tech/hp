@@ -30,7 +30,10 @@ export function Marquee({ items, durationSec = 18, className }: MarqueeProps) {
 
   return (
     <div
-      className={cn("relative overflow-hidden", className)}
+      // min-w-0 + overflow-hidden: w-max の中身が親フレックスを押し広げないように
+      // 封じ込める。isolate で stacking context を作り、translateX でコンポジット化
+      // した子も WebKit で確実にクリップさせる。
+      className={cn("relative isolate min-w-0 overflow-hidden", className)}
       style={{ maskImage: EDGE_FADE, WebkitMaskImage: EDGE_FADE }}
     >
       {/* スクリーンリーダー向けに正規テキストを一度だけ読ませる。 */}

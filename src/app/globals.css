@@ -22,6 +22,12 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  /* Timeline カテゴリ識別用の極小ドット専用色（地色には使わない） */
+  --color-cat-life: var(--cat-life);
+  --color-cat-education: var(--cat-education);
+  --color-cat-work: var(--cat-work);
+  --color-cat-event: var(--cat-event);
+  --color-cat-other: var(--cat-other);
   --font-sans: var(--font-sans);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -66,6 +72,13 @@
   /* Focus ring = green */
   --ring: oklch(0.52 0.17 152);
 
+  /* Timeline カテゴリ色（低彩度。緑は event に割り当てブランド色と一致） */
+  --cat-life: oklch(0.7 0.15 70); /* amber */
+  --cat-education: oklch(0.58 0.13 250); /* blue */
+  --cat-work: oklch(0.55 0.15 300); /* violet */
+  --cat-event: oklch(0.52 0.17 152); /* brand green */
+  --cat-other: oklch(0.55 0 0); /* gray */
+
   --radius: 0.75rem;
 }
 
@@ -99,6 +112,13 @@
   --input: oklch(0.28 0.008 155);
 
   --ring: oklch(0.65 0.19 150);
+
+  /* ダークでは少し明るめにしてコントラストを確保 */
+  --cat-life: oklch(0.78 0.14 75);
+  --cat-education: oklch(0.7 0.12 250);
+  --cat-work: oklch(0.68 0.14 300);
+  --cat-event: oklch(0.65 0.19 150);
+  --cat-other: oklch(0.7 0 0);
 }
 
 @layer base {
