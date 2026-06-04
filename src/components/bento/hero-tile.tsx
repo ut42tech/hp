@@ -5,8 +5,8 @@ import { Card } from "@/components/ui/card";
 import { profile } from "@/content/profile";
 import { cn } from "@/lib/utils";
 
-import { ScrambleText } from "./scramble-text";
-import { Typewriter } from "./typewriter";
+import { BlockReveal } from "./block-reveal";
+import { Marquee } from "./marquee";
 
 interface HeroTileProps {
   className?: string;
@@ -20,9 +20,11 @@ export function HeroTile({ className }: HeroTileProps) {
         className,
       )}
     >
-      {/* メイン：あいさつ・名前・ハッシュタグ・モットー */}
-      <div className="flex flex-1 flex-col gap-6 md:justify-center">
-        <div className="hero-reveal flex items-center gap-5">
+      {/* メイン：あいさつ・名前・ハッシュタグ・モットー。
+          min-w-0 + overflow-hidden でマーキー（w-max）が列を押し広げてサイドバーを
+          見切れさせるのを防ぐ。 */}
+      <div className="flex min-w-0 flex-1 flex-col gap-6 overflow-hidden md:justify-center">
+        <div className="flex items-center gap-5">
           {profile.image ? (
             <div className="relative size-16 shrink-0 overflow-hidden rounded-full border border-border ring-2 ring-border md:size-20">
               <Image
@@ -35,53 +37,48 @@ export function HeroTile({ className }: HeroTileProps) {
               />
             </div>
           ) : null}
-          <div className="flex flex-col">
+          {/* 名前 "Takuya Uehara" が Safari で 1↔2 行に揺れる問題への対策（2つで1組）:
+              1. テキスト列を min-w-0 flex-1 で残り幅いっぱいに広げる
+              2. 名前を block で組む（BlockReveal block）
+              これが無いと列も名前も固有幅(~300px)ぴったりに縮こまり、文字列が折り返し
+              閾値の真上に乗る。WebKit の inline-block サブピクセル丸めで 1↔2 行が不定に
+              揺れる。block＋余白なら折り返し判定がコンテナ幅で決まり、desktop は確定的に
+              1行、狭いモバイルは自然に2行になる。text-balance も付けない（同様に揺らす）。 */}
+          <div className="flex min-w-0 flex-1 flex-col">
             <span className="text-sm font-medium text-muted-foreground">
               Hello 👋
             </span>
-            <h1 className="text-balance text-2xl font-extrabold tracking-tight md:text-4xl">
-              <ScrambleText text={profile.name} />
+            <h1 className="text-2xl font-extrabold tracking-tight md:text-4xl">
+              <BlockReveal delay={0.12} block>
+                {profile.name}
+              </BlockReveal>
             </h1>
           </div>
         </div>
 
-        <div
-          className="hero-reveal flex flex-wrap gap-x-4 gap-y-1 text-sm font-bold text-accent"
-          style={{ animationDelay: "100ms" }}
-        >
-          {profile.roleTags.map((tag) => (
-            <span key={tag}>#{tag}</span>
+        {/* ハッシュタグは1つずつマスクで順番に登場（マスク色はテキスト色＝アクセント）。 */}
+        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm font-bold text-accent">
+          {profile.roleTags.map((tag, i) => (
+            <BlockReveal key={tag} delay={0.26 + i * 0.08}>
+              #{tag}
+            </BlockReveal>
           ))}
         </div>
 
-        {/* モットー：日本語⇄英語をタイピングでループ。
-            不可視サイザー（日英）をグリッドで重ね、常に高い方の高さに固定する。
-            これで Safari でも改行のたびにカード高さが変わらない。 */}
+        {/* モットー：日英を左方向へスライドし続けるマーキー。
+            枠線は使わず、端のフェード（mask）でクリーンに縁取る。 */}
         <div
-          className="hero-reveal grid grid-cols-1 border-l-[3px] border-accent pl-5 text-xl font-bold leading-relaxed text-foreground md:text-2xl [&>*]:col-start-1 [&>*]:row-start-1"
-          style={{ animationDelay: "200ms" }}
+          className="hero-reveal text-xl font-bold leading-relaxed text-foreground md:text-2xl"
+          style={{ animationDelay: "600ms" }}
         >
-          <span aria-hidden className="invisible select-none">
-            {profile.motto}
-          </span>
-          <span aria-hidden className="invisible select-none">
-            {profile.mottoEn}
-          </span>
-          <span className="self-center">
-            <Typewriter
-              texts={[profile.motto, profile.mottoEn]}
-              loop
-              holdMs={2000}
-              cursorClassName="bg-accent"
-            />
-          </span>
+          <Marquee items={[profile.motto, profile.mottoEn]} />
         </div>
       </div>
 
       {/* サイドバー：所属・肩書き */}
       <div
         className="hero-reveal flex flex-col gap-3 border-t border-border pt-6 md:w-72 md:shrink-0 md:border-t-0 md:border-l md:pt-1 md:pl-10"
-        style={{ animationDelay: "150ms" }}
+        style={{ animationDelay: "480ms" }}
       >
         <div>
           <p className="text-sm font-semibold text-foreground">
@@ -105,7 +102,7 @@ export function HeroTile({ className }: HeroTileProps) {
               className="inline-flex items-center gap-1 font-bold text-accent hover:underline"
             >
               {profile.lab.name}
-              <LinkIcon className="size-3" />
+              <LinkIcon size={12} className="size-3 shrink-0" />
             </a>
           </li>
           {profile.titles.map((title) => (

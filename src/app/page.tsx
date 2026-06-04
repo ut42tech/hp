@@ -35,6 +35,11 @@ export default async function Home() {
   const taj = profile.photos.at(0);
   const ayutthaya = profile.photos.at(2);
 
+  // Timeline 見出し下の git ログ風キャプション用。
+  const timelineCount = profile.timeline.length;
+  const timelineYears = profile.timeline.map((e) => Number(e.date.slice(0, 4)));
+  const timelineSpan = `${Math.min(...timelineYears)}–${Math.max(...timelineYears)}`;
+
   return (
     <section className="mx-auto max-w-6xl px-6 py-16">
       <BentoMotionContainer className="grid grid-flow-row-dense grid-cols-2 gap-4 md:grid-cols-6">
@@ -98,7 +103,14 @@ export default async function Home() {
 
         <BentoTileMotion className="col-span-2 md:col-span-6">
           <Card className="flex flex-col gap-6 rounded-3xl border-border bg-card p-6 md:p-8">
-            <h2 className="text-2xl font-extrabold tracking-tight">Timeline</h2>
+            <div className="flex flex-col gap-1">
+              <h2 className="text-2xl font-extrabold tracking-tight">
+                Timeline
+              </h2>
+              <p className="text-xs tabular-nums text-muted-foreground">
+                {timelineCount} commits · {timelineSpan}
+              </p>
+            </div>
             <Timeline entries={profile.timeline} />
           </Card>
         </BentoTileMotion>
