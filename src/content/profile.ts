@@ -103,7 +103,7 @@ export const profile: Profile = {
       category: "event",
       title: "Engineer Guild Hackathon 2026 参加",
       description:
-        "東京・メルカリ本社で開催された3日間のハッカソンに参加。音楽のすれ違い通信アプリ「Melo Link」を制作。",
+        "東京・メルカリ本社で開催された3日間のハッカソンに参加しました。音楽のすれ違い通信アプリ「Melo Link」を制作しました。",
       location: "東京（メルカリ本社）",
     },
     {
@@ -111,14 +111,15 @@ export const profile: Profile = {
       category: "education",
       title: "Unity Sprint 2026 企画・運営",
       description:
-        "Unity & Git講座として、研究室のメンバーやUnityを使ったゲーム制作に興味がある学生を対象とした勉強会を企画・運営した。",
+        "Unity & Git講座として、研究室のメンバーやUnityを使ったゲーム制作に興味がある学生を対象とした勉強会を企画・運営しました。",
       location: "長崎大学",
     },
     {
       date: "2026-04",
       category: "education",
       title: "長崎大学大学院 総合生産科学研究科に進学",
-      description: "瀬戸崎研究室に継続所属し、さらに高度な研究に取り組む予定。",
+      description:
+        "瀬戸崎研究室に継続所属し、さらに高度な研究に取り組む予定です。",
     },
     {
       date: "2026-03",
@@ -130,7 +131,7 @@ export const profile: Profile = {
       category: "event",
       title: "ガバイソン2026春 最優秀賞&特別賞 受賞",
       description:
-        "佐賀のハッカソンにて2人チーム「じげもんテック」として「コトコトバ」を開発し、最優秀賞と特別賞のダブル受賞を果たす。",
+        "佐賀のハッカソンにて2人チーム「じげもんテック」として「コトコトバ」を開発し、最優秀賞と特別賞のダブル受賞を果たしました。",
     },
     {
       date: "2026-03",
@@ -141,21 +142,22 @@ export const profile: Profile = {
       date: "2025-11",
       category: "event",
       title: "「長崎のWA!」インタビュー掲載",
-      description: "長崎市シティプロモーションのインタビュー記事に掲載。",
+      description:
+        "長崎市シティプロモーションのインタビュー記事に掲載されました。",
     },
     {
       date: "2025-10",
       category: "event",
       title: "長崎ハッカソン2025 イベント企画・ジャパネット賞受賞",
       description:
-        "学生団体で企業と協力しての長崎スタジアムシティでの初のハッカソン企画の試み。ジャパネット様とカラビナテクノロジー株式会社様とのご協力により、ハッカソン開催が実現した。",
+        "学生団体で企業と協力しての、長崎スタジアムシティでは初のハッカソン企画の試みでした。ジャパネット様とカラビナテクノロジー株式会社様のご協力により、ハッカソンの開催が実現しました。",
     },
     {
       date: "2025-08",
       category: "education",
       title: "高校生アプリ開発講座 メンター",
       description:
-        "長崎県内の高校生を対象としたアプリ開発講座のメンターを務める。Unityを用いたゲーム開発を指導。加えて、講義動画の制作も担当。",
+        "長崎県内の高校生を対象としたアプリ開発講座のメンターを務めました。Unityを用いたゲーム開発を指導し、加えて講義動画の制作も担当しました。",
       location: "長崎",
     },
     {
@@ -163,7 +165,7 @@ export const profile: Profile = {
       category: "event",
       title: "学生エンジニアコミュニティChoTechを設立",
       description:
-        "長崎の学生エンジニアコミュニティを立ち上げ、代表を務める。2026年度から長崎大学の公認団体に認定。主にNUTIC（長崎スタジアムシティ）を拠点に活動。",
+        "長崎の学生エンジニアコミュニティを立ち上げ、代表を務めています。2026年度から長崎大学の公認団体に認定されました。主にNUTIC（長崎スタジアムシティ）を拠点に活動しています。",
       location: "長崎",
     },
     {
@@ -171,42 +173,42 @@ export const profile: Profile = {
       category: "education",
       title: "瀬戸崎研究室に配属",
       description:
-        "学部2年次から関わっていたものの、正式に研究室に配属される。",
+        "学部2年次から関わっていたものの、正式に研究室に配属されました。",
     },
     {
       date: "2025-02",
       category: "education",
       title: "インド情報技術大学へ短期留学",
       description:
-        "IIIT-D（Indian Institutes of Information Technology, Delhi）へ短期留学。Richa Gupta先生の指導のもと、深度センサと触覚フィードバックを活用した視覚障がい者向け空間認識支援アプリ（LiDAR Vision）を開発。",
+        "IIIT-D（Indian Institutes of Information Technology, Delhi）へ短期留学しました。Richa Gupta先生の指導のもと、深度センサと触覚フィードバックを活用した視覚障がい者向け空間認識支援アプリ（LiDAR Vision）を開発しました。",
       location: "インド・ニューデリー",
     },
     {
       date: "2025-01",
       category: "event",
       title: "技育CAMP ハッカソン Vol.20 出場",
-      description: "「MapChat」を開発。",
+      description: "「MapChat」を開発しました。",
     },
     {
       date: "2024-08",
       category: "work",
       title: "ゼンリン R&D部門 インターン",
       description:
-        "道路標識検出用OSSのOCRモデルの性能比較を行い、3人チームのリーダーを務めた。",
+        "道路標識検出用OSSのOCRモデルの性能比較を行い、3人チームのリーダーを務めました。",
     },
     {
       date: "2024-07",
       category: "work",
       title: "長崎大学ジュニアドクター育成塾 メンター",
       description:
-        "中学生のアプリ開発支援に携わり始める。主にUnityを用いたゲーム開発を指導。",
+        "中学生のアプリ開発支援に携わり始めました。主にUnityを用いたゲーム開発を指導しています。",
     },
     {
       date: "2024-06",
       category: "work",
       title: "テクノバながさき 学生メンター",
       description:
-        "子ども向けクリエイティブ活動支援を行う大学生メンター。特にシステム&デザイン担当としてチェックインシステムを開発とポスター等の制作も担う。",
+        "子ども向けクリエイティブ活動支援を行う大学生メンターを務めました。特にシステム&デザイン担当として、チェックインシステムの開発やポスター等の制作も担いました。",
       location: "長崎",
     },
     {
@@ -214,7 +216,7 @@ export const profile: Profile = {
       category: "work",
       title: "N Code Labo プログラミング講師",
       description:
-        "角川ドワンゴ学園でオンライン家庭教師として Unity / Python / Swift 等を指導。",
+        "角川ドワンゴ学園でオンライン家庭教師として Unity / Python / Swift 等を指導しています。",
     },
     {
       date: "2024-03",
@@ -222,7 +224,7 @@ export const profile: Profile = {
       title:
         "日本教育工学会（JSET）2024年春季全国大会 学生セッション優秀発表賞",
       description:
-        "多言語コミュニケーション支援AIの研究で、学部2年次に論文を執筆。口頭発表を行い、最年少で優秀賞を受賞。",
+        "多言語コミュニケーション支援AIの研究で、学部2年次に論文を執筆しました。口頭発表を行い、最年少で優秀賞を受賞しました。",
       location: "熊本大学",
     },
     {
@@ -230,7 +232,7 @@ export const profile: Profile = {
       category: "education",
       title: "タイへ短期留学",
       description:
-        "タイ・バンコクの泰日工業大学（Thai-Nichi Institute of Technology）へ短期留学。AIを活用した多言語コミュニケーション支援システムの実証実験を行い、現地の学生や教員と交流。",
+        "タイ・バンコクの泰日工業大学（Thai-Nichi Institute of Technology）へ短期留学しました。AIを活用した多言語コミュニケーション支援システムの実証実験を行い、現地の学生や教員と交流しました。",
       location: "タイ・バンコク",
     },
     {
@@ -238,14 +240,14 @@ export const profile: Profile = {
       category: "work",
       title: "BrightJ Inc.（旧:ユニコネクト株式会社） 長期インターン",
       description:
-        "スカウトにより飲食店から転職。上流工程エンジニア & UI/UX Designer としてデザインと企画・保守運用を担当した。",
+        "スカウトにより飲食店から転職しました。上流工程エンジニア & UI/UX Designer として、デザインと企画・保守運用を担当しました。",
       location: "東京（リモート）",
     },
     {
       date: "2022-05",
       category: "work",
       title: "飲食店のアルバイトを始める",
-      description: "浜勝（とんかつ屋）でホールスタッフとして勤務",
+      description: "浜勝（とんかつ屋）でホールスタッフとして勤務しました。",
       location: "長崎",
     },
     {
@@ -258,35 +260,35 @@ export const profile: Profile = {
       category: "education",
       title: "高校卒業",
       description:
-        "生徒会執行部、弓道部・茶道部・写真部に所属。弓道初段、表千家入門のお免状を取得。",
+        "生徒会執行部、弓道部・茶道部・写真部に所属しました。弓道初段、表千家入門のお免状を取得しました。",
     },
     {
       date: "2019-04",
       category: "education",
       title: "高校入学",
       description:
-        "長崎県立長崎北陽台高校普通科に入学。大学進学のため、好きだった制作活動は我慢し、学業に向き合うことに。",
+        "長崎県立長崎北陽台高校普通科に入学しました。大学進学のため、好きだった制作活動は我慢し、学業に向き合うことにしました。",
     },
     {
       date: "2016-04",
       category: "life",
       title: "3DCGや映像制作に没頭",
       description:
-        "MinecraftのCGアニメーションやモーショングラフィックスを制作。YouTubeなどで公開したり、制作物は有名なYouTuberに使用されたりするなど、早くからクリエイティブな活動を行う。",
+        "MinecraftのCGアニメーションやモーショングラフィックスを制作しました。YouTubeなどで公開したり、制作物が有名なYouTuberに使用されたりするなど、早くからクリエイティブな活動を行っていました。",
     },
     {
       date: "2015-04",
       category: "life",
       title: "自作PCとソフトウェア開発に興味を持つ",
       description:
-        "MinecraftのMOD（改造プログラム）やサーバープラグインの開発に挑戦。家のPCを改造し始めるなど、ハードウェアへの関心も深まる。",
+        "MinecraftのMOD（改造プログラム）やサーバープラグインの開発に挑戦しました。家のPCを改造し始めるなど、ハードウェアへの関心も深まりました。",
     },
     {
       date: "2014-04",
       category: "life",
       title: "プログラミングとの出会い",
       description:
-        "小学4年生の頃、Minecraft PE サーバーを運営するために PHP を独学。自宅のポートを開放してサーバーを公開するなど、ネットワーク知識も自力で習得。",
+        "小学4年生の頃、Minecraft PE サーバーを運営するために PHP を独学しました。自宅のポートを開放してサーバーを公開するなど、ネットワーク知識も自力で習得しました。",
     },
     {
       date: "2012-04",
