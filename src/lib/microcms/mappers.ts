@@ -119,6 +119,7 @@ export function mapTimelineEntry(raw: RawTimelineEntry): TimelineEntry {
     title: raw.title,
     description: raw.description || undefined,
     location: raw.location || undefined,
+    thumbnail: raw.thumbnail?.url,
   };
 }
 

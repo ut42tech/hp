@@ -74,6 +74,8 @@ export interface TimelineEntry {
   description?: string;
   /** 所属先や場所(任意) */
   location?: string;
+  /** 丸アバター用サムネイル URL(任意。なければカテゴリアイコンでフォールバック) */
+  thumbnail?: string;
 }
 
 export interface PhotoEntry {
@@ -99,7 +101,7 @@ export interface Keyword {
 /** Press エントリの種別。バッジ表示に使う。 */
 export type PressType = "interview" | "feature" | "award" | "event" | "media";
 
-/** 自分が取り上げられた Web 記事（手動キュレーション）。 */
+/** メディアで取り上げられた Web 記事（microCMS で管理）。 */
 export interface PressItem {
   title: string;
   /** 媒体名（例: 長崎のWA!（長崎市）） */
@@ -131,6 +133,5 @@ export interface Profile {
   image?: string;
   social: SocialLink[];
   techStack: string[];
-  timeline: TimelineEntry[];
   photos: PhotoEntry[];
 }

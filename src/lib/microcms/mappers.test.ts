@@ -150,7 +150,16 @@ describe("mapTimelineEntry", () => {
       title: "大学院に進学",
       description: "瀬戸崎研究室に継続所属。",
       location: "長崎大学",
+      thumbnail: undefined,
     });
+  });
+
+  it("thumbnail の URL をマップする", () => {
+    const mapped = mapTimelineEntry({
+      ...rawTimeline,
+      thumbnail: { url: "https://images.microcms-assets.io/x/t.jpg" },
+    });
+    expect(mapped.thumbnail).toBe("https://images.microcms-assets.io/x/t.jpg");
   });
 
   it("未知の category は other、空文字 description/location は undefined", () => {

@@ -16,7 +16,7 @@ import { ProjectsSection } from "@/components/projects/projects-section";
 import { Card } from "@/components/ui/card";
 import { profile } from "@/content/profile";
 import { getLatestBlogPosts } from "@/lib/blog";
-import { getLatestPress } from "@/lib/microcms";
+import { getLatestPress, getTimeline } from "@/lib/microcms";
 
 export const revalidate = 3600;
 
@@ -27,18 +27,23 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const latestPosts = await getLatestBlogPosts(3);
-  const latestPress = await getLatestPress(3);
+  const [latestPosts, latestPress, timeline] = await Promise.all([
+    getLatestBlogPosts(3),
+    getLatestPress(3),
+    getTimeline(),
+  ]);
 
   // photos: [0]=タージ・マハル, [1]=長崎ハッカソン, [2]=アユタヤ
   const hackathon = profile.photos.at(1);
   const taj = profile.photos.at(0);
   const ayutthaya = profile.photos.at(2);
 
-  // Timeline 見出し下の git ログ風キャプション用。
-  const timelineCount = profile.timeline.length;
-  const timelineYears = profile.timeline.map((e) => Number(e.date.slice(0, 4)));
-  const timelineSpan = `${Math.min(...timelineYears)}–${Math.max(...timelineYears)}`;
+  // Timeline 見出し下の git ログ風キャプション用。空のときは非表示にする。
+  const timelineYears = timeline.map((e) => Number(e.date.slice(0, 4)));
+  const timelineSpan =
+    timelineYears.length > 0
+      ? `${Math.min(...timelineYears)}–${Math.max(...timelineYears)}`
+      : null;
 
   return (
     <section className="mx-auto max-w-6xl px-6 py-16">
@@ -107,11 +112,19 @@ export default async function Home() {
               <h2 className="text-2xl font-extrabold tracking-tight">
                 Timeline
               </h2>
-              <p className="text-xs tabular-nums text-muted-foreground">
-                {timelineCount} commits · {timelineSpan}
-              </p>
+              {timelineSpan ? (
+                <p className="text-xs tabular-nums text-muted-foreground">
+                  {timeline.length} commits · {timelineSpan}
+                </p>
+              ) : null}
             </div>
-            <Timeline entries={profile.timeline} />
+            {timeline.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                経歴は準備中です。
+              </p>
+            ) : (
+              <Timeline entries={timeline} />
+            )}
           </Card>
         </BentoTileMotion>
       </BentoMotionContainer>
