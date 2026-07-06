@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { FadeIn } from "@/components/motion/fade-in";
 import { PressCard } from "@/components/press/press-card";
-import { getAllPress } from "@/content/press";
+import { getAllPress } from "@/lib/microcms";
 
 export const metadata: Metadata = {
   title: "Press",
@@ -11,8 +11,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/press" },
 };
 
-export default function PressPage() {
-  const items = getAllPress();
+export default async function PressPage() {
+  const items = await getAllPress();
 
   return (
     <section className="mx-auto max-w-6xl px-6 py-16">

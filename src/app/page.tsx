@@ -14,9 +14,9 @@ import {
 } from "@/components/motion/bento-tile-motion";
 import { ProjectsSection } from "@/components/projects/projects-section";
 import { Card } from "@/components/ui/card";
-import { getLatestPress } from "@/content/press";
 import { profile } from "@/content/profile";
 import { getLatestBlogPosts } from "@/lib/blog";
+import { getLatestPress } from "@/lib/microcms";
 
 export const revalidate = 3600;
 
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const latestPosts = await getLatestBlogPosts(3);
-  const latestPress = getLatestPress(3);
+  const latestPress = await getLatestPress(3);
 
   // photos: [0]=タージ・マハル, [1]=長崎ハッカソン, [2]=アユタヤ
   const hackathon = profile.photos.at(1);

@@ -1,4 +1,5 @@
 import { Newspaper } from "lucide-react";
+import Image from "next/image";
 
 import { Card } from "@/components/ui/card";
 import type { PressItem } from "@/content/types";
@@ -16,12 +17,12 @@ export function PressCard({ item }: { item: PressItem }) {
       <Card className="flex h-full flex-col overflow-hidden rounded-2xl border-border bg-card transition-colors group-hover:border-accent">
         <div className="relative aspect-[1.91/1] w-full overflow-hidden bg-muted">
           {item.thumbnail ? (
-            // biome-ignore lint/performance/noImgElement: 外部媒体の可変ホストのため next/image を使わない
-            <img
+            <Image
               src={item.thumbnail}
               alt=""
-              loading="lazy"
-              className="size-full object-cover"
+              fill
+              sizes="(min-width: 1024px) 360px, (min-width: 640px) 45vw, 90vw"
+              className="object-cover"
             />
           ) : (
             <div className="flex size-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-accent/10 via-muted to-secondary text-muted-foreground">
