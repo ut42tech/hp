@@ -1,20 +1,56 @@
 "use client";
 
-import { MapPin } from "lucide-react";
+import {
+  Briefcase,
+  GraduationCap,
+  Heart,
+  type LucideIcon,
+  MapPin,
+  Sparkles,
+  Trophy,
+} from "lucide-react";
 import { type MotionProps, motion, useReducedMotion } from "motion/react";
+import Image from "next/image";
 import { useState } from "react";
 
 import type { TimelineCategory, TimelineEntry } from "@/content/types";
 import { cn } from "@/lib/utils";
 
-const categoryConfig: Record<TimelineCategory, { label: string; dot: string }> =
-  {
-    life: { label: "life", dot: "bg-cat-life" },
-    education: { label: "education", dot: "bg-cat-education" },
-    work: { label: "work", dot: "bg-cat-work" },
-    event: { label: "event", dot: "bg-cat-event" },
-    other: { label: "other", dot: "bg-cat-other" },
-  };
+const categoryConfig: Record<
+  TimelineCategory,
+  { label: string; dot: string; icon: LucideIcon; avatar: string }
+> = {
+  life: {
+    label: "life",
+    dot: "bg-cat-life",
+    icon: Heart,
+    avatar: "bg-cat-life/15 text-cat-life",
+  },
+  education: {
+    label: "education",
+    dot: "bg-cat-education",
+    icon: GraduationCap,
+    avatar: "bg-cat-education/15 text-cat-education",
+  },
+  work: {
+    label: "work",
+    dot: "bg-cat-work",
+    icon: Briefcase,
+    avatar: "bg-cat-work/15 text-cat-work",
+  },
+  event: {
+    label: "event",
+    dot: "bg-cat-event",
+    icon: Trophy,
+    avatar: "bg-cat-event/15 text-cat-event",
+  },
+  other: {
+    label: "other",
+    dot: "bg-cat-other",
+    icon: Sparkles,
+    avatar: "bg-cat-other/15 text-cat-other",
+  },
+};
 
 function formatDate(date: string): string {
   const [year, month] = date.split("-");
@@ -143,7 +179,7 @@ export function Timeline({ entries, className }: TimelineProps) {
                 {...rowMotion}
                 className="relative flex gap-4"
               >
-                <div className="flex w-5 flex-col items-center">
+                <div className="flex w-10 flex-col items-center">
                   <span
                     aria-hidden
                     className="size-3.5 shrink-0 rounded-full border-2 border-muted-foreground bg-card ring-4 ring-card"
@@ -162,6 +198,7 @@ export function Timeline({ entries, className }: TimelineProps) {
 
           const { entry } = row;
           const config = categoryConfig[entry.category];
+          const Icon = config.icon;
           // 次が年見出し＝時代の区切り。手前のエントリの余白を広げて段差を作る。
           // レール線は padding を満たすので連続性は保たれる。
           const nextIsYear = rows[index + 1]?.type === "year";
@@ -172,16 +209,35 @@ export function Timeline({ entries, className }: TimelineProps) {
               {...rowMotion}
               className="relative flex gap-4"
             >
-              <div className="flex w-5 flex-col items-center">
+              <div className="flex w-10 flex-col items-center">
                 <span
                   aria-hidden
-                  className="size-2.5 shrink-0 rounded-full bg-muted-foreground ring-4 ring-card"
-                />
+                  className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full ring-4 ring-card"
+                >
+                  {entry.thumbnail ? (
+                    <Image
+                      src={entry.thumbnail}
+                      alt=""
+                      fill
+                      sizes="40px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span
+                      className={cn(
+                        "flex size-full items-center justify-center",
+                        config.avatar,
+                      )}
+                    >
+                      <Icon className="size-4" />
+                    </span>
+                  )}
+                </span>
                 {lineSegment}
               </div>
               <div
                 className={cn(
-                  "flex flex-1 flex-col gap-2",
+                  "flex flex-1 flex-col gap-2 pt-2",
                   nextIsYear ? "pb-14" : "pb-8",
                 )}
               >
