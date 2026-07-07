@@ -4,7 +4,7 @@
 
 **Goal:** カードサムネイルをフルブリード + ホバーズーム化し、Press から種別を削除、works API を projects API に統一し、ホームに新 Works セクション（開発以外の取り組み）を追加する。
 
-**Architecture:** UI は既存の shadcn Card + Tailwind パターンを踏襲（余白の原因は Card 基底の `py-4`/`gap-4`）。データ層は `src/lib/microcms/`（raw 型 → mapper → 公開 API）の既存 3 層構成を維持し、`works` を `projects` にリネームした上で「開発以外の取り組み」用の新 `works` を追加する。microCMS 側のデータ移行は一発スクリプト 2 本で行う。
+**Architecture:** UI は既存の shadcn Card + Tailwind パターンを踏襲（余白の原因は Card 基底の `py-4`/`gap-4`）。データ層は `src/lib/microcms/`（raw 型 → mapper → 公開 API）の既存 3 層構成を維持する。microCMS 側の移行は完了済み（旧 works を `projects` にリネーム・その際 category / body フィールドは削除・新 `works` API 作成済み・press の type 削除済み）で、コードがこれに追随する。残データ整理は一発スクリプト 2 本（クリーンアップ + シード）で行う。
 
 **Tech Stack:** Next.js (App Router) / TypeScript / Tailwind / shadcn/ui / lucide-react / vitest / biome / pnpm / microCMS REST API
 
@@ -17,7 +17,8 @@
 - この repo の Next.js は breaking changes 前提（AGENTS.md）。既存コードにあるパターン（`next/image` の `fill` + `sizes` 等）のみ踏襲し、新しい Next.js API を使う場合は `node_modules/next/dist/docs/` の該当ガイドを先に読む。
 - ホバーズームは CSS のみ（motion ライブラリ禁止）。`motion-safe:` プレフィックスで reduced-motion に配慮。
 - コミットメッセージは日本語（既存ログの流儀: `feat: ...` / `refactor: ...`）。末尾に `Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>`。
-- 新規 API 名は microCMS 上で `projects`（開発プロジェクト）と `works`（開発以外の取り組み、新スキーマ）。旧 works の experience 8 件はどこにも移行しない。
+- microCMS 側の変更は**完了済み**: 旧 works は `projects` にリネーム済み（category / body フィールドは削除）、press の type フィールドは削除済み、新 `works` API（title / summary / date / url / thumbnail）は作成済み。projects に残る旧 experience 8 件と works のテストアイテムはクリーンアップスクリプト（Task 4）で削除する。
+- microCMS のキーは `.env` にある（`MICROCMS_SERVICE_DOMAIN` / `MICROCMS_API_KEY` / `MICROCMS_WRITE_API_KEY`）。値をログ・出力に表示しない。
 
 ---
 
@@ -202,7 +203,9 @@ git commit -m "feat: Press から種別（type）を削除"
 
 ---
 
-### Task 3: works → projects API 統一（型リネーム + エンドポイント変更）
+### Task 3: works → projects API 統一（型リネーム + category / body 削除）
+
+microCMS 側は旧 works が `projects` にリネーム済み（contentId 維持・category / body フィールドは削除済み）。コードをこれに追随させる。
 
 **Files:**
 - Modify: `src/lib/microcms/mappers.test.ts`
@@ -218,26 +221,25 @@ git commit -m "feat: Press から種別（type）を削除"
 **Interfaces:**
 - Consumes: `fetchList<T>(endpoint)`（`src/lib/microcms/client.ts`、変更なし。`orders=-date` で日付降順が保証される）
 - Produces:
-  - `Project` / `ProjectCategory`（`"project" | "oss" | "research"`）/ `ContentLink`（`{ label: string; href: string; kind: LinkKind }`）
-  - `RawProject` / `RawLink`（microCMS raw 型。Task 5 の `RawWork` が `RawProject` のエイリアスとして再利用）
+  - `Project`（category / body なし: `slug / title / summary / date / tags / thumbnail? / links`）/ `ContentLink`（`{ label: string; href: string; kind: LinkKind }`）
+  - `RawProject` / `RawLink`（microCMS raw 型）
   - `mapProject(raw: RawProject): Project` / `mapLink(raw: RawLink): ContentLink`（mappers 内部）
-  - `getProjects(): Promise<Project[]>`（`projects` エンドポイントを取得）
-  - `filterProjects` と `sortByDateDesc` は削除
+  - `getProjects(): Promise<Project[]>`（`projects` エンドポイントを直取得）
+  - 削除: `WorkCategory` / `WorkLink` / 旧 `Work` / `filterProjects` / `parseBody` / `sortByDateDesc`（+ `src/lib/utils.test.ts`）
 
 - [ ] **Step 1: テストを先にリネーム（Project 前提に）**
 
 `src/lib/microcms/mappers.test.ts` —
-- import を `filterProjects, mapWork` → `mapProject` に、型 import を `RawWork` → `RawProject` に変更
-- `rawWork` フィクスチャを `rawProject: RawProject` にリネームし、`mapWork` describe を以下に置き換え
+- import を `filterProjects, mapWork, parseBody` → `mapProject` に、型 import を `RawWork` → `RawProject` に変更
+- `describe("parseBody", ...)` ブロックを丸ごと削除（`parseBody` 自体を削除するため）
+- `rawWork` フィクスチャと `mapWork` describe を以下に置き換え（category / body なし）
 - `describe("filterProjects", ...)` ブロックを丸ごと削除
 
 ```ts
 const rawProject: RawProject = {
   id: "coto2-ba",
   title: "コトコトバ",
-  category: ["project"],
   summary: "受賞作品。",
-  body: "一段落目。\n\n二段落目。",
   date: "2026-03-14T15:00:00.000Z",
   tags: "Award, Hackathon",
   links: [
@@ -254,10 +256,8 @@ describe("mapProject", () => {
   it("contentId を slug として Project に変換する", () => {
     expect(mapProject(rawProject)).toEqual({
       slug: "coto2-ba",
-      category: "project",
       title: "コトコトバ",
       summary: "受賞作品。",
-      body: ["一段落目。", "二段落目。"],
       date: "2026-03-15",
       tags: ["Award", "Hackathon"],
       thumbnail: undefined,
@@ -271,13 +271,11 @@ describe("mapProject", () => {
     });
   });
 
-  it("未知の category は project、未知の link kind は other にフォールバックする", () => {
+  it("未知の link kind は other にフォールバックする", () => {
     const mapped = mapProject({
       ...rawProject,
-      category: ["unknown"],
       links: [{ fieldId: "link", label: "L", href: "https://a", kind: ["x"] }],
     });
-    expect(mapped.category).toBe("project");
     expect(mapped.links[0]?.kind).toBe("other");
   });
 });
@@ -290,19 +288,9 @@ Expected: FAIL — `mapProject` / `RawProject` が存在しない
 
 - [ ] **Step 3: 型のリネーム**
 
-`src/content/types.ts` — `WorkCategory` / `WorkLink` / `Work` を以下に置き換え:
+`src/content/types.ts` — `WorkCategory` / `WorkLink` / `Work` を以下に置き換え（`LinkKind` は変更なし）:
 
 ```ts
-export type ProjectCategory = "project" | "oss" | "research";
-
-export type LinkKind =
-  | "github"
-  | "demo"
-  | "paper"
-  | "slide"
-  | "article"
-  | "other";
-
 /** Projects / Works 共通の外部リンク。 */
 export interface ContentLink {
   label: string;
@@ -314,11 +302,8 @@ export interface ContentLink {
 export interface Project {
   /** URL に使う識別子。microCMS の contentId */
   slug: string;
-  category: ProjectCategory;
   title: string;
   summary: string;
-  /** プレーンテキスト段落の配列。Markdown パーサは使わない */
-  body?: string[];
   /** YYYY-MM-DD 形式 */
   date: string;
   tags: string[];
@@ -340,9 +325,7 @@ export interface RawLink {
 export interface RawProject {
   id: string;
   title: string;
-  category: string[];
   summary: string;
-  body?: string;
   date: string;
   tags?: string;
   thumbnail?: MicroCMSImage;
@@ -353,12 +336,10 @@ export interface RawProject {
 - [ ] **Step 4: mapper と公開 API のリネーム**
 
 `src/lib/microcms/mappers.ts` —
-- import を更新: `ContentLink, LinkKind, PressItem, Project, ProjectCategory, TimelineCategory, TimelineEntry` を `@/content/types` から、`RawLink, RawPress, RawProject, RawTimelineEntry` を `./types` から。`sortByDateDesc` の import 行を削除
-- `WORK_CATEGORIES` を `PROJECT_CATEGORIES` に置き換え、`mapWorkLink` / `mapWork` / `filterProjects`（末尾の `PROJECT_CATEGORIES` 定数含む）を以下に置き換え:
-
-```ts
-const PROJECT_CATEGORIES: ProjectCategory[] = ["project", "oss", "research"];
-```
+- import を更新: `ContentLink, LinkKind, PressItem, Project, TimelineCategory, TimelineEntry` を `@/content/types` から、`RawLink, RawPress, RawProject, RawTimelineEntry` を `./types` から。`import { sortByDateDesc } from "@/lib/utils";` の行を削除
+- `WORK_CATEGORIES` 定数を削除
+- `parseBody` 関数（コメント含む）を削除
+- `mapWorkLink` / `mapWork` を以下に置き換え:
 
 ```ts
 function mapLink(raw: RawLink): ContentLink {
@@ -372,10 +353,8 @@ function mapLink(raw: RawLink): ContentLink {
 export function mapProject(raw: RawProject): Project {
   return {
     slug: raw.id,
-    category: pickSelect(raw.category, PROJECT_CATEGORIES, "project"),
     title: raw.title,
     summary: raw.summary,
-    body: parseBody(raw.body),
     date: toJstDateString(raw.date),
     tags: parseTags(raw.tags),
     thumbnail: raw.thumbnail?.url,
@@ -384,7 +363,7 @@ export function mapProject(raw: RawProject): Project {
 }
 ```
 
-（`filterProjects` と旧 `const PROJECT_CATEGORIES`（ファイル末尾）は削除）
+- ファイル末尾の `const PROJECT_CATEGORIES` と `filterProjects`（コメント含む）を削除
 
 `src/lib/microcms/index.ts` — works 取得を projects 直取得に変更:
 
@@ -409,29 +388,18 @@ export async function getProjects(): Promise<Project[]> {
 
 - [ ] **Step 5: UI コンポーネントの追随**
 
-`src/components/projects/project-card.tsx` — 全体を以下に置き換え（prop 名も `project` に統一）:
+`src/components/projects/project-card.tsx` — 全体を以下に置き換え（prop 名も `project` に統一。category 廃止のためフォールバックアイコンは全件 Rocket。Task 1 で入れた `group` + ズームは維持）:
 
 ```tsx
 import { SiGithub } from "@icons-pack/react-simple-icons";
-import { FlaskConical, Link as LinkIcon, Package, Rocket } from "lucide-react";
+import { Link as LinkIcon, Rocket } from "lucide-react";
 import Image from "next/image";
-import type { ComponentType } from "react";
 
-import type { Project, ProjectCategory } from "@/content/types";
-
-const categoryIcon: Record<
-  ProjectCategory,
-  ComponentType<{ className?: string }>
-> = {
-  project: Rocket,
-  oss: Package,
-  research: FlaskConical,
-};
+import type { Project } from "@/content/types";
 
 export function ProjectCard({ project }: { project: Project }) {
   const github = project.links.find((l) => l.kind === "github")?.href;
   const demo = project.links.find((l) => l.kind === "demo")?.href;
-  const Icon = categoryIcon[project.category];
 
   return (
     <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-background">
@@ -446,7 +414,7 @@ export function ProjectCard({ project }: { project: Project }) {
           />
         ) : (
           <div className="flex size-full items-center justify-center bg-gradient-to-br from-accent/10 via-muted to-secondary">
-            <Icon className="size-9 text-muted-foreground/40" />
+            <Rocket className="size-9 text-muted-foreground/40" />
           </div>
         )}
         <div className="absolute right-2 top-2 flex gap-2">
@@ -500,9 +468,9 @@ export function ProjectCard({ project }: { project: Project }) {
 - [ ] **Step 6: 検証**
 
 Run: `pnpm test && pnpm lint && pnpm exec tsc --noEmit`
-Expected: 全て成功（`Work` / `mapWork` / `filterProjects` / `sortByDateDesc` への参照が残っていれば tsc が落ちる）
+Expected: 全て成功（旧 `Work` / `mapWork` / `filterProjects` / `sortByDateDesc` / `parseBody` への参照が残っていれば tsc が落ちる）
 
-注: この時点でホームの描画は microCMS に `projects` API が存在するまで失敗する（設計どおり。移行手順は最終セクション）。
+注: microCMS の `projects` API は移行済みのため、ホームの描画はこの時点で動く（クリーンアップ実行までは旧 experience 込みの 18 件が表示される。設計どおり）。
 
 - [ ] **Step 7: Commit**
 
@@ -513,102 +481,70 @@ git commit -m "refactor: works API を projects に統一し Work 型を Project
 
 ---
 
-### Task 4: 移行スクリプト作成 + 旧シードスクリプト削除
+### Task 4: クリーンアップスクリプト作成 + 旧シードスクリプト削除
 
 **Files:**
-- Create: `scripts/migrate-works-to-projects.mjs`
+- Create: `scripts/cleanup-microcms.mjs`
 - Delete: `scripts/seed-microcms.mjs`
 
 **Interfaces:**
-- Consumes: microCMS REST API（GET `works?limit=100` は読み取りキー、PUT `projects/{id}` は書き込みキー）
-- Produces: ユーザーが手動実行する一発スクリプト（コードからの import はなし）
+- Consumes: microCMS REST API（DELETE `projects/{id}` / `works/{id}`、書き込みキー）
+- Produces: 手動実行する一発スクリプト（コードからの import はなし）
 
-- [ ] **Step 1: 移行スクリプトを作成**
+- [ ] **Step 1: クリーンアップスクリプトを作成**
 
-`scripts/migrate-works-to-projects.mjs`:
+`scripts/cleanup-microcms.mjs`:
 
 ```js
 /**
- * 旧 works API の project / oss / research を新設の projects API へコピーする
- * ワンショットスクリプト。
+ * microCMS のリネーム移行で残った不要コンテンツを削除するワンショットスクリプト。
+ * - projects: 旧 works の experience 8 件（同等の内容が timeline に既存。
+ *   うち 5 件相当は新 works に seed-works.mjs でシードする）
+ * - works: スキーマ確認用のテストアイテム
  *
  * 使い方:
- *   MICROCMS_SERVICE_DOMAIN=xxxx MICROCMS_API_KEY=read MICROCMS_WRITE_API_KEY=write \
- *     node scripts/migrate-works-to-projects.mjs
- *
- * 前提:
- * - 管理画面で projects API（works と同スキーマ、category は project/oss/research）を作成済み
- * - thumbnail は同一サービスのメディア URL を渡して引き継ぐ
- *   （書き込み API はメディアライブラリ内画像の URL 指定を受け付ける）
- * - contentId（slug）を維持するため PUT を使う
- * - experience はここではコピーしない（timeline に既存のため）
+ *   MICROCMS_SERVICE_DOMAIN=xxxx MICROCMS_WRITE_API_KEY=yyyy \
+ *     node scripts/cleanup-microcms.mjs
  */
 
 const serviceDomain = process.env.MICROCMS_SERVICE_DOMAIN;
-const readKey = process.env.MICROCMS_API_KEY;
-const writeKey = process.env.MICROCMS_WRITE_API_KEY;
-if (!serviceDomain || !readKey || !writeKey) {
+const apiKey = process.env.MICROCMS_WRITE_API_KEY;
+if (!serviceDomain || !apiKey) {
   console.error(
-    "MICROCMS_SERVICE_DOMAIN / MICROCMS_API_KEY / MICROCMS_WRITE_API_KEY を設定してください。",
+    "MICROCMS_SERVICE_DOMAIN / MICROCMS_WRITE_API_KEY を設定してください。",
   );
   process.exit(1);
 }
 
-const TARGET_CATEGORIES = new Set(["project", "oss", "research"]);
+const TARGETS = [
+  ["projects", "chotech"],
+  ["projects", "n-code-labo"],
+  ["projects", "zenrin-internship"],
+  ["projects", "brightj-internship"],
+  ["projects", "iiit-delhi-exchange"],
+  ["projects", "tni-summer-school"],
+  ["projects", "jset-2024"],
+  ["projects", "nagasaki-univ-award"],
+  ["works", "o9e0-5d2v"], // スキーマ確認用テストアイテム「tesuto」
+];
+
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const listRes = await fetch(
-  `https://${serviceDomain}.microcms.io/api/v1/works?limit=100`,
-  { headers: { "X-MICROCMS-API-KEY": readKey } },
-);
-if (!listRes.ok) {
-  throw new Error(`GET works failed: ${listRes.status} ${await listRes.text()}`);
-}
-const { contents } = await listRes.json();
-const targets = contents.filter((w) => TARGET_CATEGORIES.has(w.category?.[0]));
-console.log(`works ${contents.length} 件中 ${targets.length} 件を projects へコピーします。`);
-
-for (const w of targets) {
-  const body = {
-    title: w.title,
-    category: w.category,
-    summary: w.summary,
-    ...(w.body ? { body: w.body } : {}),
-    date: w.date,
-    ...(w.tags ? { tags: w.tags } : {}),
-    ...(w.thumbnail ? { thumbnail: w.thumbnail.url } : {}),
-    ...(w.links?.length
-      ? {
-          links: w.links.map((l) => ({
-            fieldId: "link",
-            label: l.label,
-            href: l.href,
-            kind: l.kind,
-          })),
-        }
-      : {}),
-  };
+for (const [endpoint, id] of TARGETS) {
   const res = await fetch(
-    `https://${serviceDomain}.microcms.io/api/v1/projects/${w.id}`,
-    {
-      method: "PUT",
-      headers: {
-        "X-MICROCMS-API-KEY": writeKey,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    },
+    `https://${serviceDomain}.microcms.io/api/v1/${endpoint}/${id}`,
+    { method: "DELETE", headers: { "X-MICROCMS-API-KEY": apiKey } },
   );
   if (!res.ok) {
     throw new Error(
-      `PUT projects/${w.id} failed: ${res.status} ${await res.text()}`,
+      `DELETE ${endpoint}/${id} failed: ${res.status} ${await res.text()}`,
     );
   }
-  console.log(`projects/${w.id} OK`);
+  console.log(`${endpoint}/${id} deleted`);
   await sleep(250); // 書き込み API のレート制限対策
 }
 
-console.log(`done: ${targets.length} 件`);
+console.log(`done: ${TARGETS.length} 件`);
 ```
 
 - [ ] **Step 2: 旧シードスクリプトを削除**
@@ -617,21 +553,23 @@ console.log(`done: ${targets.length} 件`);
 git rm scripts/seed-microcms.mjs
 ```
 
-- [ ] **Step 3: 検証（構文チェックのみ。実行はユーザーの移行手順で）**
+- [ ] **Step 3: 検証（構文チェックのみ。実行は最終セクションで）**
 
-Run: `node --check scripts/migrate-works-to-projects.mjs && pnpm lint`
+Run: `node --check scripts/cleanup-microcms.mjs && pnpm lint`
 Expected: エラーなし
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add scripts/migrate-works-to-projects.mjs
-git commit -m "feat: works→projects 移行スクリプトを追加し旧シードスクリプトを削除"
+git add scripts/cleanup-microcms.mjs
+git commit -m "feat: microCMS クリーンアップスクリプトを追加し旧シードスクリプトを削除"
 ```
 
 ---
 
 ### Task 5: 新 Work 型（開発以外の取り組み）とデータ層
+
+新 `works` API はユーザーが作成済み。スキーマは title / summary / date / url / thumbnail のシンプル構成（category / tags / links / body なし）。
 
 **Files:**
 - Modify: `src/lib/microcms/mappers.test.ts`
@@ -641,10 +579,10 @@ git commit -m "feat: works→projects 移行スクリプトを追加し旧シー
 - Modify: `src/lib/microcms/index.ts`
 
 **Interfaces:**
-- Consumes: Task 3 の `ContentLink` / `RawProject` / `RawLink` / `mapLink` / `pickSelect` / `parseBody` / `parseTags` / `toJstDateString` / `fetchList`
+- Consumes: `toJstDateString` / `fetchList`（既存）
 - Produces:
-  - `Work` / `WorkCategory = "community" | "teaching" | "event" | "other"`（`@/content/types`）
-  - `RawWork`（`RawProject` の型エイリアス）
+  - `Work`（`slug / title / summary / date / url? / thumbnail?`。旧 Work とは別物）
+  - `RawWork`（title / summary / date / url? / thumbnail?）
   - `mapWork(raw: RawWork): Work`
   - `getWorks(): Promise<Work[]>`（新 `works` エンドポイント）
 
@@ -656,31 +594,26 @@ git commit -m "feat: works→projects 移行スクリプトを追加し旧シー
 const rawWork: RawWork = {
   id: "chotech",
   title: "学生エンジニアコミュニティ ChoTech 設立・運営",
-  category: ["community"],
   summary: "長崎の学生エンジニアコミュニティを設立し、代表として運営。",
   date: "2025-03-31T15:00:00.000Z",
-  tags: "Community, Leadership",
+  url: "https://example.com/chotech",
 };
 
 describe("mapWork", () => {
   it("contentId を slug として Work に変換する", () => {
     expect(mapWork(rawWork)).toEqual({
       slug: "chotech",
-      category: "community",
       title: "学生エンジニアコミュニティ ChoTech 設立・運営",
       summary: "長崎の学生エンジニアコミュニティを設立し、代表として運営。",
-      body: undefined,
       date: "2025-04-01",
-      tags: ["Community", "Leadership"],
+      url: "https://example.com/chotech",
       thumbnail: undefined,
-      links: [],
     });
   });
 
-  it("未知の category は other にフォールバックする", () => {
-    expect(mapWork({ ...rawWork, category: ["unknown"] }).category).toBe(
-      "other",
-    );
+  it("未設定・空文字の url は undefined になる", () => {
+    expect(mapWork({ ...rawWork, url: undefined }).url).toBeUndefined();
+    expect(mapWork({ ...rawWork, url: "" }).url).toBeUndefined();
   });
 });
 ```
@@ -695,66 +628,47 @@ Expected: FAIL — `mapWork` / `RawWork` が存在しない
 `src/content/types.ts` — `Project` 定義の直後に追記:
 
 ```ts
-/**
- * 開発以外の取り組みのカテゴリ。フォールバックアイコンの出し分けに用いる。
- * - community: コミュニティ設立・運営
- * - teaching: 講師・メンター
- * - event: イベント企画・運営
- * - other: それ以外
- */
-export type WorkCategory = "community" | "teaching" | "event" | "other";
-
 /** 開発以外の取り組み（microCMS の works API で管理）。 */
 export interface Work {
   /** URL に使う識別子。microCMS の contentId */
   slug: string;
-  category: WorkCategory;
   title: string;
   summary: string;
-  /** プレーンテキスト段落の配列。Markdown パーサは使わない */
-  body?: string[];
   /** YYYY-MM-DD 形式 */
   date: string;
-  tags: string[];
+  /** 紹介先の外部リンク（任意。あればカード全体がリンクになる） */
+  url?: string;
   thumbnail?: string;
-  links: ContentLink[];
 }
 ```
 
 `src/lib/microcms/types.ts` — `RawProject` の直後に追記:
 
 ```ts
-/** 新 works API（開発以外の取り組み）。projects と同形で category の選択肢のみ異なる。 */
-export type RawWork = RawProject;
+/** 新 works API（開発以外の取り組み）。 */
+export interface RawWork {
+  id: string;
+  title: string;
+  summary: string;
+  date: string;
+  url?: string;
+  thumbnail?: MicroCMSImage;
+}
 ```
 
 `src/lib/microcms/mappers.ts` —
-- import に `Work` / `WorkCategory`（`@/content/types`）と `RawWork`（`./types`）を追加
-- `PROJECT_CATEGORIES` の直後に追加:
-
-```ts
-const WORK_CATEGORIES: WorkCategory[] = [
-  "community",
-  "teaching",
-  "event",
-  "other",
-];
-```
-
+- import に `Work`（`@/content/types`）と `RawWork`（`./types`）を追加
 - `mapProject` の直後に追加:
 
 ```ts
 export function mapWork(raw: RawWork): Work {
   return {
     slug: raw.id,
-    category: pickSelect(raw.category, WORK_CATEGORIES, "other"),
     title: raw.title,
     summary: raw.summary,
-    body: parseBody(raw.body),
     date: toJstDateString(raw.date),
-    tags: parseTags(raw.tags),
+    url: raw.url || undefined,
     thumbnail: raw.thumbnail?.url,
-    links: (raw.links ?? []).map(mapLink),
   };
 }
 ```
@@ -791,35 +705,25 @@ git commit -m "feat: 開発以外の取り組み用の Work 型と works API フ
 - Modify: `src/app/page.tsx`
 
 **Interfaces:**
-- Consumes: `Work` / `WorkCategory`（Task 5）、`getWorks()`（Task 5）、shadcn `Card`、`cn`
+- Consumes: `Work`（Task 5）、`getWorks()`（Task 5）、shadcn `Card`、`cn`
 - Produces: `WorksSection({ className })`（async Server Component）、`WorkCard({ work })`
 
 - [ ] **Step 1: WorkCard を作成**
 
-`src/components/works/work-card.tsx`:
+`src/components/works/work-card.tsx`（`url` があればカード全体を外部リンクにする。サムネなしのフォールバックは Sparkles）:
 
 ```tsx
-import { GraduationCap, Megaphone, Sparkles, Users } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import Image from "next/image";
-import type { ComponentType } from "react";
 
-import type { Work, WorkCategory } from "@/content/types";
+import type { Work } from "@/content/types";
 
-const categoryIcon: Record<
-  WorkCategory,
-  ComponentType<{ className?: string }>
-> = {
-  community: Users,
-  teaching: GraduationCap,
-  event: Megaphone,
-  other: Sparkles,
-};
+const cardClassName =
+  "group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-background";
 
-export function WorkCard({ work }: { work: Work }) {
-  const Icon = categoryIcon[work.category];
-
+function WorkCardBody({ work }: { work: Work }) {
   return (
-    <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-background">
+    <>
       <div className="relative aspect-video overflow-hidden bg-muted">
         {work.thumbnail ? (
           <Image
@@ -831,7 +735,7 @@ export function WorkCard({ work }: { work: Work }) {
           />
         ) : (
           <div className="flex size-full items-center justify-center bg-gradient-to-br from-accent/10 via-muted to-secondary">
-            <Icon className="size-9 text-muted-foreground/40" />
+            <Sparkles className="size-9 text-muted-foreground/40" />
           </div>
         )}
       </div>
@@ -841,6 +745,27 @@ export function WorkCard({ work }: { work: Work }) {
           {work.summary}
         </p>
       </div>
+    </>
+  );
+}
+
+export function WorkCard({ work }: { work: Work }) {
+  if (work.url) {
+    return (
+      <a
+        href={work.url}
+        target="_blank"
+        rel="noreferrer"
+        className={`${cardClassName} transition-colors hover:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
+      >
+        <WorkCardBody work={work} />
+      </a>
+    );
+  }
+
+  return (
+    <div className={cardClassName}>
+      <WorkCardBody work={work} />
     </div>
   );
 }
@@ -903,7 +828,7 @@ export async function WorksSection({ className }: { className?: string }) {
 - [ ] **Step 4: 検証**
 
 Run: `pnpm test && pnpm lint && pnpm exec tsc --noEmit`
-Expected: 全て成功（描画確認は microCMS 側の移行完了後、最終セクションで）
+Expected: 全て成功（描画確認はクリーンアップ・シード実行後、最終セクションで）
 
 - [ ] **Step 5: Commit**
 
@@ -921,7 +846,7 @@ git commit -m "feat: ホームの Projects 上に Works セクション（開発
 
 **Interfaces:**
 - Consumes: microCMS REST API（PUT `works/{slug}`、書き込みキー）
-- Produces: ユーザーが手動実行する一発スクリプト（初期データ 5 件）
+- Produces: 手動実行する一発スクリプト（初期データ 5 件。title / summary / date のみ。url・サムネイルはあとから管理画面で設定）
 
 - [ ] **Step 1: シードスクリプトを作成**
 
@@ -935,7 +860,7 @@ git commit -m "feat: ホームの Projects 上に Works セクション（開発
  *   MICROCMS_SERVICE_DOMAIN=xxxx MICROCMS_WRITE_API_KEY=yyyy node scripts/seed-works.mjs
  *
  * - slug を contentId にするため PUT を使う
- * - 画像（thumbnail）は content API から投入できないため、管理画面から手動で設定する
+ * - 画像（thumbnail）と url は content API から投入せず、管理画面から手動で設定する
  */
 
 const serviceDomain = process.env.MICROCMS_SERVICE_DOMAIN;
@@ -950,58 +875,38 @@ if (!serviceDomain || !apiKey) {
 const WORKS = [
   {
     slug: "chotech",
-    category: "community",
     title: "学生エンジニアコミュニティ ChoTech 設立・運営",
     summary:
-      "長崎の学生エンジニアコミュニティを設立し、代表として LT 会やワークショップを運営。",
-    body: [
-      "2025 年 4 月に設立。NUTIC（長崎スタジアムシティ）を拠点に、LT 会、ワークショップ、技術知識共有などの活動を展開。",
-      "2026 年度から長崎大学の公認団体に認定された。",
-    ],
+      "長崎の学生エンジニアコミュニティを設立し、代表として LT 会やワークショップを運営。2026 年度から長崎大学の公認団体。",
     date: "2025-04-01",
-    tags: ["Community", "Leadership"],
   },
   {
     slug: "nagasaki-hackathon-2025",
-    category: "event",
     title: "長崎ハッカソン2025 企画・運営",
     summary:
       "長崎スタジアムシティでは初のハッカソンを学生団体として企画・運営。ジャパネット賞を受賞。",
-    body: [
-      "学生団体で企業と協力しての、長崎スタジアムシティでは初のハッカソン企画。ジャパネット様とカラビナテクノロジー株式会社様のご協力により開催が実現した。",
-    ],
     date: "2025-10-01",
-    tags: ["Event", "Hackathon", "Community"],
   },
   {
     slug: "junior-doctor-mentor",
-    category: "teaching",
     title: "長崎大学ジュニアドクター育成塾 メンター",
     summary:
       "中学生のアプリ開発支援に従事。主に Unity を用いたゲーム開発を指導。",
     date: "2024-07-01",
-    tags: ["Teaching", "Unity"],
   },
   {
     slug: "technova-mentor",
-    category: "teaching",
     title: "テクノバながさき 学生メンター",
     summary:
       "子ども向けクリエイティブ活動支援を行う学生メンター。システム&デザイン担当としてチェックインシステム開発やポスター制作も担当。",
-    body: [
-      "テクノバフェス 2025 では自作のチェックインシステムが 400 名以上の来場者受付に活用された。",
-    ],
     date: "2024-06-01",
-    tags: ["Teaching", "Design", "DX"],
   },
   {
     slug: "n-code-labo",
-    category: "teaching",
     title: "N Code Labo プログラミング講師",
     summary:
       "角川ドワンゴ学園でオンライン家庭教師として Unity / Python / Swift 等のプログラミング指導。",
     date: "2024-05-01",
-    tags: ["Teaching", "Programming"],
   },
 ];
 
@@ -1021,11 +926,8 @@ for (const w of WORKS) {
       },
       body: JSON.stringify({
         title: w.title,
-        category: [w.category],
         summary: w.summary,
-        ...(w.body ? { body: w.body.join("\n\n") } : {}),
         date: toIsoDate(w.date),
-        tags: w.tags.join(", "),
       }),
     },
   );
@@ -1055,21 +957,20 @@ git commit -m "feat: 新 works API の初期データ投入スクリプトを追
 
 ---
 
-## 最終セクション: microCMS 移行手順（ユーザー作業）と目視検証
+## 最終セクション: microCMS クリーンアップ・シードと目視検証
 
-コード実装完了後、以下をユーザーと進める。ステップ 1〜6 が終わるまでホームは
-`projects` / `works` の fetch でエラーになる（ローカル確認はその後）。
+microCMS 側のスキーマ変更（projects へのリネーム・press type 削除・新 works API 作成）は
+**完了済み**。コード実装完了後、以下を進める。キーは `.env` にある
+（`set -a && source .env && set +a` で読み込む。値はログ・出力に表示しない）。
 
-- [ ] **1. ユーザー: 管理画面で `projects` API を作成**（リスト型。works と同スキーマ、category セレクトは project / oss / research の 3 択）
-- [ ] **2. 移行スクリプト実行**: `MICROCMS_SERVICE_DOMAIN=xxx MICROCMS_API_KEY=read MICROCMS_WRITE_API_KEY=write node scripts/migrate-works-to-projects.mjs` → `done: 10 件` を確認
-- [ ] **3. ユーザー: 管理画面で旧 `works` API を削除**
-- [ ] **4. ユーザー: 管理画面で新 `works` API を作成**（リスト型。title / category(community / teaching / event / other) / summary / body / date / tags / thumbnail / links(繰り返し `link`: label, href, kind)）
-- [ ] **5. シード実行**: `MICROCMS_SERVICE_DOMAIN=xxx MICROCMS_WRITE_API_KEY=write node scripts/seed-works.mjs` → `done: 5 件` を確認
-- [ ] **6. ユーザー: 管理画面で press の `type` フィールドを削除**、works 5 件のサムネイルを任意で設定
-- [ ] **7. 目視検証**: `pnpm dev` を起動し以下を確認
-  - ホーム: Works セクションが Projects の上に出る（5 件、サムネなしはカテゴリアイコン）
-  - ホーム: Projects に 10 件（experience が消えている）、サムネイル付き
+- [ ] **1. クリーンアップ実行**: `node scripts/cleanup-microcms.mjs` → `done: 9 件` を確認
+- [ ] **2. シード実行**: `node scripts/seed-works.mjs` → `done: 5 件` を確認
+- [ ] **3. API 確認**: GET `projects?limit=100` が 10 件・GET `works?limit=100` が 5 件を返すことを curl で確認
+- [ ] **4. ユーザー: 管理画面で works 5 件のサムネイル・url、projects のサムネイルを任意設定**（随時で可）
+- [ ] **5. 目視検証**: `pnpm dev` を起動し以下を確認
+  - ホーム: Works セクションが Projects の上に出る（5 件、サムネなしは Sparkles アイコン）
+  - ホーム: Projects に 10 件（experience が消えている）
   - /press: サムネイルがカード縁までフィットし、種別バッジが消えている
   - /blogs: サムネイルがカード縁までフィット
   - 各カードのホバーでサムネイルがゆっくりズームする（1.05 倍 / 500ms）
-- [ ] **8. `pnpm build` が通ることを確認してデプロイ**
+- [ ] **6. `pnpm build` が通ることを確認してデプロイ**
