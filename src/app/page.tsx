@@ -14,6 +14,7 @@ import {
 } from "@/components/motion/bento-tile-motion";
 import { ProjectsSection } from "@/components/projects/projects-section";
 import { Card } from "@/components/ui/card";
+import { WorksSection } from "@/components/works/works-section";
 import { profile } from "@/content/profile";
 import { getLatestBlogPosts } from "@/lib/blog";
 import { getLatestPress, getTimeline } from "@/lib/microcms";
@@ -100,6 +101,10 @@ export default async function Home() {
         </BentoTileMotion>
         <BentoTileMotion className="col-span-2 md:col-span-2">
           <BlogTeaserTile posts={latestPosts} className="h-full" />
+        </BentoTileMotion>
+
+        <BentoTileMotion className="col-span-2 md:col-span-6">
+          <WorksSection className="h-full" />
         </BentoTileMotion>
 
         <BentoTileMotion className="col-span-2 md:col-span-6">
