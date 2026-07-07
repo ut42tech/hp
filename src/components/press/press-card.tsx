@@ -14,7 +14,7 @@ export function PressCard({ item }: { item: PressItem }) {
       rel="noreferrer"
       className="group block h-full rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
-      <Card className="flex h-full flex-col overflow-hidden rounded-2xl border-border bg-card transition-colors group-hover:border-accent">
+      <Card className="flex h-full flex-col gap-0 overflow-hidden rounded-2xl border-border bg-card py-0 transition-colors group-hover:border-accent">
         <div className="relative aspect-[1.91/1] w-full overflow-hidden bg-muted">
           {item.thumbnail ? (
             <Image
@@ -22,7 +22,7 @@ export function PressCard({ item }: { item: PressItem }) {
               alt=""
               fill
               sizes="(min-width: 1024px) 360px, (min-width: 640px) 45vw, 90vw"
-              className="object-cover"
+              className="object-cover motion-safe:transition-transform motion-safe:duration-500 group-hover:scale-105"
             />
           ) : (
             <div className="flex size-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-accent/10 via-muted to-secondary text-muted-foreground">

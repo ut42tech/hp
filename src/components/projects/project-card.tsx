@@ -19,7 +19,7 @@ export function ProjectCard({ work }: { work: Work }) {
   const Icon = categoryIcon[work.category] ?? Rocket;
 
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-background">
+    <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-background">
       <div className="relative aspect-video overflow-hidden bg-muted">
         {work.thumbnail ? (
           <Image
@@ -27,7 +27,7 @@ export function ProjectCard({ work }: { work: Work }) {
             alt=""
             fill
             sizes="(min-width: 1024px) 360px, (min-width: 640px) 45vw, 90vw"
-            className="object-cover"
+            className="object-cover motion-safe:transition-transform motion-safe:duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="flex size-full items-center justify-center bg-gradient-to-br from-accent/10 via-muted to-secondary">

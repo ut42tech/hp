@@ -22,7 +22,7 @@ export function BlogCard({ post }: { post: BlogPost }) {
       rel="noopener noreferrer"
       className="group block h-full rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
-      <Card className="flex h-full flex-col overflow-hidden rounded-2xl border-border bg-card transition-colors group-hover:border-accent">
+      <Card className="flex h-full flex-col gap-0 overflow-hidden rounded-2xl border-border bg-card py-0 transition-colors group-hover:border-accent">
         <div className="relative aspect-[1.91/1] w-full overflow-hidden">
           {post.thumbnail ? (
             // biome-ignore lint/performance/noImgElement: 外部の可変ホスト（Zenn Cloudinary / note）のため next/image を使わない
@@ -30,7 +30,7 @@ export function BlogCard({ post }: { post: BlogPost }) {
               src={post.thumbnail}
               alt=""
               loading="lazy"
-              className="size-full object-cover"
+              className="size-full object-cover motion-safe:transition-transform motion-safe:duration-500 group-hover:scale-105"
             />
           ) : (
             <div
