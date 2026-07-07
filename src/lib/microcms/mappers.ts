@@ -5,9 +5,16 @@ import type {
   Project,
   TimelineCategory,
   TimelineEntry,
+  Work,
 } from "@/content/types";
 
-import type { RawLink, RawPress, RawProject, RawTimelineEntry } from "./types";
+import type {
+  RawLink,
+  RawPress,
+  RawProject,
+  RawTimelineEntry,
+  RawWork,
+} from "./types";
 
 const TIMELINE_CATEGORIES: TimelineCategory[] = [
   "life",
@@ -81,6 +88,17 @@ export function mapProject(raw: RawProject): Project {
     tags: parseTags(raw.tags),
     thumbnail: raw.thumbnail?.url,
     links: (raw.links ?? []).map(mapLink),
+  };
+}
+
+export function mapWork(raw: RawWork): Work {
+  return {
+    slug: raw.id,
+    title: raw.title,
+    summary: raw.summary,
+    date: toJstDateString(raw.date),
+    url: raw.url || undefined,
+    thumbnail: raw.thumbnail?.url,
   };
 }
 

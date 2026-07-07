@@ -46,6 +46,16 @@ export interface RawProject {
   links?: RawLink[];
 }
 
+/** 新 works API（開発以外の取り組み）。 */
+export interface RawWork {
+  id: string;
+  title: string;
+  summary: string;
+  date: string;
+  url?: string;
+  thumbnail?: MicroCMSImage;
+}
+
 export interface RawTimelineEntry {
   id: string;
   title: string;

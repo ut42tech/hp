@@ -4,10 +4,11 @@ import {
   mapPress,
   mapProject,
   mapTimelineEntry,
+  mapWork,
   parseTags,
   toJstDateString,
 } from "./mappers";
-import type { RawPress, RawProject, RawTimelineEntry } from "./types";
+import type { RawPress, RawProject, RawTimelineEntry, RawWork } from "./types";
 
 describe("toJstDateString", () => {
   it("JST で選んだ日付（前日 15:00Z）を正しい日付に戻す", () => {
@@ -144,5 +145,31 @@ describe("mapTimelineEntry", () => {
     expect(mapped.category).toBe("other");
     expect(mapped.description).toBeUndefined();
     expect(mapped.location).toBeUndefined();
+  });
+});
+
+const rawWork: RawWork = {
+  id: "chotech",
+  title: "学生エンジニアコミュニティ ChoTech 設立・運営",
+  summary: "長崎の学生エンジニアコミュニティを設立し、代表として運営。",
+  date: "2025-03-31T15:00:00.000Z",
+  url: "https://example.com/chotech",
+};
+
+describe("mapWork", () => {
+  it("contentId を slug として Work に変換する", () => {
+    expect(mapWork(rawWork)).toEqual({
+      slug: "chotech",
+      title: "学生エンジニアコミュニティ ChoTech 設立・運営",
+      summary: "長崎の学生エンジニアコミュニティを設立し、代表として運営。",
+      date: "2025-04-01",
+      url: "https://example.com/chotech",
+      thumbnail: undefined,
+    });
+  });
+
+  it("未設定・空文字の url は undefined になる", () => {
+    expect(mapWork({ ...rawWork, url: undefined }).url).toBeUndefined();
+    expect(mapWork({ ...rawWork, url: "" }).url).toBeUndefined();
   });
 });

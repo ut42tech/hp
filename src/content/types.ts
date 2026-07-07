@@ -32,6 +32,19 @@ export interface Project {
   links: ContentLink[];
 }
 
+/** 開発以外の取り組み（microCMS の works API で管理）。 */
+export interface Work {
+  /** URL に使う識別子。microCMS の contentId */
+  slug: string;
+  title: string;
+  summary: string;
+  /** YYYY-MM-DD 形式 */
+  date: string;
+  /** 紹介先の外部リンク（任意。あればカード全体がリンクになる） */
+  url?: string;
+  thumbnail?: string;
+}
+
 export type SocialIcon =
   | "github"
   | "x"
