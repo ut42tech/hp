@@ -1,7 +1,6 @@
 import type {
   LinkKind,
   PressItem,
-  PressType,
   TimelineCategory,
   TimelineEntry,
   Work,
@@ -12,13 +11,6 @@ import { sortByDateDesc } from "@/lib/utils";
 
 import type { RawPress, RawTimelineEntry, RawWork, RawWorkLink } from "./types";
 
-const PRESS_TYPES: PressType[] = [
-  "interview",
-  "feature",
-  "award",
-  "event",
-  "media",
-];
 const WORK_CATEGORIES: WorkCategory[] = [
   "project",
   "oss",
@@ -84,7 +76,6 @@ export function mapPress(raw: RawPress): PressItem {
     outlet: raw.outlet,
     url: raw.url,
     date: toJstDateString(raw.date),
-    type: pickSelect(raw.type, PRESS_TYPES, "media"),
     thumbnail: raw.thumbnail?.url,
     excerpt: raw.excerpt || undefined,
   };

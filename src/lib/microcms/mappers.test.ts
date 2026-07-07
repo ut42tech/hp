@@ -56,7 +56,6 @@ const rawPress: RawPress = {
   outlet: "長崎のWA!",
   url: "https://example.com/article",
   date: "2025-10-31T15:00:00.000Z",
-  type: ["interview"],
   thumbnail: { url: "https://images.microcms-assets.io/x/press.jpg" },
   excerpt: "取材いただきました。",
 };
@@ -68,14 +67,9 @@ describe("mapPress", () => {
       outlet: "長崎のWA!",
       url: "https://example.com/article",
       date: "2025-11-01",
-      type: "interview",
       thumbnail: "https://images.microcms-assets.io/x/press.jpg",
       excerpt: "取材いただきました。",
     });
-  });
-
-  it("未知の type は media にフォールバックする", () => {
-    expect(mapPress({ ...rawPress, type: ["unknown"] }).type).toBe("media");
   });
 
   it("空文字 excerpt は undefined になる", () => {

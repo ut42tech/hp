@@ -25,7 +25,6 @@ export interface RawPress {
   outlet: string;
   url: string;
   date: string;
-  type: string[];
   thumbnail?: MicroCMSImage;
   excerpt?: string;
 }

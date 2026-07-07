@@ -1,7 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
-import { formatPressDate, pressTypeLabel } from "@/components/press/press-meta";
+import { formatPressDate } from "@/components/press/press-meta";
 import { Card } from "@/components/ui/card";
 import type { PressItem } from "@/content/types";
 import { cn } from "@/lib/utils";
@@ -49,7 +49,7 @@ export function PressTeaserTile({ items, className }: PressTeaserTileProps) {
                   {item.title}
                 </span>
                 <span className="text-[10px] text-muted-foreground">
-                  {formatPressDate(item.date)} ・ {pressTypeLabel[item.type]}
+                  {formatPressDate(item.date)}
                 </span>
               </a>
             </li>

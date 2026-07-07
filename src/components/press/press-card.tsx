@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import type { PressItem } from "@/content/types";
 
-import { formatPressDate, pressTypeLabel } from "./press-meta";
+import { formatPressDate } from "./press-meta";
 
 export function PressCard({ item }: { item: PressItem }) {
   return (
@@ -34,9 +34,6 @@ export function PressCard({ item }: { item: PressItem }) {
           )}
         </div>
         <div className="flex flex-1 flex-col gap-2 p-4">
-          <span className="inline-flex w-fit items-center rounded-full bg-accent/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-accent">
-            {pressTypeLabel[item.type]}
-          </span>
           <h3 className="line-clamp-2 text-sm font-bold leading-snug text-foreground">
             {item.title}
           </h3>

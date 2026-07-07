@@ -98,9 +98,6 @@ export interface Keyword {
   accent?: boolean;
 }
 
-/** Press エントリの種別。バッジ表示に使う。 */
-export type PressType = "interview" | "feature" | "award" | "event" | "media";
-
 /** メディアで取り上げられた Web 記事（microCMS で管理）。 */
 export interface PressItem {
   title: string;
@@ -109,7 +106,6 @@ export interface PressItem {
   url: string;
   /** YYYY-MM または YYYY-MM-DD */
   date: string;
-  type: PressType;
   thumbnail?: string;
   excerpt?: string;
 }
