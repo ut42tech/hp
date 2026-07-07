@@ -29,23 +29,21 @@ export interface RawPress {
   excerpt?: string;
 }
 
-export interface RawWorkLink {
+export interface RawLink {
   fieldId: string;
   label: string;
   href: string;
   kind: string[];
 }
 
-export interface RawWork {
+export interface RawProject {
   id: string;
   title: string;
-  category: string[];
   summary: string;
-  body?: string;
   date: string;
   tags?: string;
   thumbnail?: MicroCMSImage;
-  links?: RawWorkLink[];
+  links?: RawLink[];
 }
 
 export interface RawTimelineEntry {

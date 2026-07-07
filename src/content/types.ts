@@ -4,8 +4,6 @@
  * 多言語化は後続タスクで next-intl に移行する前提。
  */
 
-export type WorkCategory = "project" | "oss" | "research" | "experience";
-
 export type LinkKind =
   | "github"
   | "demo"
@@ -14,25 +12,24 @@ export type LinkKind =
   | "article"
   | "other";
 
-export interface WorkLink {
+/** Projects / Works 共通の外部リンク。 */
+export interface ContentLink {
   label: string;
   href: string;
   kind: LinkKind;
 }
 
-export interface Work {
-  /** URL に使う識別子。言語不問(単一言語でも命名規約は統一) */
+/** 開発プロジェクト（microCMS の projects API で管理）。 */
+export interface Project {
+  /** URL に使う識別子。microCMS の contentId */
   slug: string;
-  category: WorkCategory;
   title: string;
   summary: string;
-  /** プレーンテキスト段落の配列。Markdown パーサは使わない */
-  body?: string[];
   /** YYYY-MM-DD 形式 */
   date: string;
   tags: string[];
   thumbnail?: string;
-  links: WorkLink[];
+  links: ContentLink[];
 }
 
 export type SocialIcon =

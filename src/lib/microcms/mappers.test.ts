@@ -1,15 +1,13 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  filterProjects,
   mapPress,
+  mapProject,
   mapTimelineEntry,
-  mapWork,
-  parseBody,
   parseTags,
   toJstDateString,
 } from "./mappers";
-import type { RawPress, RawTimelineEntry, RawWork } from "./types";
+import type { RawPress, RawProject, RawTimelineEntry } from "./types";
 
 describe("toJstDateString", () => {
   it("JST で選んだ日付（前日 15:00Z）を正しい日付に戻す", () => {
@@ -33,20 +31,6 @@ describe("parseTags", () => {
   it("未設定・空文字は空配列", () => {
     expect(parseTags(undefined)).toEqual([]);
     expect(parseTags("")).toEqual([]);
-  });
-});
-
-describe("parseBody", () => {
-  it("空行区切りで段落に分割する", () => {
-    expect(parseBody("一段落目。\n\n二段落目。")).toEqual([
-      "一段落目。",
-      "二段落目。",
-    ]);
-  });
-
-  it("未設定・空文字は undefined", () => {
-    expect(parseBody(undefined)).toBeUndefined();
-    expect(parseBody("")).toBeUndefined();
   });
 });
 
@@ -77,12 +61,10 @@ describe("mapPress", () => {
   });
 });
 
-const rawWork: RawWork = {
+const rawProject: RawProject = {
   id: "coto2-ba",
   title: "コトコトバ",
-  category: ["project"],
   summary: "受賞作品。",
-  body: "一段落目。\n\n二段落目。",
   date: "2026-03-14T15:00:00.000Z",
   tags: "Award, Hackathon",
   links: [
@@ -95,14 +77,12 @@ const rawWork: RawWork = {
   ],
 };
 
-describe("mapWork", () => {
-  it("contentId を slug として Work に変換する", () => {
-    expect(mapWork(rawWork)).toEqual({
+describe("mapProject", () => {
+  it("contentId を slug として Project に変換する", () => {
+    expect(mapProject(rawProject)).toEqual({
       slug: "coto2-ba",
-      category: "project",
       title: "コトコトバ",
       summary: "受賞作品。",
-      body: ["一段落目。", "二段落目。"],
       date: "2026-03-15",
       tags: ["Award", "Hackathon"],
       thumbnail: undefined,
@@ -116,13 +96,11 @@ describe("mapWork", () => {
     });
   });
 
-  it("未知の category は project、未知の link kind は other にフォールバックする", () => {
-    const mapped = mapWork({
-      ...rawWork,
-      category: ["unknown"],
+  it("未知の link kind は other にフォールバックする", () => {
+    const mapped = mapProject({
+      ...rawProject,
       links: [{ fieldId: "link", label: "L", href: "https://a", kind: ["x"] }],
     });
-    expect(mapped.category).toBe("project");
     expect(mapped.links[0]?.kind).toBe("other");
   });
 });
@@ -166,27 +144,5 @@ describe("mapTimelineEntry", () => {
     expect(mapped.category).toBe("other");
     expect(mapped.description).toBeUndefined();
     expect(mapped.location).toBeUndefined();
-  });
-});
-
-describe("filterProjects", () => {
-  const base = { title: "t", summary: "s", tags: [], links: [] };
-
-  it("project/oss/research のみ返し experience を除外する", () => {
-    const list = filterProjects([
-      { ...base, slug: "a", category: "project", date: "2026-01-01" },
-      { ...base, slug: "b", category: "experience", date: "2026-02-01" },
-      { ...base, slug: "c", category: "oss", date: "2026-03-01" },
-      { ...base, slug: "d", category: "research", date: "2026-04-01" },
-    ]);
-    expect(list.map((w) => w.slug)).toEqual(["d", "c", "a"]);
-  });
-
-  it("日付降順に並ぶ", () => {
-    const list = filterProjects([
-      { ...base, slug: "old", category: "project", date: "2024-01-01" },
-      { ...base, slug: "new", category: "project", date: "2026-01-01" },
-    ]);
-    expect(list.map((w) => w.slug)).toEqual(["new", "old"]);
   });
 });

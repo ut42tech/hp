@@ -1,8 +1,8 @@
-import type { PressItem, TimelineEntry, Work } from "@/content/types";
+import type { PressItem, Project, TimelineEntry } from "@/content/types";
 
 import { fetchList } from "./client";
-import { filterProjects, mapPress, mapTimelineEntry, mapWork } from "./mappers";
-import type { RawPress, RawTimelineEntry, RawWork } from "./types";
+import { mapPress, mapProject, mapTimelineEntry } from "./mappers";
+import type { RawPress, RawProject, RawTimelineEntry } from "./types";
 
 /** 日付降順で全 Press を返す。 */
 export async function getAllPress(): Promise<PressItem[]> {
@@ -15,10 +15,10 @@ export async function getLatestPress(n: number): Promise<PressItem[]> {
   return (await getAllPress()).slice(0, n);
 }
 
-/** Projects セクション用：作品（project/oss/research）を日付降順で全件返す。 */
-export async function getProjects(): Promise<Work[]> {
-  const contents = await fetchList<RawWork>("works");
-  return filterProjects(contents.map(mapWork));
+/** Projects セクション用：開発プロジェクトを日付降順で全件返す。 */
+export async function getProjects(): Promise<Project[]> {
+  const contents = await fetchList<RawProject>("projects");
+  return contents.map(mapProject);
 }
 
 /** 自己紹介タイムラインを日付降順で全件返す。 */

@@ -19,9 +19,9 @@ export async function ProjectsSection({ className }: { className?: string }) {
         <p className="text-sm text-muted-foreground">作品は準備中です。</p>
       ) : (
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((work) => (
-            <li key={work.slug}>
-              <ProjectCard work={work} />
+          {projects.map((project) => (
+            <li key={project.slug}>
+              <ProjectCard project={project} />
             </li>
           ))}
         </ul>

@@ -1,22 +1,14 @@
 import type {
+  ContentLink,
   LinkKind,
   PressItem,
+  Project,
   TimelineCategory,
   TimelineEntry,
-  Work,
-  WorkCategory,
-  WorkLink,
 } from "@/content/types";
-import { sortByDateDesc } from "@/lib/utils";
 
-import type { RawPress, RawTimelineEntry, RawWork, RawWorkLink } from "./types";
+import type { RawLink, RawPress, RawProject, RawTimelineEntry } from "./types";
 
-const WORK_CATEGORIES: WorkCategory[] = [
-  "project",
-  "oss",
-  "research",
-  "experience",
-];
 const TIMELINE_CATEGORIES: TimelineCategory[] = [
   "life",
   "education",
@@ -61,15 +53,6 @@ export function parseTags(text: string | undefined): string[] {
     .filter(Boolean);
 }
 
-/** テキストエリア → 空行区切りの段落配列。空なら undefined。 */
-export function parseBody(text: string | undefined): string[] | undefined {
-  const paragraphs = (text ?? "")
-    .split(/\n\s*\n/)
-    .map((p) => p.trim())
-    .filter(Boolean);
-  return paragraphs.length > 0 ? paragraphs : undefined;
-}
-
 export function mapPress(raw: RawPress): PressItem {
   return {
     title: raw.title,
@@ -81,7 +64,7 @@ export function mapPress(raw: RawPress): PressItem {
   };
 }
 
-function mapWorkLink(raw: RawWorkLink): WorkLink {
+function mapLink(raw: RawLink): ContentLink {
   return {
     label: raw.label,
     href: raw.href,
@@ -89,17 +72,15 @@ function mapWorkLink(raw: RawWorkLink): WorkLink {
   };
 }
 
-export function mapWork(raw: RawWork): Work {
+export function mapProject(raw: RawProject): Project {
   return {
     slug: raw.id,
-    category: pickSelect(raw.category, WORK_CATEGORIES, "project"),
     title: raw.title,
     summary: raw.summary,
-    body: parseBody(raw.body),
     date: toJstDateString(raw.date),
     tags: parseTags(raw.tags),
     thumbnail: raw.thumbnail?.url,
-    links: (raw.links ?? []).map(mapWorkLink),
+    links: (raw.links ?? []).map(mapLink),
   };
 }
 
@@ -112,13 +93,4 @@ export function mapTimelineEntry(raw: RawTimelineEntry): TimelineEntry {
     location: raw.location || undefined,
     thumbnail: raw.thumbnail?.url,
   };
-}
-
-const PROJECT_CATEGORIES: WorkCategory[] = ["project", "oss", "research"];
-
-/** Projects セクション用：project/oss/research のみ日付降順で返す。 */
-export function filterProjects(works: Work[]): Work[] {
-  return sortByDateDesc(
-    works.filter((w) => PROJECT_CATEGORIES.includes(w.category)),
-  );
 }
