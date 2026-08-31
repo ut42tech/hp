@@ -1,3 +1,6 @@
-ignoredBuiltDependencies:
-  - sharp
-  - unrs-resolver
+# ビルドスクリプトの実行可否。どちらも postinstall を実行しなくても動作するため false。
+# - sharp: next が同梱しており、Vercel 側でも提供される
+# - msw: vitest（@vitest/mocker）の推移的依存。テストで Service Worker を使っていない
+allowBuilds:
+  sharp: false
+  msw: false
