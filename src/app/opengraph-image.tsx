@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 
 import { profile } from "@/content/profile";
+import { navItems } from "@/lib/navigation";
 import { ogColors, site } from "@/lib/site";
 
 export const alt = `${site.name} — ${site.description}`;
@@ -88,8 +89,8 @@ export default function Image() {
           color: ogColors.muted,
         }}
       >
-        <span>About · Works · Contact</span>
-        <span>Projects · OSS · Research · Experience</span>
+        <span>{navItems.map((item) => item.label).join(" · ")}</span>
+        <span>Works · Projects · Timeline</span>
       </div>
     </div>,
     { ...size },
