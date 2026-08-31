@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
 
 /**
- * サイトマップ。統合ホームと Blogs を列挙する。
+ * サイトマップ。navItems と同じ 3 ルート（ホーム / Blog / Press）を列挙する。
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

@@ -1,5 +1,7 @@
 # サムネイルフルブリード化 + Press 種別削除 + projects API 統一 + 新 Works セクション 実装計画
 
+> **ステータス**: 一部未完了（2026-08-31 時点） — 全 42 項目中 完了 39 / 不要 0 / 未完了 3
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** カードサムネイルをフルブリード + ホバーズーム化し、Press から種別を削除、works API を projects API に統一し、ホームに新 Works セクション（開発以外の取り組み）を追加する。
@@ -35,7 +37,7 @@
 
 視覚変更のみでユニットテスト対象外。lint + 型検査で機械検証し、目視確認は最終セクションでまとめて行う。
 
-- [ ] **Step 1: PressCard — Card の余白除去とズーム**
+- [x] **Step 1: PressCard — Card の余白除去とズーム**
 
 `src/components/press/press-card.tsx` の `Card` 開始タグと `Image` を以下に変更（ルート `<a>` に `group` は既にある）:
 
@@ -52,7 +54,7 @@
             />
 ```
 
-- [ ] **Step 2: BlogCard — Card の余白除去とズーム**
+- [x] **Step 2: BlogCard — Card の余白除去とズーム**
 
 `src/components/blog/blog-card.tsx` の `Card` 開始タグと `<img>` を以下に変更（ルート `<a>` に `group` は既にある）:
 
@@ -69,7 +71,7 @@
             />
 ```
 
-- [ ] **Step 3: ProjectCard — group 付与とズーム**
+- [x] **Step 3: ProjectCard — group 付与とズーム**
 
 `src/components/projects/project-card.tsx`（素の div 構成で余白はなし）。ルート div に `group` を追加し、`Image` にズームを付与:
 
@@ -86,12 +88,12 @@
           />
 ```
 
-- [ ] **Step 4: 検証**
+- [x] **Step 4: 検証**
 
 Run: `pnpm lint && pnpm exec tsc --noEmit`
 Expected: どちらもエラーなし
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/components/press/press-card.tsx src/components/blog/blog-card.tsx src/components/projects/project-card.tsx
@@ -115,7 +117,7 @@ git commit -m "feat: カードサムネイルをフルブリード化しホバ�
 - Consumes: `PressItem` / `RawPress` / `mapPress`（既存）
 - Produces: `PressItem` から `type` が消える。`press-meta.tsx` は `formatPressDate` のみ export（`pressTypeLabel` 削除）。
 
-- [ ] **Step 1: テストを先に更新（type なしを期待）**
+- [x] **Step 1: テストを先に更新（type なしを期待）**
 
 `src/lib/microcms/mappers.test.ts` — `rawPress` フィクスチャから `type: ["interview"],` を削除し、`mapPress` の describe を以下に置き換え（フォールバックのテストを削除）:
 
@@ -148,12 +150,12 @@ describe("mapPress", () => {
 });
 ```
 
-- [ ] **Step 2: テストが落ちることを確認**
+- [x] **Step 2: テストが落ちることを確認**
 
 Run: `pnpm test`
 Expected: FAIL — `mapPress` の戻り値に `type: "media"` が含まれ toEqual が不一致
 
-- [ ] **Step 3: 型と実装から type を削除**
+- [x] **Step 3: 型と実装から type を削除**
 
 `src/content/types.ts` — `PressType` の型定義とコメント行（`/** Press エントリの種別。バッジ表示に使う。 */` と `export type PressType = ...`）を削除し、`PressItem` から `type: PressType;` を削除。
 
@@ -164,12 +166,12 @@ Expected: FAIL — `mapPress` の戻り値に `type: "media"` が含まれ toEqu
 - `const PRESS_TYPES: PressType[] = [...]` を削除
 - `mapPress` から `type: pickSelect(raw.type, PRESS_TYPES, "media"),` を削除
 
-- [ ] **Step 4: テストが通ることを確認**
+- [x] **Step 4: テストが通ることを確認**
 
 Run: `pnpm test`
 Expected: PASS（全テスト）
 
-- [ ] **Step 5: UI から種別表示を削除**
+- [x] **Step 5: UI から種別表示を削除**
 
 `src/components/press/press-meta.tsx` — 全体を以下に置き換え:
 
@@ -189,12 +191,12 @@ export function formatPressDate(date: string): string {
 - import を `import { formatPressDate } from "@/components/press/press-meta";` に変更
 - `{formatPressDate(item.date)} ・ {pressTypeLabel[item.type]}` → `{formatPressDate(item.date)}`
 
-- [ ] **Step 6: 検証**
+- [x] **Step 6: 検証**
 
 Run: `pnpm test && pnpm lint && pnpm exec tsc --noEmit`
 Expected: 全て成功（`PressType` / `pressTypeLabel` への参照が残っていれば tsc が落ちる）
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add -A src
@@ -227,7 +229,7 @@ microCMS 側は旧 works が `projects` にリネーム済み（contentId 維持
   - `getProjects(): Promise<Project[]>`（`projects` エンドポイントを直取得）
   - 削除: `WorkCategory` / `WorkLink` / 旧 `Work` / `filterProjects` / `parseBody` / `sortByDateDesc`（+ `src/lib/utils.test.ts`）
 
-- [ ] **Step 1: テストを先にリネーム（Project 前提に）**
+- [x] **Step 1: テストを先にリネーム（Project 前提に）**
 
 `src/lib/microcms/mappers.test.ts` —
 - import を `filterProjects, mapWork, parseBody` → `mapProject` に、型 import を `RawWork` → `RawProject` に変更
@@ -281,12 +283,12 @@ describe("mapProject", () => {
 });
 ```
 
-- [ ] **Step 2: テストが落ちることを確認**
+- [x] **Step 2: テストが落ちることを確認**
 
 Run: `pnpm test`
 Expected: FAIL — `mapProject` / `RawProject` が存在しない
 
-- [ ] **Step 3: 型のリネーム**
+- [x] **Step 3: 型のリネーム**
 
 `src/content/types.ts` — `WorkCategory` / `WorkLink` / `Work` を以下に置き換え（`LinkKind` は変更なし）:
 
@@ -333,7 +335,7 @@ export interface RawProject {
 }
 ```
 
-- [ ] **Step 4: mapper と公開 API のリネーム**
+- [x] **Step 4: mapper と公開 API のリネーム**
 
 `src/lib/microcms/mappers.ts` —
 - import を更新: `ContentLink, LinkKind, PressItem, Project, TimelineCategory, TimelineEntry` を `@/content/types` から、`RawLink, RawPress, RawProject, RawTimelineEntry` を `./types` から。`import { sortByDateDesc } from "@/lib/utils";` の行を削除
@@ -386,7 +388,7 @@ export async function getProjects(): Promise<Project[]> {
 `src/lib/utils.ts` — `sortByDateDesc`（コメント含む）を削除し `cn` のみ残す。
 `src/lib/utils.test.ts` — ファイルごと削除（`sortByDateDesc` 専用のため）: `git rm src/lib/utils.test.ts`
 
-- [ ] **Step 5: UI コンポーネントの追随**
+- [x] **Step 5: UI コンポーネントの追随**
 
 `src/components/projects/project-card.tsx` — 全体を以下に置き換え（prop 名も `project` に統一。category 廃止のためフォールバックアイコンは全件 Rocket。Task 1 で入れた `group` + ズームは維持）:
 
@@ -465,14 +467,14 @@ export function ProjectCard({ project }: { project: Project }) {
         </ul>
 ```
 
-- [ ] **Step 6: 検証**
+- [x] **Step 6: 検証**
 
 Run: `pnpm test && pnpm lint && pnpm exec tsc --noEmit`
 Expected: 全て成功（旧 `Work` / `mapWork` / `filterProjects` / `sortByDateDesc` / `parseBody` への参照が残っていれば tsc が落ちる）
 
 注: microCMS の `projects` API は移行済みのため、ホームの描画はこの時点で動く（クリーンアップ実行までは旧 experience 込みの 18 件が表示される。設計どおり）。
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add -A src
@@ -491,7 +493,7 @@ git commit -m "refactor: works API を projects に統一し Work 型を Project
 - Consumes: microCMS REST API（DELETE `projects/{id}` / `works/{id}`、書き込みキー）
 - Produces: 手動実行する一発スクリプト（コードからの import はなし）
 
-- [ ] **Step 1: クリーンアップスクリプトを作成**
+- [x] **Step 1: クリーンアップスクリプトを作成**
 
 `scripts/cleanup-microcms.mjs`:
 
@@ -547,18 +549,18 @@ for (const [endpoint, id] of TARGETS) {
 console.log(`done: ${TARGETS.length} 件`);
 ```
 
-- [ ] **Step 2: 旧シードスクリプトを削除**
+- [x] **Step 2: 旧シードスクリプトを削除**
 
 ```bash
 git rm scripts/seed-microcms.mjs
 ```
 
-- [ ] **Step 3: 検証（構文チェックのみ。実行は最終セクションで）**
+- [x] **Step 3: 検証（構文チェックのみ。実行は最終セクションで）**
 
 Run: `node --check scripts/cleanup-microcms.mjs && pnpm lint`
 Expected: エラーなし
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add scripts/cleanup-microcms.mjs
@@ -586,7 +588,7 @@ git commit -m "feat: microCMS クリーンアップスクリプトを追加し�
   - `mapWork(raw: RawWork): Work`
   - `getWorks(): Promise<Work[]>`（新 `works` エンドポイント）
 
-- [ ] **Step 1: mapWork のテストを先に書く**
+- [x] **Step 1: mapWork のテストを先に書く**
 
 `src/lib/microcms/mappers.test.ts` — import に `mapWork` と `RawWork` を追加し、ファイル末尾に追記:
 
@@ -618,12 +620,12 @@ describe("mapWork", () => {
 });
 ```
 
-- [ ] **Step 2: テストが落ちることを確認**
+- [x] **Step 2: テストが落ちることを確認**
 
 Run: `pnpm test`
 Expected: FAIL — `mapWork` / `RawWork` が存在しない
 
-- [ ] **Step 3: 型と実装を追加**
+- [x] **Step 3: 型と実装を追加**
 
 `src/content/types.ts` — `Project` 定義の直後に追記:
 
@@ -683,12 +685,12 @@ export async function getWorks(): Promise<Work[]> {
 }
 ```
 
-- [ ] **Step 4: 検証**
+- [x] **Step 4: 検証**
 
 Run: `pnpm test && pnpm lint && pnpm exec tsc --noEmit`
 Expected: 全て成功
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add -A src
@@ -708,7 +710,7 @@ git commit -m "feat: 開発以外の取り組み用の Work 型と works API フ
 - Consumes: `Work`（Task 5）、`getWorks()`（Task 5）、shadcn `Card`、`cn`
 - Produces: `WorksSection({ className })`（async Server Component）、`WorkCard({ work })`
 
-- [ ] **Step 1: WorkCard を作成**
+- [x] **Step 1: WorkCard を作成**
 
 `src/components/works/work-card.tsx`（`url` があればカード全体を外部リンクにする。サムネなしのフォールバックは Sparkles）:
 
@@ -771,7 +773,7 @@ export function WorkCard({ work }: { work: Work }) {
 }
 ```
 
-- [ ] **Step 2: WorksSection を作成**
+- [x] **Step 2: WorksSection を作成**
 
 `src/components/works/works-section.tsx`:
 
@@ -809,7 +811,7 @@ export async function WorksSection({ className }: { className?: string }) {
 }
 ```
 
-- [ ] **Step 3: ホームに挿入**
+- [x] **Step 3: ホームに挿入**
 
 `src/app/page.tsx` —
 - import 追加: `import { WorksSection } from "@/components/works/works-section";`
@@ -825,12 +827,12 @@ export async function WorksSection({ className }: { className?: string }) {
         </BentoTileMotion>
 ```
 
-- [ ] **Step 4: 検証**
+- [x] **Step 4: 検証**
 
 Run: `pnpm test && pnpm lint && pnpm exec tsc --noEmit`
 Expected: 全て成功（描画確認はクリーンアップ・シード実行後、最終セクションで）
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/components/works src/app/page.tsx
@@ -848,7 +850,7 @@ git commit -m "feat: ホームの Projects 上に Works セクション（開発
 - Consumes: microCMS REST API（PUT `works/{slug}`、書き込みキー）
 - Produces: 手動実行する一発スクリプト（初期データ 5 件。title / summary / date のみ。url・サムネイルはあとから管理画面で設定）
 
-- [ ] **Step 1: シードスクリプトを作成**
+- [x] **Step 1: シードスクリプトを作成**
 
 `scripts/seed-works.mjs`:
 
@@ -943,12 +945,12 @@ for (const w of WORKS) {
 console.log(`done: ${WORKS.length} 件`);
 ```
 
-- [ ] **Step 2: 検証（構文チェックのみ）**
+- [x] **Step 2: 検証（構文チェックのみ）**
 
 Run: `node --check scripts/seed-works.mjs && pnpm lint`
 Expected: エラーなし
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add scripts/seed-works.mjs
@@ -963,14 +965,14 @@ microCMS 側のスキーマ変更（projects へのリネーム・press type 削
 **完了済み**。コード実装完了後、以下を進める。キーは `.env` にある
 （`set -a && source .env && set +a` で読み込む。値はログ・出力に表示しない）。
 
-- [ ] **1. クリーンアップ実行**: `node scripts/cleanup-microcms.mjs` → `done: 9 件` を確認
-- [ ] **2. シード実行**: `node scripts/seed-works.mjs` → `done: 5 件` を確認
-- [ ] **3. API 確認**: GET `projects?limit=100` が 10 件・GET `works?limit=100` が 5 件を返すことを curl で確認
-- [ ] **4. ユーザー: 管理画面で works 5 件のサムネイル・url、projects のサムネイルを任意設定**（随時で可）
-- [ ] **5. 目視検証**: `pnpm dev` を起動し以下を確認
+- [x] **1. クリーンアップ実行**: `node scripts/cleanup-microcms.mjs` → `done: 9 件` を確認
+- [x] **2. シード実行**: `node scripts/seed-works.mjs` → `done: 5 件` を確認
+- [x] **3. API 確認**: GET `projects?limit=100` が 10 件・GET `works?limit=100` が 5 件を返すことを curl で確認
+- [ ] **4. ユーザー: 管理画面で works 5 件のサムネイル・url、projects のサムネイルを任意設定**（随時で可） <!-- 未完了 -->
+- [ ] **5. 目視検証**: `pnpm dev` を起動し以下を確認 <!-- 未完了 -->
   - ホーム: Works セクションが Projects の上に出る（5 件、サムネなしは Sparkles アイコン）
   - ホーム: Projects に 10 件（experience が消えている）
   - /press: サムネイルがカード縁までフィットし、種別バッジが消えている
   - /blogs: サムネイルがカード縁までフィット
   - 各カードのホバーでサムネイルがゆっくりズームする（1.05 倍 / 500ms）
-- [ ] **6. `pnpm build` が通ることを確認してデプロイ**
+- [ ] **6. `pnpm build` が通ることを確認してデプロイ** <!-- 未完了 -->

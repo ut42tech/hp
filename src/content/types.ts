@@ -95,8 +95,6 @@ export interface PhotoEntry {
   alt: string;
   /** クリック時にオーバーレイで表示するキャプション(任意) */
   caption?: string;
-  /** 撮影日や日付。YYYY-MM-DD 形式(任意) */
-  date?: string;
 }
 
 /** Keywords タイルに表示する人物像キーワード。 */
@@ -110,6 +108,8 @@ export interface Keyword {
 
 /** メディアで取り上げられた Web 記事（microCMS で管理）。 */
 export interface PressItem {
+  /** microCMS の contentId。一覧の key に使う */
+  slug: string;
   title: string;
   /** 媒体名（例: 長崎のWA!（長崎市）） */
   outlet: string;
@@ -134,8 +134,6 @@ export interface Profile {
   motto: string;
   /** モットーの英語版（Hero のタイピングで日本語と交互にループ表示） */
   mottoEn: string;
-  /** 旧 About 本文。ホームでは未使用（データは保持可） */
-  bio?: string[];
   image?: string;
   social: SocialLink[];
   techStack: string[];

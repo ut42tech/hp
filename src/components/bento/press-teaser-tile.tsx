@@ -35,7 +35,7 @@ export function PressTeaserTile({ items, className }: PressTeaserTileProps) {
       ) : (
         <ul className="flex flex-col gap-3">
           {items.map((item) => (
-            <li key={item.url || item.title}>
+            <li key={item.slug}>
               <a
                 href={item.url}
                 target="_blank"

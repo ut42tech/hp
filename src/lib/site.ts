@@ -7,12 +7,9 @@ export const site = {
   description:
     "Takuya Uehara のパーソナルサイト。ソフトウェア開発・HCI 研究・OSS・コミュニティ活動などの取り組みをまとめています。",
   locale: "ja_JP",
-  ogImage: "/opengraph-image",
   /** true にするとページ上部に工事中バナーを表示する */
   underConstruction: true,
 } as const;
-
-export type Site = typeof site;
 
 /**
  * OG 画像で使用する共通カラーパレット。
@@ -20,7 +17,6 @@ export type Site = typeof site;
  */
 export const ogColors = {
   bg: "linear-gradient(135deg, #0a120d 0%, #0f261a 45%, #163b28 100%)",
-  bgSolid: "#0a120d",
   fg: "#f5f5f7",
   accent: "#7ee787",
   accentDot: "#3fb950",

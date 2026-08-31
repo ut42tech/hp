@@ -43,7 +43,8 @@ export interface RawProject {
   date: string;
   tags?: string;
   thumbnail?: MicroCMSImage;
-  links?: RawLink[];
+  /** 未設定の場合 microCMS は null を返す */
+  links?: RawLink[] | null;
 }
 
 /** 新 works API（開発以外の取り組み）。 */

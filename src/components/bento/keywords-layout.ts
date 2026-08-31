@@ -140,11 +140,10 @@ function tryLayout(
 /**
  * Keywords の配置を計算する。コンテナ幅に応じてフォントを縮小し、
  * 全ピルが枠内に収まる最大スケールを採用する（重なりゼロを保証）。
- * @param opts.ticks 互換のため受けるが未使用。
  */
 export function computeKeywordLayout(
   keywords: Keyword[],
-  opts: { width: number; height: number; ticks?: number },
+  opts: { width: number; height: number },
 ): KeywordNode[] {
   const { width, height } = opts;
   const base = clamp(width / REF_WIDTH, MIN_SCALE, 1);
