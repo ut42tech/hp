@@ -1,5 +1,7 @@
 # ホーム再構成（Keywords / Projects / Press / Hero）Implementation Plan
 
+> **ステータス**: 完了（2026-08-31 時点） — 全 72 項目中 完了 53 / 不要 19 / 未完了 0
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** ホーム（`/`）の Hero を作り直し、About を Keywords（中心放射バッジ・衝突回避）に置換、Selected Works 枠を Press タイル＋`/press` 一覧に、Projects を Timeline 直上のフル幅セクションで全件表示する。
@@ -56,7 +58,7 @@
 - Modify: `package.json`
 - Create: `vitest.config.ts`
 
-- [ ] **Step 1: d3-force と Vitest を追加**
+- [~] **Step 1: d3-force と Vitest を追加** <!-- 設計変更により不要 -->
 
 Run:
 ```bash
@@ -65,7 +67,7 @@ pnpm add -D @types/d3-force vitest
 ```
 Expected: `package.json` の dependencies に `d3-force`、devDependencies に `@types/d3-force` `vitest` が入る。
 
-- [ ] **Step 2: `package.json` に test スクリプトを追加**
+- [x] **Step 2: `package.json` に test スクリプトを追加**
 
 `scripts` に1行追加（既存の lint/format はそのまま）:
 ```json
@@ -79,7 +81,7 @@ Expected: `package.json` の dependencies に `d3-force`、devDependencies に `
 }
 ```
 
-- [ ] **Step 3: `vitest.config.ts` を作成**
+- [x] **Step 3: `vitest.config.ts` を作成**
 
 ```ts
 import { fileURLToPath } from "node:url";
@@ -96,7 +98,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 4: コミット**
+- [x] **Step 4: コミット**
 
 ```bash
 git add package.json pnpm-lock.yaml vitest.config.ts
@@ -113,7 +115,7 @@ git commit -m "chore: add d3-force と Vitest（純ロジック検証用）"
 - Create: `src/lib/utils.test.ts`
 - Modify: `src/lib/utils.ts`
 
-- [ ] **Step 1: 失敗するテストを書く**
+- [~] **Step 1: 失敗するテストを書く** <!-- 設計変更により不要 -->
 
 `src/lib/utils.test.ts`:
 ```ts
@@ -141,12 +143,12 @@ describe("sortByDateDesc", () => {
 });
 ```
 
-- [ ] **Step 2: テストが失敗することを確認**
+- [~] **Step 2: テストが失敗することを確認** <!-- 設計変更により不要 -->
 
 Run: `pnpm test`
 Expected: FAIL（`sortByDateDesc` is not exported / undefined）
 
-- [ ] **Step 3: 最小実装を追加**
+- [~] **Step 3: 最小実装を追加** <!-- 設計変更により不要 -->
 
 `src/lib/utils.ts` の末尾に追記（既存の `cn` 等はそのまま）:
 ```ts
@@ -156,12 +158,12 @@ export function sortByDateDesc<T extends { date: string }>(items: T[]): T[] {
 }
 ```
 
-- [ ] **Step 4: テストが通ることを確認**
+- [~] **Step 4: テストが通ることを確認** <!-- 設計変更により不要 -->
 
 Run: `pnpm test`
 Expected: PASS（2 tests）
 
-- [ ] **Step 5: コミット**
+- [~] **Step 5: コミット** <!-- 設計変更により不要 -->
 
 ```bash
 git add src/lib/utils.ts src/lib/utils.test.ts
@@ -175,7 +177,7 @@ git commit -m "feat: sortByDateDesc を追加（日付降順の共有ソート�
 **Files:**
 - Modify: `src/content/types.ts`
 
-- [ ] **Step 1: 新しい型を追加し Profile を更新**
+- [x] **Step 1: 新しい型を追加し Profile を更新**
 
 `src/content/types.ts` に以下を追記（既存の `Work` 系・`SocialLink`・`TimelineEntry`・`PhotoEntry` はそのまま）。`Profile` インターフェースは下記のとおり `lab` と `motto` を追加する。
 
@@ -228,12 +230,12 @@ export interface Profile {
 
 > 注意：既存の `Profile` 定義（`bio: string[]` 必須など）を上記で置き換える。`bio` は任意（`?`）に変更。
 
-- [ ] **Step 2: 型チェック（この時点では profile.ts が未更新なのでエラーになる想定）**
+- [x] **Step 2: 型チェック（この時点では profile.ts が未更新なのでエラーになる想定）**
 
 Run: `pnpm build`
 Expected: `src/content/profile.ts` で `lab`/`motto` 不足の型エラー（次タスクで解消）。エラー内容が `lab`・`motto` 起因であることだけ確認する。
 
-- [ ] **Step 3: コミット**
+- [x] **Step 3: コミット**
 
 ```bash
 git add src/content/types.ts
@@ -247,7 +249,7 @@ git commit -m "feat: Keyword / PressItem 型と Profile(lab, motto) を追加"
 **Files:**
 - Modify: `src/content/profile.ts`
 
-- [ ] **Step 1: フィールドを更新**
+- [x] **Step 1: フィールドを更新**
 
 `src/content/profile.ts` の先頭オブジェクトを次のように変更（`bio`/`social`/`techStack`/`timeline`/`photos` はそのまま残す）:
 ```ts
@@ -262,12 +264,12 @@ export const profile: Profile = {
 ```
 （`image:` 以降は既存のまま）
 
-- [ ] **Step 2: 型チェックが通ることを確認**
+- [x] **Step 2: 型チェックが通ることを確認**
 
 Run: `pnpm build`
 Expected: profile 起因の型エラーが解消（about-tile はまだ存在するが `affiliation`/`bio` 参照は有効なのでビルド可）。ビルドが成功すること。
 
-- [ ] **Step 3: コミット**
+- [x] **Step 3: コミット**
 
 ```bash
 git add src/content/profile.ts
@@ -282,7 +284,7 @@ git commit -m "feat: profile を新 Hero 用に更新（role/affiliation/lab/mot
 - Create: `src/content/works.test.ts`
 - Modify: `src/content/works.ts`
 
-- [ ] **Step 1: 失敗するテストを書く**
+- [~] **Step 1: 失敗するテストを書く** <!-- 設計変更により不要 -->
 
 `src/content/works.test.ts`:
 ```ts
@@ -308,12 +310,12 @@ describe("getProjects", () => {
 });
 ```
 
-- [ ] **Step 2: テストが失敗することを確認**
+- [~] **Step 2: テストが失敗することを確認** <!-- 設計変更により不要 -->
 
 Run: `pnpm test`
 Expected: FAIL（`getProjects` is not exported）
 
-- [ ] **Step 3: 実装を追加**
+- [~] **Step 3: 実装を追加** <!-- 設計変更により不要 -->
 
 `src/content/works.ts` の `import` に `sortByDateDesc` を追加し、末尾に `getProjects` を追記。`getFeaturedWorks` は Projects 全件表示で不要になるため削除する。
 
@@ -332,12 +334,12 @@ export function getProjects(): Work[] {
 }
 ```
 
-- [ ] **Step 4: テストが通ることを確認**
+- [~] **Step 4: テストが通ることを確認** <!-- 設計変更により不要 -->
 
 Run: `pnpm test`
 Expected: PASS（works 2 tests ＋ 既存 utils tests）
 
-- [ ] **Step 5: コミット**
+- [~] **Step 5: コミット** <!-- 設計変更により不要 -->
 
 ```bash
 git add src/content/works.ts src/content/works.test.ts
@@ -353,7 +355,7 @@ git commit -m "feat: getProjects を追加し getFeaturedWorks を削除"
 **Files:**
 - Create: `src/content/press.ts`
 
-- [ ] **Step 1: ファイルを作成**
+- [~] **Step 1: ファイルを作成** <!-- 設計変更により不要 -->
 
 `src/content/press.ts`:
 ```ts
@@ -389,12 +391,12 @@ export function getLatestPress(n: number): PressItem[] {
 
 > 設計書 未確定事項 #5：実エントリ（長崎のWA! 等）の URL を収集して `press` に追加する。空のままでも UI は破綻しない（空状態対応済み）。
 
-- [ ] **Step 2: 型チェック**
+- [~] **Step 2: 型チェック** <!-- 設計変更により不要 -->
 
 Run: `pnpm build`
 Expected: PASS（press.ts は未参照だが型エラーが無いこと）
 
-- [ ] **Step 3: コミット**
+- [~] **Step 3: コミット** <!-- 設計変更により不要 -->
 
 ```bash
 git add src/content/press.ts
@@ -408,7 +410,7 @@ git commit -m "feat: press コンテンツ層（データ＋セレクタ）を�
 **Files:**
 - Create: `src/content/keywords.ts`
 
-- [ ] **Step 1: データを作成（README＋note 由来・persona 寄り）**
+- [x] **Step 1: データを作成（README＋note 由来・persona 寄り）**
 
 `src/content/keywords.ts`:
 ```ts
@@ -454,12 +456,12 @@ export const keywords: Keyword[] = [
 ];
 ```
 
-- [ ] **Step 2: 型チェック**
+- [x] **Step 2: 型チェック**
 
 Run: `pnpm build`
 Expected: PASS
 
-- [ ] **Step 3: コミット**
+- [x] **Step 3: コミット**
 
 ```bash
 git add src/content/keywords.ts
@@ -474,7 +476,7 @@ git commit -m "feat: keywords データを追加（README/note 由来）"
 - Create: `src/components/bento/keywords-layout.test.ts`
 - Create: `src/components/bento/keywords-layout.ts`
 
-- [ ] **Step 1: 失敗するテストを書く**
+- [x] **Step 1: 失敗するテストを書く**
 
 `src/components/bento/keywords-layout.test.ts`:
 ```ts
@@ -537,12 +539,12 @@ describe("computeKeywordLayout", () => {
 });
 ```
 
-- [ ] **Step 2: テストが失敗することを確認**
+- [x] **Step 2: テストが失敗することを確認**
 
 Run: `pnpm test`
 Expected: FAIL（`computeKeywordLayout` not found）
 
-- [ ] **Step 3: 純関数を実装**
+- [~] **Step 3: 純関数を実装** <!-- 設計変更により不要 -->
 
 `src/components/bento/keywords-layout.ts`:
 ```ts
@@ -644,12 +646,12 @@ export function computeKeywordLayout(
 }
 ```
 
-- [ ] **Step 4: テストが通ることを確認**
+- [x] **Step 4: テストが通ることを確認**
 
 Run: `pnpm test`
 Expected: PASS（keywords-layout 3 tests ＋ 既存）
 
-- [ ] **Step 5: コミット**
+- [x] **Step 5: コミット**
 
 ```bash
 git add src/components/bento/keywords-layout.ts src/components/bento/keywords-layout.test.ts
@@ -663,7 +665,7 @@ git commit -m "feat: Keywords の衝突回避レイアウト純関数を追加�
 **Files:**
 - Modify: `src/app/globals.css`
 
-- [ ] **Step 1: keyframes を追加**
+- [~] **Step 1: keyframes を追加** <!-- 設計変更により不要 -->
 
 `src/app/globals.css` の末尾に追記:
 ```css
@@ -682,12 +684,12 @@ git commit -m "feat: Keywords の衝突回避レイアウト純関数を追加�
 }
 ```
 
-- [ ] **Step 2: ビルド確認**
+- [~] **Step 2: ビルド確認** <!-- 設計変更により不要 -->
 
 Run: `pnpm build`
 Expected: PASS
 
-- [ ] **Step 3: コミット**
+- [~] **Step 3: コミット** <!-- 設計変更により不要 -->
 
 ```bash
 git add src/app/globals.css
@@ -701,7 +703,7 @@ git commit -m "style: Keywords バッジの微ドリフト keyframes を追加"
 **Files:**
 - Create: `src/components/bento/keywords-tile.tsx`
 
-- [ ] **Step 1: コンポーネントを作成**
+- [x] **Step 1: コンポーネントを作成**
 
 `src/components/bento/keywords-tile.tsx`:
 ```tsx
@@ -785,12 +787,12 @@ export function KeywordsTile({ className }: { className?: string }) {
 
 > 配色（accent ピルの色味）は実機で `--accent` トークンに合わせて微調整可。
 
-- [ ] **Step 2: lint / build 確認**
+- [x] **Step 2: lint / build 確認**
 
 Run: `pnpm lint && pnpm build`
 Expected: PASS（KeywordsTile は未配置でもビルド可。lint も通ること）
 
-- [ ] **Step 3: コミット**
+- [x] **Step 3: コミット**
 
 ```bash
 git add src/components/bento/keywords-tile.tsx
@@ -804,7 +806,7 @@ git commit -m "feat: Keywords タイル（中心放射バッジ・client）を�
 **Files:**
 - Modify: `src/components/bento/hero-tile.tsx`
 
-- [ ] **Step 1: 実装を置き換える**
+- [x] **Step 1: 実装を置き換える**
 
 `src/components/bento/hero-tile.tsx` を全置換:
 ```tsx
@@ -876,12 +878,12 @@ export function HeroTile({ className }: HeroTileProps) {
 }
 ```
 
-- [ ] **Step 2: lint / build 確認**
+- [x] **Step 2: lint / build 確認**
 
 Run: `pnpm lint && pnpm build`
 Expected: PASS
 
-- [ ] **Step 3: コミット**
+- [x] **Step 3: コミット**
 
 ```bash
 git add src/components/bento/hero-tile.tsx
@@ -896,7 +898,7 @@ git commit -m "feat: Hero を会話調プロフィールに刷新（モバイル
 - Create: `src/components/projects/project-card.tsx`
 - Create: `src/components/projects/projects-section.tsx`
 
-- [ ] **Step 1: ProjectCard を作成**
+- [x] **Step 1: ProjectCard を作成**
 
 `src/components/projects/project-card.tsx`:
 ```tsx
@@ -968,7 +970,7 @@ export function ProjectCard({ work }: { work: Work }) {
 }
 ```
 
-- [ ] **Step 2: ProjectsSection を作成**
+- [x] **Step 2: ProjectsSection を作成**
 
 `src/components/projects/projects-section.tsx`:
 ```tsx
@@ -1001,12 +1003,12 @@ export function ProjectsSection({ className }: { className?: string }) {
 }
 ```
 
-- [ ] **Step 3: lint / build 確認**
+- [x] **Step 3: lint / build 確認**
 
 Run: `pnpm lint && pnpm build`
 Expected: PASS
 
-- [ ] **Step 4: コミット**
+- [x] **Step 4: コミット**
 
 ```bash
 git add src/components/projects/project-card.tsx src/components/projects/projects-section.tsx
@@ -1022,7 +1024,7 @@ git commit -m "feat: Projects 全件フルセクション（GitHub/デプロイ 
 - Create: `src/components/press/press-card.tsx`
 - Create: `src/components/bento/press-teaser-tile.tsx`
 
-- [ ] **Step 1: 共有メタを作成**
+- [x] **Step 1: 共有メタを作成**
 
 `src/components/press/press-meta.tsx`:
 ```tsx
@@ -1043,7 +1045,7 @@ export function formatPressDate(date: string): string {
 }
 ```
 
-- [ ] **Step 2: PressCard を作成（一覧ページ用・サムネ画像つき）**
+- [x] **Step 2: PressCard を作成（一覧ページ用・サムネ画像つき）**
 
 `src/components/press/press-card.tsx`:
 ```tsx
@@ -1099,7 +1101,7 @@ export function PressCard({ item }: { item: PressItem }) {
 }
 ```
 
-- [ ] **Step 3: ホームの PressTeaserTile を作成**
+- [x] **Step 3: ホームの PressTeaserTile を作成**
 
 `src/components/bento/press-teaser-tile.tsx`:
 ```tsx
@@ -1166,12 +1168,12 @@ export function PressTeaserTile({ items, className }: PressTeaserTileProps) {
 }
 ```
 
-- [ ] **Step 4: lint / build 確認**
+- [x] **Step 4: lint / build 確認**
 
 Run: `pnpm lint && pnpm build`
 Expected: PASS
 
-- [ ] **Step 5: コミット**
+- [x] **Step 5: コミット**
 
 ```bash
 git add src/components/press/press-meta.tsx src/components/press/press-card.tsx src/components/bento/press-teaser-tile.tsx
@@ -1185,7 +1187,7 @@ git commit -m "feat: Press カード・ホームタイル・共有メタを追�
 **Files:**
 - Create: `src/app/press/page.tsx`
 
-- [ ] **Step 1: ページを作成（/blogs に倣う）**
+- [x] **Step 1: ページを作成（/blogs に倣う）**
 
 `src/app/press/page.tsx`:
 ```tsx
@@ -1239,12 +1241,12 @@ export default function PressPage() {
 }
 ```
 
-- [ ] **Step 2: lint / build 確認**
+- [x] **Step 2: lint / build 確認**
 
 Run: `pnpm lint && pnpm build`
 Expected: PASS（`/press` ルートが生成される）
 
-- [ ] **Step 3: コミット**
+- [x] **Step 3: コミット**
 
 ```bash
 git add src/app/press/page.tsx
@@ -1259,7 +1261,7 @@ git commit -m "feat: /press 一覧ページを追加"
 - Modify: `src/lib/navigation.ts`
 - Modify: `src/app/sitemap.ts`
 
-- [ ] **Step 1: navigation を更新（Blog 統一・Press 追加）**
+- [x] **Step 1: navigation を更新（Blog 統一・Press 追加）**
 
 `src/lib/navigation.ts` を全置換:
 ```ts
@@ -1270,7 +1272,7 @@ export const navItems = [
 ] as const;
 ```
 
-- [ ] **Step 2: sitemap に /press を追加**
+- [x] **Step 2: sitemap に /press を追加**
 
 `src/app/sitemap.ts` の `return [...]` に Press エントリを追加（`/` と `/blogs` の後ろ）:
 ```ts
@@ -1282,12 +1284,12 @@ export const navItems = [
     },
 ```
 
-- [ ] **Step 3: lint / build 確認**
+- [x] **Step 3: lint / build 確認**
 
 Run: `pnpm lint && pnpm build`
 Expected: PASS
 
-- [ ] **Step 4: コミット**
+- [x] **Step 4: コミット**
 
 ```bash
 git add src/lib/navigation.ts src/app/sitemap.ts
@@ -1303,7 +1305,7 @@ About→Keywords、Selected Works→Press タイル、Projects フルセクシ�
 **Files:**
 - Modify: `src/app/page.tsx`
 
-- [ ] **Step 1: import を差し替える**
+- [x] **Step 1: import を差し替える**
 
 `src/app/page.tsx` の import を更新：`AboutTile`・`SelectedWorksTile` を削除し、`KeywordsTile`・`PressTeaserTile`・`ProjectsSection`・`getLatestPress` を追加。
 ```tsx
@@ -1326,7 +1328,7 @@ import { getLatestPress } from "@/content/press";
 import { getLatestBlogPosts } from "@/lib/blog";
 ```
 
-- [ ] **Step 2: データ取得とメタデータを更新**
+- [x] **Step 2: データ取得とメタデータを更新**
 
 `metadata.description` を Keywords/Projects/Press を反映した文言に変更し、本文先頭で press を取得：
 ```tsx
@@ -1346,7 +1348,7 @@ export default async function Home() {
   const ayutthaya = profile.photos.at(2);
 ```
 
-- [ ] **Step 3: About タイルを Keywords タイルに差し替える**
+- [x] **Step 3: About タイルを Keywords タイルに差し替える**
 
 `<AboutTile>` を含む `BentoTileMotion` を次に置換（span は据え置き）:
 ```tsx
@@ -1355,7 +1357,7 @@ export default async function Home() {
         </BentoTileMotion>
 ```
 
-- [ ] **Step 4: Selected Works を Press タイルに差し替える**
+- [x] **Step 4: Selected Works を Press タイルに差し替える**
 
 `<SelectedWorksTile>` を含む `BentoTileMotion`（`md:col-span-4`）を次に置換:
 ```tsx
@@ -1365,7 +1367,7 @@ export default async function Home() {
 ```
 （隣の `BlogTeaserTile`（`md:col-span-2`）はそのまま。）
 
-- [ ] **Step 5: Timeline の直前に Projects フルセクションを挿入**
+- [x] **Step 5: Timeline の直前に Projects フルセクションを挿入**
 
 Timeline の `BentoTileMotion`（`md:col-span-6`）の**直前**に追加:
 ```tsx
@@ -1374,12 +1376,12 @@ Timeline の `BentoTileMotion`（`md:col-span-6`）の**直前**に追加:
         </BentoTileMotion>
 ```
 
-- [ ] **Step 6: lint / build 確認**
+- [x] **Step 6: lint / build 確認**
 
 Run: `pnpm lint && pnpm build`
 Expected: PASS（`AboutTile`/`SelectedWorksTile` への参照が残っていないこと）
 
-- [ ] **Step 7: コミット**
+- [x] **Step 7: コミット**
 
 ```bash
 git add src/app/page.tsx
@@ -1394,7 +1396,7 @@ git commit -m "feat: ホームを再構成（Keywords/Press タイル・Projects
 - Delete: `src/components/bento/about-tile.tsx`
 - Delete: `src/components/bento/selected-works-tile.tsx`
 
-- [ ] **Step 1: 参照が無いことを確認**
+- [x] **Step 1: 参照が無いことを確認**
 
 Run:
 ```bash
@@ -1402,19 +1404,19 @@ grep -rn "about-tile\|AboutTile\|selected-works-tile\|SelectedWorksTile" src/
 ```
 Expected: 出力なし（参照ゼロ）。もし残っていれば該当箇所を修正してから次へ。
 
-- [ ] **Step 2: 削除**
+- [x] **Step 2: 削除**
 
 Run:
 ```bash
 git rm src/components/bento/about-tile.tsx src/components/bento/selected-works-tile.tsx
 ```
 
-- [ ] **Step 3: lint / build / test 確認**
+- [x] **Step 3: lint / build / test 確認**
 
 Run: `pnpm lint && pnpm build && pnpm test`
 Expected: すべて PASS
 
-- [ ] **Step 4: コミット**
+- [x] **Step 4: コミット**
 
 ```bash
 git commit -m "chore: 旧 About/SelectedWorks タイルを削除"
@@ -1426,12 +1428,12 @@ git commit -m "chore: 旧 About/SelectedWorks タイルを削除"
 
 **Files:** なし（手動確認）
 
-- [ ] **Step 1: 開発サーバ起動**
+- [x] **Step 1: 開発サーバ起動**
 
 Run: `pnpm dev`
 （別ターミナルで http://localhost:3000 を開く）
 
-- [ ] **Step 2: ホーム（デスクトップ）確認**
+- [x] **Step 2: ホーム（デスクトップ）確認**
 
 - Hero：Hello / I'm Takuya Uehara・「学生エンジニア / フルスタック」・M1 Student · Nagasaki University・@ Setozaki Lab（クリックで setozakilab.com が新規タブ）・モットー表示。
 - Keywords：白カードにバッジが**重ならず**中心放射で配置、上下に微ドリフト、ホバーで緑反転。
@@ -1439,16 +1441,16 @@ Run: `pnpm dev`
 - Press タイル（Blog の隣）に View all → `/press`。
 - Projects が Timeline 直上にフル幅・全件、サムネ右上に GitHub/チェーンアイコン（リンク先が新規タブ）。
 
-- [ ] **Step 3: モバイル幅で確認**
+- [x] **Step 3: モバイル幅で確認**
 
 DevTools で 375px 前後にして、Hero が自然な縦プロフィール、Keywords が重ならない、Projects が縦並びで崩れないことを確認。
 
-- [ ] **Step 4: `/press` と `prefers-reduced-motion` 確認**
+- [~] **Step 4: `/press` と `prefers-reduced-motion` 確認** <!-- 設計変更により不要 -->
 
 - `/press`：空状態（「記事はまだありません。」）が表示されること。ナビが Home / Blog / Press になっていること。
 - DevTools の Rendering で「prefers-reduced-motion: reduce」を有効化 → Keywords のドリフトが停止すること。
 
-- [ ] **Step 5: 仕上げ**
+- [x] **Step 5: 仕上げ**
 
 Run: `pnpm lint && pnpm build && pnpm test`
 Expected: すべて PASS。問題があれば該当タスクに戻って修正・コミット。

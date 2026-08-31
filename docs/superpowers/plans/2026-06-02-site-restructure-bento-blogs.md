@@ -1,5 +1,7 @@
 # サイト再構成（統合ホーム Bento + Blogs）Implementation Plan
 
+> **ステータス**: 完了（2026-08-31 時点） — 全 74 項目中 完了 72 / 不要 2 / 未完了 0
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Home と About を1ページの Bento 自己紹介ページに統合し、Works/Gallery ページを廃止し、Qiita/Zenn/note の記事を自動集約する `/blogs` を新設する。
@@ -69,7 +71,7 @@
 **Files:**
 - Modify: `package.json`（依存）
 
-- [ ] **Step 1: fast-xml-parser を追加**
+- [x] **Step 1: fast-xml-parser を追加**
 
 Run:
 ```bash
@@ -77,7 +79,7 @@ pnpm add fast-xml-parser
 ```
 Expected: `package.json` の `dependencies` に `fast-xml-parser` が追加される。
 
-- [ ] **Step 2: インストール確認**
+- [x] **Step 2: インストール確認**
 
 Run:
 ```bash
@@ -85,7 +87,7 @@ pnpm exec node -e "console.log(require('fast-xml-parser/package.json').version)"
 ```
 Expected: バージョン番号（例 `5.x.x`）が表示される。
 
-- [ ] **Step 3: コミット**
+- [x] **Step 3: コミット**
 
 ```bash
 git add package.json pnpm-lock.yaml
@@ -100,7 +102,7 @@ git commit -m "chore: ブログRSSパース用に fast-xml-parser を追加"
 - Create: `src/lib/blog/types.ts`
 - Create: `src/lib/blog/config.ts`
 
-- [ ] **Step 1: 型定義を作成**
+- [x] **Step 1: 型定義を作成**
 
 `src/lib/blog/types.ts`:
 ```ts
@@ -121,7 +123,7 @@ export interface BlogPost {
 }
 ```
 
-- [ ] **Step 2: 設定を作成**
+- [x] **Step 2: 設定を作成**
 
 `src/lib/blog/config.ts`:
 ```ts
@@ -145,12 +147,12 @@ export const blogProfileUrls: Record<BlogPlatform, string> = {
 };
 ```
 
-- [ ] **Step 3: 型チェック**
+- [x] **Step 3: 型チェック**
 
 Run: `pnpm exec tsc --noEmit`
 Expected: エラー無し（exit 0）。
 
-- [ ] **Step 4: コミット**
+- [x] **Step 4: コミット**
 
 ```bash
 git add src/lib/blog/types.ts src/lib/blog/config.ts
@@ -164,7 +166,7 @@ git commit -m "feat(blog): ブログ集約の型と handle 設定を追加"
 **Files:**
 - Create: `src/lib/blog/utils.ts`
 
-- [ ] **Step 1: ユーティリティを実装**
+- [x] **Step 1: ユーティリティを実装**
 
 `src/lib/blog/utils.ts`:
 ```ts
@@ -207,12 +209,12 @@ export function sortByPublishedDesc(posts: BlogPost[]): BlogPost[] {
 }
 ```
 
-- [ ] **Step 2: 型チェック**
+- [x] **Step 2: 型チェック**
 
 Run: `pnpm exec tsc --noEmit`
 Expected: エラー無し。
 
-- [ ] **Step 3: 動作を一時確認（ランタイム）**
+- [x] **Step 3: 動作を一時確認（ランタイム）**
 
 Run:
 ```bash
@@ -222,12 +224,12 @@ const { toPlainExcerpt, toIso, extractThumbnail } = require('esbuild-register/di
 ```
 （注: tsx/ts-node が無いため厳密な単体実行は不要。型チェックとビルドで担保し、実データは Task 9 の `pnpm dev` で確認する。本ステップはスキップ可。）
 
-- [ ] **Step 4: Lint**
+- [x] **Step 4: Lint**
 
 Run: `pnpm lint`
 Expected: `src/lib/blog/utils.ts` に関するエラー無し（必要なら `pnpm format`）。
 
-- [ ] **Step 5: コミット**
+- [x] **Step 5: コミット**
 
 ```bash
 git add src/lib/blog/utils.ts
@@ -241,7 +243,7 @@ git commit -m "feat(blog): 抜粋・サムネ抽出・日付正規化・並べ�
 **Files:**
 - Create: `src/lib/blog/qiita.ts`
 
-- [ ] **Step 1: 実装**
+- [x] **Step 1: 実装**
 
 `src/lib/blog/qiita.ts`:
 ```ts
@@ -288,17 +290,17 @@ export async function fetchQiita(): Promise<BlogPost[]> {
 }
 ```
 
-- [ ] **Step 2: 型チェック**
+- [x] **Step 2: 型チェック**
 
 Run: `pnpm exec tsc --noEmit`
 Expected: エラー無し。
 
-- [ ] **Step 3: Lint**
+- [x] **Step 3: Lint**
 
 Run: `pnpm lint`
 Expected: 当該ファイルにエラー無し。
 
-- [ ] **Step 4: コミット**
+- [x] **Step 4: コミット**
 
 ```bash
 git add src/lib/blog/qiita.ts
@@ -312,7 +314,7 @@ git commit -m "feat(blog): Qiita API v2 のフェッチャと正規化を追加"
 **Files:**
 - Create: `src/lib/blog/rss.ts`
 
-- [ ] **Step 1: 実装**
+- [x] **Step 1: 実装**
 
 `src/lib/blog/rss.ts`:
 ```ts
@@ -385,17 +387,17 @@ export function fetchNote(): Promise<BlogPost[]> {
 }
 ```
 
-- [ ] **Step 2: 型チェック**
+- [x] **Step 2: 型チェック**
 
 Run: `pnpm exec tsc --noEmit`
 Expected: エラー無し。
 
-- [ ] **Step 3: Lint**
+- [x] **Step 3: Lint**
 
 Run: `pnpm lint`
 Expected: 当該ファイルにエラー無し。
 
-- [ ] **Step 4: コミット**
+- [x] **Step 4: コミット**
 
 ```bash
 git add src/lib/blog/rss.ts
@@ -409,7 +411,7 @@ git commit -m "feat(blog): Zenn/note の RSS フェッチャと共通正規化�
 **Files:**
 - Create: `src/lib/blog/index.ts`
 
-- [ ] **Step 1: 実装**
+- [x] **Step 1: 実装**
 
 `src/lib/blog/index.ts`:
 ```ts
@@ -439,17 +441,17 @@ export async function getLatestBlogPosts(limit: number): Promise<BlogPost[]> {
 }
 ```
 
-- [ ] **Step 2: 型チェック**
+- [x] **Step 2: 型チェック**
 
 Run: `pnpm exec tsc --noEmit`
 Expected: エラー無し。
 
-- [ ] **Step 3: Lint**
+- [x] **Step 3: Lint**
 
 Run: `pnpm lint`
 Expected: 当該ファイルにエラー無し。
 
-- [ ] **Step 4: コミット**
+- [x] **Step 4: コミット**
 
 ```bash
 git add src/lib/blog/index.ts
@@ -466,7 +468,7 @@ git commit -m "feat(blog): allSettled で耐障害な集約関数を追加"
 - Create: `src/components/blog/platform-meta.tsx`
 - Create: `src/components/blog/blog-card.tsx`
 
-- [ ] **Step 1: プラットフォームメタを作成**
+- [x] **Step 1: プラットフォームメタを作成**
 
 `src/components/blog/platform-meta.tsx`:
 ```tsx
@@ -489,7 +491,7 @@ export const platformMeta: Record<BlogPlatform, PlatformMeta> = {
 };
 ```
 
-- [ ] **Step 2: ブログカードを作成**
+- [x] **Step 2: ブログカードを作成**
 
 `src/components/blog/blog-card.tsx`:
 ```tsx
@@ -576,12 +578,12 @@ export function BlogCard({ post }: { post: BlogPost }) {
 }
 ```
 
-- [ ] **Step 3: 型チェック + Lint**
+- [x] **Step 3: 型チェック + Lint**
 
 Run: `pnpm exec tsc --noEmit && pnpm lint`
 Expected: エラー無し（`<img>` の lint 警告が Biome で出る場合は許容、または上記コメントで抑制）。
 
-- [ ] **Step 4: コミット**
+- [x] **Step 4: コミット**
 
 ```bash
 git add src/components/blog/platform-meta.tsx src/components/blog/blog-card.tsx
@@ -595,7 +597,7 @@ git commit -m "feat(blog): プラットフォームメタと記事カードを�
 **Files:**
 - Create: `src/components/blog/blog-filter.tsx`
 
-- [ ] **Step 1: 実装（Timeline と同じ button+Badge の pill フィルタを踏襲）**
+- [x] **Step 1: 実装（Timeline と同じ button+Badge の pill フィルタを踏襲）**
 
 `src/components/blog/blog-filter.tsx`:
 ```tsx
@@ -667,12 +669,12 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
 }
 ```
 
-- [ ] **Step 2: 型チェック + Lint**
+- [x] **Step 2: 型チェック + Lint**
 
 Run: `pnpm exec tsc --noEmit && pnpm lint`
 Expected: エラー無し。
 
-- [ ] **Step 3: コミット**
+- [x] **Step 3: コミット**
 
 ```bash
 git add src/components/blog/blog-filter.tsx
@@ -687,7 +689,7 @@ git commit -m "feat(blog): プラットフォーム別フィルタ（pill）を�
 - Create: `src/app/blogs/page.tsx`
 - Create: `src/app/blogs/loading.tsx`
 
-- [ ] **Step 1: ページを作成**
+- [x] **Step 1: ページを作成**
 
 `src/app/blogs/page.tsx`:
 ```tsx
@@ -770,7 +772,7 @@ export default async function BlogsPage() {
 
 > 注: `BLOG_REVALIDATE_SECONDS` は import するが route の `revalidate` には静的リテラル `3600` が必要なため別個に書く。lint で未使用 import を指摘されたら import を削除すること。
 
-- [ ] **Step 2: ローディングUIを作成**
+- [x] **Step 2: ローディングUIを作成**
 
 `src/app/blogs/loading.tsx`:
 ```tsx
@@ -794,24 +796,24 @@ export default function Loading() {
 }
 ```
 
-- [ ] **Step 3: 未使用 import の整理**
+- [x] **Step 3: 未使用 import の整理**
 
 `src/app/blogs/page.tsx` で `BLOG_REVALIDATE_SECONDS` を実際に使っていなければ import から削除する。
 Run: `pnpm lint`
 Expected: 未使用 import エラーが無いこと。必要なら修正。
 
-- [ ] **Step 4: ビルド確認**
+- [x] **Step 4: ビルド確認**
 
 Run: `pnpm build`
 Expected: ビルド成功。`/blogs` がルートとして出力される。
 
-- [ ] **Step 5: 実データ描画確認**
+- [x] **Step 5: 実データ描画確認**
 
 Run: `pnpm dev`（別ターミナル）→ ブラウザで `http://localhost:3000/blogs`
 - `ut42tech` が現在0件のため「記事はまだありません」が表示されることを確認。
 - 取得経路の確認として、一時的に `src/lib/blog/config.ts` の各 handle を既知のアクティブユーザ（例: zenn=`catnose99`、qiita=`Qiita`）に差し替えて再読込し、カードが新着順で描画され、フィルタが効くことを確認。**確認後 handle は `ut42tech` に戻す。**
 
-- [ ] **Step 6: コミット**
+- [x] **Step 6: コミット**
 
 ```bash
 git add src/app/blogs/page.tsx src/app/blogs/loading.tsx
@@ -825,7 +827,7 @@ git commit -m "feat(blog): Blogs ページ（ISR・空状態・ローディン�
 **Files:**
 - Modify: `src/lib/navigation.ts`
 
-- [ ] **Step 1: navItems を更新**
+- [x] **Step 1: navItems を更新**
 
 `src/lib/navigation.ts` を次の内容に置換:
 ```ts
@@ -837,12 +839,12 @@ export const navItems = [
 
 > 注: この時点で `/about` `/works` `/gallery` への nav リンクは消えるが、各ページはまだ存在する（Phase 4 で削除）。リンクが消えるだけで壊れない。
 
-- [ ] **Step 2: 型チェック + Lint + ビルド**
+- [x] **Step 2: 型チェック + Lint + ビルド**
 
 Run: `pnpm exec tsc --noEmit && pnpm lint && pnpm build`
 Expected: エラー無し。ヘッダー・フッター・モバイルナビが `Home ・ Blogs` の2項目になる。
 
-- [ ] **Step 3: コミット**
+- [x] **Step 3: コミット**
 
 ```bash
 git add src/lib/navigation.ts
@@ -859,7 +861,7 @@ git commit -m "feat: ナビゲーションを Home・Blogs の2項目に変更"
 - Create: `src/components/bento/selected-works-tile.tsx`
 - Delete: `src/components/bento/featured-tile.tsx`
 
-- [ ] **Step 1: 新タイルを作成（詳細ページ廃止 → 外部 Demo/GitHub へ）**
+- [~] **Step 1: 新タイルを作成（詳細ページ廃止 → 外部 Demo/GitHub へ）** <!-- 設計変更により不要 -->
 
 `src/components/bento/selected-works-tile.tsx`:
 ```tsx
@@ -938,7 +940,7 @@ export function SelectedWorksTile({ className }: SelectedWorksTileProps) {
 }
 ```
 
-- [ ] **Step 2: 旧 featured-tile を削除**
+- [x] **Step 2: 旧 featured-tile を削除**
 
 Run:
 ```bash
@@ -946,12 +948,12 @@ git rm src/components/bento/featured-tile.tsx
 ```
 （page.tsx の import は Task 13 で差し替えるため、この時点でビルドは一時的に壊れる。次タスクまで連続実行する。）
 
-- [ ] **Step 3: 型チェック**
+- [x] **Step 3: 型チェック**
 
 Run: `pnpm exec tsc --noEmit`
 Expected: `app/page.tsx` が削除済みの FeaturedTile を import しているエラーのみ（Task 13 で解消）。新タイル自体の型エラーは無いこと。
 
-- [ ] **Step 4: コミット**
+- [x] **Step 4: コミット**
 
 ```bash
 git add src/components/bento/selected-works-tile.tsx
@@ -965,7 +967,7 @@ git commit -m "feat(home): Selected Works タイルを追加し旧 FeaturedTile 
 **Files:**
 - Create: `src/components/bento/blog-teaser-tile.tsx`
 
-- [ ] **Step 1: 実装（最新記事を受け取り表示。空/未取得時は誘導リンクのみ）**
+- [x] **Step 1: 実装（最新記事を受け取り表示。空/未取得時は誘導リンクのみ）**
 
 `src/components/bento/blog-teaser-tile.tsx`:
 ```tsx
@@ -1037,12 +1039,12 @@ export function BlogTeaserTile({ posts, className }: BlogTeaserTileProps) {
 }
 ```
 
-- [ ] **Step 2: 型チェック + Lint**
+- [x] **Step 2: 型チェック + Lint**
 
 Run: `pnpm exec tsc --noEmit && pnpm lint`
 Expected: 当該ファイルにエラー無し（page.tsx 関連の既存エラーは Task 13 で解消）。
 
-- [ ] **Step 3: コミット**
+- [x] **Step 3: コミット**
 
 ```bash
 git add src/components/bento/blog-teaser-tile.tsx
@@ -1061,7 +1063,7 @@ git commit -m "feat(home): 最新記事ティーザータイルを追加"
 
 > 注: `/about` の唯一の固有要素は Timeline 表示。これをホームへ移すため、`/about` ルート削除と Timeline 移設・ホーム再構成は同一タスクで連続実行し、各ステップ末に壊れた状態を残さない。
 
-- [ ] **Step 1: /about ルートを削除**
+- [x] **Step 1: /about ルートを削除**
 
 `/about` の内容（bio はホームの AboutTile に既存、Timeline は次ステップでホームへ移設）はホームに統合されるため、ルートを先に削除して Timeline の唯一の他参照を断つ。
 
@@ -1070,7 +1072,7 @@ Run:
 git rm -r src/app/about
 ```
 
-- [ ] **Step 2: Timeline を移設**
+- [x] **Step 2: Timeline を移設**
 
 Run:
 ```bash
@@ -1079,7 +1081,7 @@ git mv src/components/about/timeline.tsx src/components/home/timeline.tsx
 ```
 （中身の変更は不要。import 元が変わるだけ。）
 
-- [ ] **Step 3: ホームを再構成**
+- [x] **Step 3: ホームを再構成**
 
 `src/app/page.tsx` を次の内容に全置換:
 ```tsx
@@ -1171,17 +1173,17 @@ export default async function Home() {
 }
 ```
 
-- [ ] **Step 4: 参照確認（/about と旧 timeline パスが消えたか）**
+- [x] **Step 4: 参照確認（/about と旧 timeline パスが消えたか）**
 
 Run: `grep -rn "\"/about\"\|'/about'\|app/about\|about/timeline" src/`
 Expected: 出力無し（`app/page.tsx` は `@/components/home/timeline` を使用）。
 
-- [ ] **Step 5: 型チェック + Lint + ビルド**
+- [x] **Step 5: 型チェック + Lint + ビルド**
 
 Run: `pnpm exec tsc --noEmit && pnpm lint && pnpm build`
 Expected: エラー無し。`/` がビルドされ、`/about` がビルド対象から消える。
 
-- [ ] **Step 6: 実描画確認（PC/モバイル両方）**
+- [x] **Step 6: 実描画確認（PC/モバイル両方）**
 
 Run: `pnpm dev` → `http://localhost:3000/`
 - PC幅で Bento が `md:grid-cols-6` のモザイクになる（Hero全幅 / About大 / Tech・Contact / 写真3枚 / Selected Works / Latest Blog / Timeline全幅）。
@@ -1189,7 +1191,7 @@ Run: `pnpm dev` → `http://localhost:3000/`
 - Selected Works のカードが外部リンク（新規タブ）で開くこと。
 - `/about` が 404 になること。
 
-- [ ] **Step 7: コミット**
+- [x] **Step 7: コミット**
 
 ```bash
 git add -A
@@ -1206,14 +1208,14 @@ git commit -m "feat(home): Home と About を Bento 1ページに統合（/about
 - Delete: `src/app/works/`、`src/components/works/`
 - Modify: `src/content/works.ts`
 
-- [ ] **Step 1: ルートとコンポーネントを削除**
+- [x] **Step 1: ルートとコンポーネントを削除**
 
 Run:
 ```bash
 git rm -r src/app/works src/components/works
 ```
 
-- [ ] **Step 2: works.ts の未使用 export を削除**
+- [~] **Step 2: works.ts の未使用 export を削除** <!-- 設計変更により不要 -->
 
 `src/content/works.ts` から、詳細ページ廃止で未使用になる `getWorkBySlug` / `getWorksByCategory` / `workCategories` を削除する。`works`（配列）と `getFeaturedWorks` は残す。
 
@@ -1230,7 +1232,7 @@ grep -n "export" src/content/works.ts
 >
 > それに伴い未使用になる型 import（`WorkCategory`）も `import type { Work } from "./types";` に整理する。
 
-- [ ] **Step 3: 参照確認**
+- [x] **Step 3: 参照確認**
 
 Run:
 ```bash
@@ -1238,12 +1240,12 @@ grep -rn "getWorkBySlug\|getWorksByCategory\|workCategories\|components/works\|a
 ```
 Expected: 出力無し。
 
-- [ ] **Step 4: 型チェック + Lint + ビルド**
+- [x] **Step 4: 型チェック + Lint + ビルド**
 
 Run: `pnpm exec tsc --noEmit && pnpm lint && pnpm build`
 Expected: エラー無し。`/works` と `/works/[slug]` が消える。
 
-- [ ] **Step 5: コミット**
+- [x] **Step 5: コミット**
 
 ```bash
 git add -A
@@ -1257,7 +1259,7 @@ git commit -m "refactor: /works ページ・コンポーネントを削除し wo
 **Files:**
 - Delete: `src/app/gallery/`、`src/components/gallery/`、`src/content/gallery.ts`、`src/components/shared/under-construction.tsx`、`public/photos/placeholder-*.svg`
 
-- [ ] **Step 1: 削除**
+- [x] **Step 1: 削除**
 
 Run:
 ```bash
@@ -1266,7 +1268,7 @@ git rm src/content/gallery.ts src/components/shared/under-construction.tsx
 git rm public/photos/placeholder-*.svg
 ```
 
-- [ ] **Step 2: 参照確認**
+- [x] **Step 2: 参照確認**
 
 Run:
 ```bash
@@ -1274,17 +1276,17 @@ grep -rn "content/gallery\|gallery-card\|galleryPhotos\|UnderConstruction\|under
 ```
 Expected: 出力無し。
 
-- [ ] **Step 3: home 写真が残っていることを確認**
+- [x] **Step 3: home 写真が残っていることを確認**
 
 Run: `ls public/photos/home`
 Expected: `1.jpg 2.jpg 3.jpg` が残っている。
 
-- [ ] **Step 4: 型チェック + Lint + ビルド**
+- [x] **Step 4: 型チェック + Lint + ビルド**
 
 Run: `pnpm exec tsc --noEmit && pnpm lint && pnpm build`
 Expected: エラー無し。`/gallery` が消える。
 
-- [ ] **Step 5: コミット**
+- [x] **Step 5: コミット**
 
 ```bash
 git add -A
@@ -1298,7 +1300,7 @@ git commit -m "refactor: /gallery・仮画像・under-construction を削除（�
 **Files:**
 - Modify: `src/app/sitemap.ts`
 
-- [ ] **Step 1: sitemap を `/` と `/blogs` のみに置換**
+- [x] **Step 1: sitemap を `/` と `/blogs` のみに置換**
 
 `src/app/sitemap.ts` を次の内容に全置換:
 ```ts
@@ -1329,22 +1331,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
 }
 ```
 
-- [ ] **Step 2: works 参照が消えたか確認**
+- [x] **Step 2: works 参照が消えたか確認**
 
 Run: `grep -rn "content/works" src/app/sitemap.ts`
 Expected: 出力無し。
 
-- [ ] **Step 3: 型チェック + ビルド**
+- [x] **Step 3: 型チェック + ビルド**
 
 Run: `pnpm exec tsc --noEmit && pnpm build`
 Expected: エラー無し。
 
-- [ ] **Step 4: sitemap 出力確認**
+- [x] **Step 4: sitemap 出力確認**
 
 Run: `pnpm dev` → `http://localhost:3000/sitemap.xml`
 Expected: `https://ut42tech.com/` と `https://ut42tech.com/blogs` の2 URL のみ。
 
-- [ ] **Step 5: コミット**
+- [x] **Step 5: コミット**
 
 ```bash
 git add src/app/sitemap.ts
@@ -1359,7 +1361,7 @@ git commit -m "refactor: sitemap を / と /blogs のみに更新"
 
 **Files:** （変更なし。検証のみ）
 
-- [ ] **Step 1: クリーンビルド + Lint**
+- [x] **Step 1: クリーンビルド + Lint**
 
 Run:
 ```bash
@@ -1367,7 +1369,7 @@ pnpm lint && pnpm build
 ```
 Expected: 両方成功。警告に新規の致命的問題が無いこと。
 
-- [ ] **Step 2: 削除ルートの 404 と新ルートの描画**
+- [x] **Step 2: 削除ルートの 404 と新ルートの描画**
 
 Run: `pnpm start`（`pnpm build` 後）→ 以下を確認:
 - `/` … Bento 統合ホームが PC/モバイル両方で正しく描画。
@@ -1375,19 +1377,19 @@ Run: `pnpm start`（`pnpm build` 後）→ 以下を確認:
 - `/about` `/works` `/gallery` … いずれも 404。
 - ヘッダー・フッター・モバイルナビが `Home ・ Blogs` の2項目。
 
-- [ ] **Step 3: モバイル Bento の最終目視（〜375px）**
+- [x] **Step 3: モバイル Bento の最終目視（〜375px）**
 
 ブラウザを 375px 幅にして `/` を確認:
 - 1列に崩れず `grid-cols-2` のモザイクになっている。
 - 富士山写真が縦長タイルとして非対称感を作っている。
 - 各タイルが読みやすく破綻していない（必要なら span を微調整して再コミット）。
 
-- [ ] **Step 4: handle が ut42tech に戻っているか最終確認**
+- [x] **Step 4: handle が ut42tech に戻っているか最終確認**
 
 Run: `grep -n "ut42tech" src/lib/blog/config.ts`
 Expected: qiita/zenn/note すべて `ut42tech`。
 
-- [ ] **Step 5: 完了コミット（差分があれば）**
+- [x] **Step 5: 完了コミット（差分があれば）**
 
 ```bash
 git add -A

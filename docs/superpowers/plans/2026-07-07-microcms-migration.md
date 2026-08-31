@@ -1,5 +1,7 @@
 # MicroCMS 移行 + Timeline 丸アバター化 実装計画
 
+> **ステータス**: 一部未完了（2026-08-31 時点） — 全 35 項目中 完了 31 / 不要 3 / 未完了 1
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Press / Projects / Timeline のコンテンツを MicroCMS（単一ソース）に移行し、Timeline を丸アイコンサムネイル（フォールバックはカテゴリアイコン）前提のデザインにする。
@@ -36,7 +38,7 @@
 **Interfaces:**
 - Produces: `getMicroCMSConfig(): { serviceDomain: string; apiKey: string }`（未設定で throw）、`MICROCMS_REVALIDATE_SECONDS = 3600`、`fetchList<T>(endpoint: string): Promise<T[]>`、raw 型 `RawPress` / `RawWork` / `RawWorkLink` / `RawTimelineEntry` / `MicroCMSImage` / `MicroCMSListResponse<T>`
 
-- [ ] **Step 1: config の失敗テストを書く**
+- [x] **Step 1: config の失敗テストを書く**
 
 `src/lib/microcms/config.test.ts`:
 
@@ -67,12 +69,12 @@ describe("getMicroCMSConfig", () => {
 });
 ```
 
-- [ ] **Step 2: テストが落ちることを確認**
+- [x] **Step 2: テストが落ちることを確認**
 
 Run: `pnpm test`
 Expected: FAIL（`./config` が存在しない）
 
-- [ ] **Step 3: config.ts を実装**
+- [x] **Step 3: config.ts を実装**
 
 `src/lib/microcms/config.ts`:
 
@@ -103,12 +105,12 @@ export function getMicroCMSConfig(): MicroCMSConfig {
 }
 ```
 
-- [ ] **Step 4: テストが通ることを確認**
+- [x] **Step 4: テストが通ることを確認**
 
 Run: `pnpm test`
 Expected: PASS（config.test.ts の 2 件を含む）
 
-- [ ] **Step 5: raw 型と client を実装**
+- [x] **Step 5: raw 型と client を実装**
 
 `src/lib/microcms/types.ts`:
 
@@ -197,7 +199,7 @@ export async function fetchList<T>(endpoint: string): Promise<T[]> {
 }
 ```
 
-- [ ] **Step 6: .env.example を作成し .gitignore を調整**
+- [x] **Step 6: .env.example を作成し .gitignore を調整**
 
 `.env.example`:
 
@@ -216,7 +218,7 @@ MICROCMS_WRITE_API_KEY=
 !.env.example
 ```
 
-- [ ] **Step 7: lint + test + コミット**
+- [x] **Step 7: lint + test + コミット**
 
 Run: `pnpm lint && pnpm test`
 Expected: どちらも PASS
@@ -243,7 +245,7 @@ git commit -m "feat: microCMS 接続基盤（config/client/raw 型）を追加"
 
 注意: この時点では `TimelineEntry` に `thumbnail` がまだ無い（Task 5 で追加）。`mapTimelineEntry` の `thumbnail` 行は Task 5 まで入れない。
 
-- [ ] **Step 1: マッパーの失敗テストを書く**
+- [x] **Step 1: マッパーの失敗テストを書く**
 
 `src/lib/microcms/mappers.test.ts`:
 
@@ -439,12 +441,12 @@ describe("filterProjects", () => {
 });
 ```
 
-- [ ] **Step 2: テストが落ちることを確認**
+- [x] **Step 2: テストが落ちることを確認**
 
 Run: `pnpm test`
 Expected: FAIL（`./mappers` が存在しない）
 
-- [ ] **Step 3: mappers.ts を実装**
+- [x] **Step 3: mappers.ts を実装**
 
 `src/lib/microcms/mappers.ts`:
 
@@ -583,12 +585,12 @@ export function filterProjects(works: Work[]): Work[] {
 }
 ```
 
-- [ ] **Step 4: テストが通ることを確認**
+- [x] **Step 4: テストが通ることを確認**
 
 Run: `pnpm test`
 Expected: PASS（mappers.test.ts の全件）
 
-- [ ] **Step 5: index.ts（公開 API）を実装**
+- [x] **Step 5: index.ts（公開 API）を実装**
 
 `src/lib/microcms/index.ts`:
 
@@ -623,7 +625,7 @@ export async function getTimeline(): Promise<TimelineEntry[]> {
 }
 ```
 
-- [ ] **Step 6: lint + test + コミット**
+- [x] **Step 6: lint + test + コミット**
 
 Run: `pnpm lint && pnpm test`
 Expected: どちらも PASS
@@ -646,7 +648,7 @@ git commit -m "feat: microCMS マッパーと公開 API（press/works/timeline�
 - Consumes: `src/content/works.ts` の `works` 配列（18 件、4〜252 行目）と `src/content/profile.ts` の `timeline` 配列（30 件、100〜308 行目）のデータをスクリプト内に定数として転記する
 - Produces: microCMS の `works` / `timeline` API へコンテンツを投入するワンショットスクリプト（`node scripts/seed-microcms.mjs` で実行）
 
-- [ ] **Step 1: seed-microcms.mjs を作成**
+- [~] **Step 1: seed-microcms.mjs を作成** <!-- 設計変更により不要 -->
 
 `scripts/seed-microcms.mjs`（`WORKS` / `TIMELINE` には出典元の配列をオブジェクトリテラルのまま**全件**転記する。改変しない）:
 
@@ -744,12 +746,12 @@ for (const t of TIMELINE) {
 console.log(`done: works=${WORKS.length}, timeline=${TIMELINE.length}`);
 ```
 
-- [ ] **Step 2: 転記の検証**
+- [~] **Step 2: 転記の検証** <!-- 設計変更により不要 -->
 
 Run: `node -e "const s=require('fs').readFileSync('scripts/seed-microcms.mjs','utf8'); console.log('works(slug):', (s.match(/slug:/g)||[]).length, '/ titles:', (s.match(/title:/g)||[]).length)"`
 Expected: `works(slug): 18 / titles: 48`（works 18 件 + timeline 30 件 = title 48 個）。目視で TIMELINE の先頭が 2026-05-24、末尾が 2003-04 であることも確認
 
-- [ ] **Step 3: lint + コミット**
+- [~] **Step 3: lint + コミット** <!-- 設計変更により不要 -->
 
 Run: `pnpm lint`
 Expected: PASS（biome が scripts/ を対象にする場合もフォーマット済みであること）
@@ -774,7 +776,7 @@ git commit -m "feat: microCMS へのデータ移行用シードスクリプト�
 - Consumes: Task 2 の `getAllPress()` / `getLatestPress(n)`（`@/lib/microcms`）
 - Produces: なし（消費側の置き換えのみ）
 
-- [ ] **Step 1: next.config.ts に microCMS の画像ホストを追加**
+- [x] **Step 1: next.config.ts に microCMS の画像ホストを追加**
 
 `next.config.ts` 全体:
 
@@ -792,7 +794,7 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 ```
 
-- [ ] **Step 2: press/page.tsx を async 化**
+- [x] **Step 2: press/page.tsx を async 化**
 
 `src/app/press/page.tsx` の import を変更:
 
@@ -809,7 +811,7 @@ export default async function PressPage() {
 
 （return 以下は変更なし）
 
-- [ ] **Step 3: ホームの getLatestPress を差し替え**
+- [x] **Step 3: ホームの getLatestPress を差し替え**
 
 `src/app/page.tsx` 17 行目の `import { getLatestPress } from "@/content/press";` を削除し、19 行目付近の blog import の近くに追加:
 
@@ -823,7 +825,7 @@ import { getLatestPress } from "@/lib/microcms";
 const latestPress = await getLatestPress(3);
 ```
 
-- [ ] **Step 4: press-card.tsx のサムネイルを next/image 化**
+- [x] **Step 4: press-card.tsx のサムネイルを next/image 化**
 
 `src/components/press/press-card.tsx` の import に追加:
 
@@ -854,13 +856,13 @@ import Image from "next/image";
 </div>
 ```
 
-- [ ] **Step 5: content/press.ts を削除**
+- [x] **Step 5: content/press.ts を削除**
 
 ```bash
 rm src/content/press.ts
 ```
 
-- [ ] **Step 6: lint + test + コミット**
+- [x] **Step 6: lint + test + コミット**
 
 Run: `pnpm lint && pnpm test`
 Expected: どちらも PASS（`@/content/press` への参照が残っていれば lint / tsc が検知する）
@@ -883,7 +885,7 @@ git commit -m "feat: Press を microCMS から取得するように移行"
 - Consumes: Task 2 の `getProjects()`（`@/lib/microcms`）
 - Produces: `ProjectsSection` は async サーバーコンポーネントになる（呼び出し側 `src/app/page.tsx` の JSX 使用箇所は変更不要）
 
-- [ ] **Step 1: projects-section.tsx を async 化 + 空状態を追加**
+- [x] **Step 1: projects-section.tsx を async 化 + 空状態を追加**
 
 `src/components/projects/projects-section.tsx` 全体:
 
@@ -921,13 +923,13 @@ export async function ProjectsSection({ className }: { className?: string }) {
 }
 ```
 
-- [ ] **Step 2: works.ts と works.test.ts を削除**
+- [x] **Step 2: works.ts と works.test.ts を削除**
 
 ```bash
 rm src/content/works.ts src/content/works.test.ts
 ```
 
-- [ ] **Step 3: lint + test + コミット**
+- [x] **Step 3: lint + test + コミット**
 
 Run: `pnpm lint && pnpm test`
 Expected: どちらも PASS（works.test.ts が消え、mappers.test.ts が契約を担う）
@@ -952,7 +954,7 @@ git commit -m "feat: Projects を microCMS から取得するように移行"
 - Consumes: Task 2 の `getTimeline()`（`@/lib/microcms`）
 - Produces: `TimelineEntry.thumbnail?: string`（Task 7 の UI が使う）
 
-- [ ] **Step 1: mappers.test.ts に thumbnail のテストを追加（失敗を確認）**
+- [x] **Step 1: mappers.test.ts に thumbnail のテストを追加（失敗を確認）**
 
 `mapTimelineEntry` の describe 内に追加:
 
@@ -971,7 +973,7 @@ it("thumbnail の URL をマップする", () => {
 Run: `pnpm test`
 Expected: FAIL（`mapTimelineEntry` がまだ thumbnail を返さない）
 
-- [ ] **Step 2: 型とマッパーを更新**
+- [x] **Step 2: 型とマッパーを更新**
 
 `src/content/types.ts` の `TimelineEntry` に追加:
 
@@ -1000,11 +1002,11 @@ export interface TimelineEntry {
 Run: `pnpm test`
 Expected: PASS
 
-- [ ] **Step 3: profile.ts から timeline 配列を削除**
+- [x] **Step 3: profile.ts から timeline 配列を削除**
 
 `src/content/profile.ts` の `timeline: [ … ],`（100〜308 行目）を丸ごと削除する。`photos` 以降は残す。
 
-- [ ] **Step 4: page.tsx を getTimeline に配線 + 空ガード**
+- [x] **Step 4: page.tsx を getTimeline に配線 + 空ガード**
 
 `src/app/page.tsx` の import に追加（Task 4 で追加済みの行を拡張）:
 
@@ -1059,7 +1061,7 @@ Timeline タイル部分を差し替え:
 </BentoTileMotion>
 ```
 
-- [ ] **Step 5: lint + test + コミット**
+- [x] **Step 5: lint + test + コミット**
 
 Run: `pnpm lint && pnpm test`
 Expected: どちらも PASS（`profile.timeline` への参照が残っていれば tsc が検知する）
@@ -1088,7 +1090,7 @@ git commit -m "feat: Timeline を microCMS から取得するように移行"
 - 年見出しノード: `size-3.5` のまま（広くなった列の中央に自然に配置される）
 - コンテンツ先頭行が 40px アバターと光学的に揃うよう、エントリ本文に `pt-2` を追加
 
-- [ ] **Step 1: timeline.tsx を改修**
+- [x] **Step 1: timeline.tsx を改修**
 
 import を変更（`MapPin` に追加）:
 
@@ -1197,7 +1199,7 @@ const categoryConfig: Record<
 >
 ```
 
-- [ ] **Step 2: lint + test + コミット**
+- [x] **Step 2: lint + test + コミット**
 
 Run: `pnpm lint && pnpm test`
 Expected: どちらも PASS
@@ -1220,12 +1222,12 @@ git commit -m "feat: Timeline を丸アイコンサムネイル前提のデザ�
 
 **Files:** なし（検証のみ）
 
-- [ ] **Step 1: 全体チェック**
+- [x] **Step 1: 全体チェック**
 
 Run: `pnpm lint && pnpm test && pnpm build`
 Expected: すべて PASS（env 未設定の場合、build は `MICROCMS_SERVICE_DOMAIN / MICROCMS_API_KEY が未設定です` で失敗する = 意図どおりのメッセージが出ることも確認）
 
-- [ ] **Step 2: 表示確認**
+- [ ] **Step 2: 表示確認** <!-- 未完了 -->
 
 Run: `pnpm dev`
 確認項目:
@@ -1234,7 +1236,7 @@ Run: `pnpm dev`
 - /press: 一覧表示（0 件なら「記事はまだありません。」）
 - ライト / ダークテーマ両方でアバターのコントラスト確認
 
-- [ ] **Step 3: 完了コミット（残変更があれば）**
+- [x] **Step 3: 完了コミット（残変更があれば）**
 
 ```bash
 git status
