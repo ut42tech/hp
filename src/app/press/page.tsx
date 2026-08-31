@@ -4,6 +4,8 @@ import { FadeIn } from "@/components/motion/fade-in";
 import { PressCard } from "@/components/press/press-card";
 import { getAllPress } from "@/lib/microcms";
 
+export const revalidate = 3600; // MICROCMS_REVALIDATE_SECONDS と同値（route segment config は静的リテラルを要求）
+
 export const metadata: Metadata = {
   title: "Press",
   description:
@@ -38,7 +40,7 @@ export default async function PressPage() {
         ) : (
           <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((item) => (
-              <li key={item.url || item.title}>
+              <li key={item.slug}>
                 <PressCard item={item} />
               </li>
             ))}
