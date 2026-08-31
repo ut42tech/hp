@@ -108,6 +108,8 @@ export interface Keyword {
 
 /** メディアで取り上げられた Web 記事（microCMS で管理）。 */
 export interface PressItem {
+  /** microCMS の contentId。一覧の key に使う */
+  slug: string;
   title: string;
   /** 媒体名（例: 長崎のWA!（長崎市）） */
   outlet: string;

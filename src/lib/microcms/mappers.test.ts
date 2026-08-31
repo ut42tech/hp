@@ -48,6 +48,7 @@ const rawPress: RawPress = {
 describe("mapPress", () => {
   it("PressItem に変換する", () => {
     expect(mapPress(rawPress)).toEqual({
+      slug: "abc",
       title: "掲載記事",
       outlet: "長崎のWA!",
       url: "https://example.com/article",
@@ -103,6 +104,15 @@ describe("mapProject", () => {
       links: [{ fieldId: "link", label: "L", href: "https://a", kind: ["x"] }],
     });
     expect(mapped.links[0]?.kind).toBe("other");
+  });
+
+  it("links 未設定（microCMS は null を返す）は空配列になる", () => {
+    expect(mapProject({ ...rawProject, links: null }).links).toEqual([]);
+    expect(mapProject({ ...rawProject, links: undefined }).links).toEqual([]);
+  });
+
+  it("tags 未設定は空配列になる", () => {
+    expect(mapProject({ ...rawProject, tags: undefined }).tags).toEqual([]);
   });
 });
 

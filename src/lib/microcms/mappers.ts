@@ -62,6 +62,7 @@ export function parseTags(text: string | undefined): string[] {
 
 export function mapPress(raw: RawPress): PressItem {
   return {
+    slug: raw.id,
     title: raw.title,
     outlet: raw.outlet,
     url: raw.url,
