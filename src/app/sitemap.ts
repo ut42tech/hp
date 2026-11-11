@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 
+import { hasPress } from "@/content/press";
 import { site } from "@/lib/site";
 
 /**
@@ -21,11 +22,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 0.8,
     },
-    {
-      url: `${site.url}/press`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
+    ...(hasPress()
+      ? [
+          {
+            url: `${site.url}/press`,
+            lastModified: now,
+            changeFrequency: "monthly" as const,
+            priority: 0.7,
+          },
+        ]
+      : []),
   ];
 }

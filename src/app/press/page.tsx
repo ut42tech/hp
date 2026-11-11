@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 import { FadeIn } from "@/components/motion/fade-in";
 import { PressCard } from "@/components/press/press-card";
-import { getAllPress } from "@/content/press";
+import { getAllPress, hasPress } from "@/content/press";
 
 export const metadata: Metadata = {
   title: "Press",
@@ -12,6 +13,8 @@ export const metadata: Metadata = {
 };
 
 export default function PressPage() {
+  if (!hasPress()) notFound();
+
   const items = getAllPress();
 
   return (
@@ -31,19 +34,13 @@ export default function PressPage() {
       </FadeIn>
 
       <FadeIn delay={0.05}>
-        {items.length === 0 ? (
-          <p className="py-16 text-center text-sm text-muted-foreground">
-            記事はまだありません。
-          </p>
-        ) : (
-          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map((item) => (
-              <li key={item.url || item.title}>
-                <PressCard item={item} />
-              </li>
-            ))}
-          </ul>
-        )}
+        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((item) => (
+            <li key={item.url || item.title}>
+              <PressCard item={item} />
+            </li>
+          ))}
+        </ul>
       </FadeIn>
     </section>
   );
