@@ -56,3 +56,15 @@ export function sortByPublishedDesc(posts: BlogPost[]): BlogPost[] {
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
   );
 }
+
+const jstDate = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Asia/Tokyo",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+/** ISO 日時を Asia/Tokyo の日付 "YYYY.MM.DD" に整形する。 */
+export function formatBlogDate(iso: string): string {
+  return jstDate.format(new Date(iso)).replaceAll("-", ".");
+}

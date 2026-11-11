@@ -1,15 +1,8 @@
 import { Card } from "@/components/ui/card";
 import type { BlogPost } from "@/lib/blog/types";
+import { formatBlogDate } from "@/lib/blog/utils";
 
 import { platformMeta } from "./platform-meta";
-
-function formatDate(iso: string): string {
-  const d = new Date(iso);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}.${m}.${day}`;
-}
 
 export function BlogCard({ post }: { post: BlogPost }) {
   const meta = platformMeta[post.platform];
@@ -54,7 +47,7 @@ export function BlogCard({ post }: { post: BlogPost }) {
           </h3>
           <p className="text-xs text-muted-foreground">
             <time dateTime={post.publishedAt}>
-              {formatDate(post.publishedAt)}
+              {formatBlogDate(post.publishedAt)}
             </time>
             {typeof post.likes === "number" ? ` ・ ♥ ${post.likes}` : ""}
           </p>

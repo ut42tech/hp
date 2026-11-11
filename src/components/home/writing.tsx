@@ -3,6 +3,7 @@ import { platformMeta } from "@/components/blog/platform-meta";
 import { Section } from "@/components/home/section";
 import type { PressItem } from "@/content/types";
 import type { BlogPost } from "@/lib/blog/types";
+import { formatBlogDate } from "@/lib/blog/utils";
 
 interface WritingProps {
   posts: BlogPost[];
@@ -12,17 +13,19 @@ interface WritingProps {
 const linkClass =
   "text-sm text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline";
 
-/** ISO 日時や YYYY-MM(-DD) を YYYY.MM(.DD) に整形する。 */
-function formatDate(value: string): string {
+/** Press の date（YYYY-MM または YYYY-MM-DD）を YYYY.MM(.DD) に整形する。 */
+function formatPressDate(value: string): string {
   return value.slice(0, 10).replaceAll("-", ".");
 }
 
 function Row({
+  dateTime,
   date,
   source,
   title,
   url,
 }: {
+  dateTime: string;
   date: string;
   source: string;
   title: string;
@@ -37,7 +40,9 @@ function Row({
         className="group flex flex-col gap-0.5 py-3 sm:flex-row sm:items-baseline sm:gap-4"
       >
         <span className="flex shrink-0 items-baseline gap-3 text-xs text-muted-foreground sm:w-40">
-          <time className="tabular-nums">{formatDate(date)}</time>
+          <time dateTime={dateTime} className="tabular-nums">
+            {date}
+          </time>
           <span>{source}</span>
         </span>
         <span className="min-w-0 text-sm leading-relaxed group-hover:underline underline-offset-4">
@@ -60,7 +65,8 @@ export function Writing({ posts, press }: WritingProps) {
           {posts.map((post) => (
             <Row
               key={post.url}
-              date={post.publishedAt}
+              dateTime={post.publishedAt}
+              date={formatBlogDate(post.publishedAt)}
               source={platformMeta[post.platform].label}
               title={post.title}
               url={post.url}
@@ -83,7 +89,8 @@ export function Writing({ posts, press }: WritingProps) {
             {press.map((item) => (
               <Row
                 key={item.url || item.title}
-                date={item.date}
+                dateTime={item.date}
+                date={formatPressDate(item.date)}
                 source={item.outlet}
                 title={item.title}
                 url={item.url}
