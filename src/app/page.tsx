@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 
+import { About } from "@/components/home/about";
+import { Highlights } from "@/components/home/highlights";
 import { Intro } from "@/components/home/intro";
+import { FadeIn } from "@/components/motion/fade-in";
+import { getHighlights } from "@/content/highlights";
 
 export const revalidate = 3600;
 
@@ -14,6 +18,12 @@ export default function Home() {
   return (
     <div className="mx-auto max-w-2xl px-5">
       <Intro />
+      <FadeIn>
+        <Highlights items={getHighlights()} />
+      </FadeIn>
+      <FadeIn>
+        <About />
+      </FadeIn>
       {/* 以降のセクションは <FadeIn><Section …/></FadeIn> の形でここに追加する */}
     </div>
   );
