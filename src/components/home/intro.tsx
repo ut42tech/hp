@@ -18,7 +18,7 @@ export function Intro() {
           alt={`${name}のプロフィール写真`}
           width={160}
           height={160}
-          priority
+          preload
           className="size-20 rounded-full object-cover md:size-24"
         />
       ) : (

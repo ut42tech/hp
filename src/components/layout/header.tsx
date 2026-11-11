@@ -22,7 +22,11 @@ export function Header() {
           className="flex items-center gap-4"
         >
           {navItems.map((item) => (
-            <Link key={item.href} href={item.href} className={linkClass}>
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`${linkClass} -mx-2 inline-flex min-h-11 items-center px-2`}
+            >
               {item.label}
             </Link>
           ))}

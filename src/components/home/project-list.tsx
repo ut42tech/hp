@@ -39,6 +39,7 @@ export function ProjectList() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-0.5 py-1 text-sm font-medium text-foreground transition-colors hover:text-accent"
                     >
+                      <span className="sr-only">{project.title} の </span>
                       {link.label}
                       <ArrowUpRight className="size-3.5" aria-hidden />
                     </a>

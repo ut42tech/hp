@@ -59,9 +59,17 @@ for (const vp of viewports) {
     const page = await context.newPage();
     for (const route of routes) {
       const label = `${route.name} ${vp.name} ${scheme}`;
-      await page.goto(new URL(route.path, baseUrl).toString(), {
+      const res = await page.goto(new URL(route.path, baseUrl).toString(), {
         waitUntil: "networkidle",
       });
+      if (!res || !res.ok()) {
+        console.log(
+          `FAIL http-status ${label} (${res ? res.status() : "no response"})`,
+        );
+        failures.push(
+          `http-status: ${label} (${res ? res.status() : "no response"})`,
+        );
+      }
 
       const overflow = await page.evaluate(() => ({
         scrollWidth: document.documentElement.scrollWidth,

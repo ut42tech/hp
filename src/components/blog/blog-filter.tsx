@@ -33,6 +33,7 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
             type="button"
             aria-pressed={active === f.value}
             onClick={() => setActive(f.value)}
+            className="inline-flex min-h-11 items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <span
               className={`inline-block rounded-full px-3 py-1 text-xs transition-colors ${

@@ -11,8 +11,8 @@ interface FadeInProps {
 
 /**
  * 単純な fade + slide-up 演出（ビューポートに入ったとき一度だけ再生）。Apple 風の ease-out カーブを使う。
- * SSR・JS 無効・印刷・クローラでは常に表示し、マウント後に（動きを減らす設定でない場合のみ）
- * 非表示の初期状態へ切り替えてから、ビューポートに入ったときに再生する。
+ * SSR・JS 無効・印刷・クローラでは常に表示し、マウント後に（動きを減らす設定でなく、かつ要素が
+ * ビューポートより下にある場合のみ）非表示の初期状態へ切り替えてから、ビューポートに入ったときに再生する。
  * `useReducedMotion` は SSR/ハイドレーション中は null なので `=== false` で判定する。
  */
 export function FadeIn({ children, delay = 0, className }: FadeInProps) {
@@ -22,7 +22,12 @@ export function FadeIn({ children, delay = 0, className }: FadeInProps) {
   const [armed, setArmed] = useState(false);
 
   useEffect(() => {
-    if (reduce === false) setArmed(true);
+    if (reduce !== false) return;
+    // すでにビューポート内・上方にある要素は隠さない（ちらつき防止）。完全に下にある要素のみ arm する。
+    const el = ref.current;
+    if (el && el.getBoundingClientRect().top >= window.innerHeight) {
+      setArmed(true);
+    }
   }, [reduce]);
 
   const hidden = armed && !inView;

@@ -136,15 +136,15 @@ export interface Profile {
   headline: string;
   /** ホームの自己紹介（短い文の配列） */
   summary: string[];
-  /** 所属。Hero サイドバーで「role / at school」の2行に分けて表示する */
+  /** 所属。Intro で「role · school」として表示する */
   affiliation: { role: string; school: string };
-  /** 研究室。Hero でリンク表示する */
+  /** 研究室。Intro でリンク表示する */
   lab: { name: string; url: string };
-  /** コミュニティ・役職などの肩書き一覧（Hero に列挙） */
+  /** コミュニティ・役職などの肩書き一覧（About に列挙） */
   titles: string[];
-  /** Hero で語るモットー（日本語） */
+  /** Intro で表示するモットー（日本語） */
   motto: string;
-  /** 旧 About 本文。ホームでは未使用（データは保持可） */
+  /** About セクションで展開表示する本文 */
   bio?: string[];
   image?: string;
   social: SocialLink[];
