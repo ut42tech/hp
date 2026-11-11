@@ -9,7 +9,7 @@
 対象ファイル: `src/content/profile.ts`（型は `src/content/types.ts` の `Profile`）
 
 - [ ] **`headline`** — 現在値: 「学生エンジニア / フルスタック・デザイン」。Intro の肩書き 1 行と OGP 画像に使われる。今の立場・得意領域を表せているか。1 行で折り返さず読める長さか
-- [ ] **`affiliation`**（`role` / `school`） — 現在値: Master's Student / Nagasaki University。Intro の所属表記（M1 など）が進級・所属変更後も正しいか。学年表記を入れるか
+- [ ] **`affiliation`**（`role` / `school`） — 現在値: Master's Student / Nagasaki University。Intro には `{role} · {school}` と研究室リンクが「Master's Student · Nagasaki University」「Setozaki Lab」の形で表示される。進級・所属変更後も正しいか、role の表記を変更するか（例: M1）
 - [ ] **`lab`**（`name` / `url`） — 現在値: Setozaki Lab。研究室名・リンク先が現在も有効か
 - [ ] **`motto`** — 現在値: 「デザインとテクノロジーで、最高のユーザ体験を届けたい。」。Intro の 1 行。変更する場合は `summary` の 1 文目や metadata の description にも同じ文言が出るので揃える
 - [ ] **`summary`** — About 冒頭の 2〜3 文（現在 3 文）。直近の研究テーマ・活動（ChoTech など）が最新か。事実関係（受賞・設立時期）に誤りがないか
@@ -25,7 +25,7 @@
 
 - [ ] **2026-05 以降の追加** — 現在の最新は 2026-05-24「Engineer Guild Hackathon 2026 参加」。それ以降の活動・受賞・登壇・就職先などを追加（`date` は `YYYY-MM` または `YYYY-MM-DD`）
 - [ ] **`featured`**（折りたたみ時にも表示される主要項目。現在 6 件: 大学院進学 / 学長賞 / ガバイソン最優秀賞 / ChoTech 設立 / インド留学 / 2024-03 の項目） — 今の自分を伝える項目になっているか。多すぎず 6 件前後か。古い項目を外し、新しい項目を加える
-- [ ] **`highlight`**（Highlights に出る項目。現在 Timeline 側は「学長賞」） — Highlights は Work と Timeline を合わせて日付降順で最大 3 件。直近の目玉が選ばれているか
+- [ ] **`highlight`**（Highlights に出る項目。現在 Timeline 側は「長崎大学 学長賞（学術研究活動分野）受賞」と「JSET 2024年春季全国大会 学生セッション優秀発表賞」の 2 件で、Work 側の「コトコトバ」と合わせて上限の 3 件に達している） — Highlights は Work と Timeline を合わせて日付降順で最大 3 件のため、新しい項目を足す場合は何かを外す必要がある。直近の目玉が選ばれているか。Highlights には Work の `summary` / Timeline の `description` が 2 行に切り詰めて表示される
 - [ ] **各項目の `title` / `description` / `location`** — 事実関係・表記、`description` の長さ（長すぎないか）
 - [ ] **`life` カテゴリ** — 全件表示時のみ出る。公開してよい内容か
 
@@ -35,7 +35,7 @@
 
 - [ ] **追加作品** — 直近のハッカソン作品・個人開発・OSS・研究などの追記（手順は `.claude/skills/add-work/SKILL.md`）
 - [ ] **各 `links` の生存確認** — GitHub / Demo / 論文 / スライドなどのリンク切れ、非公開化したリポジトリがないか
-- [ ] **`summary`** — Projects の 1 行説明（`line-clamp` で切られる場合あり）。1 行で何の作品か伝わるか。古い・曖昧な説明の見直し
+- [ ] **`summary`** — Projects の 1 行説明（全文が表示される）。1 行で何の作品か伝わるか。古い・曖昧な説明の見直し
 - [ ] **`tags`** — 表記ゆれ（Next.js / NextJS など）がないか
 - [ ] **`highlight`**（Highlights に出る作品。現在 Work 側は「コトコトバ」） — 最新の代表作・受賞作になっているか。Timeline 側の `highlight` と合わせて 3 件以内に収まるか
 - [ ] **MapChat（`slug: "mapchat"`）の空リンク** — `links: []` のためリンクが出ない。公開できるリポジトリ・デモがあれば追加し、なければこのままでよいか判断する

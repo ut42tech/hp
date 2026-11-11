@@ -73,7 +73,7 @@ interface TechStackListProps {
 
 /**
  * 技術名の配列をアイコン付き Badge で列挙する共有コンポーネント。
- * Bento タイルと About ページから呼び出される。
+ * Skills セクションから呼び出される。
  */
 export function TechStackList({ items, className }: TechStackListProps) {
   return (
