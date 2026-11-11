@@ -18,7 +18,7 @@ export default async function BlogsPage() {
   const posts = await getAllBlogPosts();
 
   return (
-    <section className="mx-auto max-w-6xl px-6 py-16">
+    <section className="mx-auto max-w-2xl px-5 py-12">
       <FadeIn>
         <header className="mb-10 flex flex-col gap-2">
           <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">

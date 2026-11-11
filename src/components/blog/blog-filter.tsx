@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-import { Badge } from "@/components/ui/badge";
 import type { BlogPlatform, BlogPost } from "@/lib/blog/types";
 
 import { BlogCard } from "./blog-card";
@@ -26,7 +25,7 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
     <div className="flex flex-col gap-6">
       <fieldset
         aria-label="記事のプラットフォームフィルター"
-        className="flex flex-wrap gap-2 border-none p-0"
+        className="flex flex-wrap gap-1 border-none p-0 -ml-3"
       >
         {FILTERS.map((f) => (
           <button
@@ -35,12 +34,15 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
             aria-pressed={active === f.value}
             onClick={() => setActive(f.value)}
           >
-            <Badge
-              variant={active === f.value ? "default" : "secondary"}
-              className="cursor-pointer transition-colors"
+            <span
+              className={`inline-block rounded-full px-3 py-1 text-xs transition-colors ${
+                active === f.value
+                  ? "bg-foreground text-background"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
             >
               {f.label}
-            </Badge>
+            </span>
           </button>
         ))}
       </fieldset>
@@ -50,14 +52,9 @@ export function BlogFilter({ posts }: { posts: BlogPost[] }) {
           このプラットフォームの記事はまだありません。
         </p>
       ) : (
-        <ul
-          aria-live="polite"
-          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-        >
+        <ul aria-live="polite" className="divide-y divide-border">
           {filtered.map((post) => (
-            <li key={post.url}>
-              <BlogCard post={post} />
-            </li>
+            <BlogCard key={post.url} post={post} />
           ))}
         </ul>
       )}

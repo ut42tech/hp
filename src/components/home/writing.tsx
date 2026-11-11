@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { platformMeta } from "@/components/blog/platform-meta";
 import { Section } from "@/components/home/section";
 import type { PressItem } from "@/content/types";
@@ -18,18 +19,20 @@ function formatPressDate(value: string): string {
   return value.slice(0, 10).replaceAll("-", ".");
 }
 
-function Row({
+export function Row({
   dateTime,
   date,
   source,
   title,
   url,
+  extra,
 }: {
   dateTime: string;
   date: string;
   source: string;
   title: string;
   url: string;
+  extra?: ReactNode;
 }) {
   return (
     <li>
@@ -45,8 +48,11 @@ function Row({
           </time>
           <span>{source}</span>
         </span>
-        <span className="min-w-0 text-sm leading-relaxed group-hover:underline underline-offset-4">
-          {title}
+        <span className="min-w-0">
+          <span className="text-sm leading-relaxed underline-offset-4 group-hover:underline">
+            {title}
+          </span>
+          {extra}
         </span>
       </a>
     </li>
