@@ -1,9 +1,9 @@
 "use client";
 
 import { MapPin } from "lucide-react";
-import { type MotionProps, motion, useReducedMotion } from "motion/react";
-import { useState } from "react";
+import { useId, useState } from "react";
 
+import { Section } from "@/components/home/section";
 import type { TimelineCategory, TimelineEntry } from "@/content/types";
 import { cn } from "@/lib/utils";
 
@@ -26,54 +26,23 @@ type Row =
   | { type: "entry"; entry: TimelineEntry };
 
 interface TimelineProps {
-  entries: TimelineEntry[];
-  className?: string;
+  featured: TimelineEntry[];
+  all: TimelineEntry[];
 }
 
-export function Timeline({ entries, className }: TimelineProps) {
-  const reduce = useReducedMotion();
-  const [activeFilter, setActiveFilter] = useState<TimelineCategory | "all">(
-    "all",
-  );
+/**
+ * 年表。既定は主要項目のみ、「すべて見る」で全件（life 含む）を表示する。
+ * Section は Server 専用の処理を持たないので、このクライアントファイル内で使う。
+ */
+export function Timeline({ featured, all }: TimelineProps) {
+  const [expanded, setExpanded] = useState(false);
+  const listId = useId();
+  const canToggle = featured.length !== all.length;
+  const entries = expanded ? all : featured;
 
-  const counts = entries.reduce(
-    (acc, e) => {
-      acc[e.category] = (acc[e.category] ?? 0) + 1;
-      return acc;
-    },
-    {} as Record<TimelineCategory, number>,
-  );
-
-  // categoryConfig のキー順（life→…→other）で安定したフィルタ並びにする。
-  const presentCategories = (
-    Object.keys(categoryConfig) as TimelineCategory[]
-  ).filter((c) => counts[c]);
-
-  const filters: {
-    value: TimelineCategory | "all";
-    label: string;
-    count: number;
-    dot?: string;
-  }[] = [
-    { value: "all", label: "all", count: entries.length },
-    ...presentCategories.map((c) => ({
-      value: c,
-      label: categoryConfig[c].label,
-      count: counts[c],
-      dot: categoryConfig[c].dot,
-    })),
-  ];
-
-  const sorted = [...entries].sort((a, b) => (a.date < b.date ? 1 : -1));
-  const filtered =
-    activeFilter === "all"
-      ? sorted
-      : sorted.filter((e) => e.category === activeFilter);
-
-  // 年見出しとエントリを 1 本のリストにフラット化し、git-graph レールを連続させる。
   const rows: Row[] = [];
   let currentYear: string | null = null;
-  for (const entry of filtered) {
+  for (const entry of entries) {
     const year = entry.date.slice(0, 4);
     if (year !== currentYear) {
       rows.push({ type: "year", year });
@@ -82,54 +51,9 @@ export function Timeline({ entries, className }: TimelineProps) {
     rows.push({ type: "entry", entry });
   }
 
-  // スクロールで各行を順次フェードイン。reduced-motion なら即時表示。
-  const rowMotion: MotionProps = reduce
-    ? {}
-    : {
-        initial: { opacity: 0, y: 12 },
-        whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true, amount: 0.3 },
-        transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
-      };
-
   return (
-    <div className={cn("flex flex-col gap-8", className)}>
-      <fieldset
-        aria-label="タイムラインのカテゴリフィルター"
-        className="flex flex-wrap gap-2 border-none p-0"
-      >
-        {filters.map((f) => {
-          const active = activeFilter === f.value;
-          return (
-            <button
-              key={f.value}
-              type="button"
-              aria-pressed={active}
-              onClick={() => setActiveFilter(f.value)}
-              className={cn(
-                "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition-colors",
-                active
-                  ? "border-accent bg-accent/10 text-foreground"
-                  : "border-border bg-secondary text-muted-foreground hover:text-foreground",
-              )}
-            >
-              <span
-                aria-hidden
-                className={cn(
-                  "size-1.5 shrink-0 rounded-full",
-                  f.dot ?? "border border-muted-foreground",
-                )}
-              />
-              {f.label}
-              <span className="tabular-nums text-muted-foreground/70">
-                {f.count}
-              </span>
-            </button>
-          );
-        })}
-      </fieldset>
-
-      <ol aria-live="polite" className="flex flex-col">
+    <Section id="timeline" label="Timeline">
+      <ol id={listId} className="flex flex-col">
         {rows.map((row, index) => {
           const isLast = index === rows.length - 1;
           const lineSegment = !isLast ? (
@@ -138,69 +62,53 @@ export function Timeline({ entries, className }: TimelineProps) {
 
           if (row.type === "year") {
             return (
-              <motion.li
-                key={`year-${row.year}`}
-                {...rowMotion}
-                className="relative flex gap-4"
-              >
+              <li key={`year-${row.year}`} className="relative flex gap-4">
                 <div className="flex w-5 flex-col items-center">
                   <span
                     aria-hidden
-                    className="size-3.5 shrink-0 rounded-full border-2 border-muted-foreground bg-card ring-4 ring-card"
+                    className="size-3.5 shrink-0 rounded-full border-2 border-muted-foreground bg-background ring-4 ring-background"
                   />
                   {lineSegment}
                 </div>
-                <div className="flex flex-1 items-center gap-3 pb-7">
+                <div className="flex flex-1 items-center gap-3 pb-6">
                   <span className="text-base font-bold tracking-tight tabular-nums text-foreground">
                     {row.year}
                   </span>
                   <span aria-hidden className="h-px flex-1 bg-border" />
                 </div>
-              </motion.li>
+              </li>
             );
           }
 
           const { entry } = row;
           const config = categoryConfig[entry.category];
-          // 次が年見出し＝時代の区切り。手前のエントリの余白を広げて段差を作る。
-          // レール線は padding を満たすので連続性は保たれる。
           const nextIsYear = rows[index + 1]?.type === "year";
 
           return (
-            <motion.li
+            <li
               key={`${entry.date}-${entry.title}`}
-              {...rowMotion}
               className="relative flex gap-4"
             >
               <div className="flex w-5 flex-col items-center">
                 <span
                   aria-hidden
-                  className="size-2.5 shrink-0 rounded-full bg-muted-foreground ring-4 ring-card"
+                  className={cn(
+                    "size-2.5 shrink-0 rounded-full ring-4 ring-background",
+                    config.dot,
+                  )}
                 />
                 {lineSegment}
               </div>
               <div
                 className={cn(
-                  "flex flex-1 flex-col gap-2",
-                  nextIsYear ? "pb-14" : "pb-8",
+                  "flex min-w-0 flex-1 flex-col gap-1.5",
+                  nextIsYear ? "pb-10" : "pb-6",
                 )}
               >
-                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-                  <time className="text-sm font-semibold tabular-nums text-accent">
-                    {formatDate(entry.date)}
-                  </time>
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "size-1.5 shrink-0 rounded-full",
-                        config.dot,
-                      )}
-                    />
-                    {config.label}
-                  </span>
-                </div>
-                <h3 className="text-base font-bold leading-snug md:text-lg">
+                <time className="text-sm font-semibold tabular-nums text-accent">
+                  {formatDate(entry.date)}
+                </time>
+                <h3 className="break-words text-base font-bold leading-snug">
                   {entry.title}
                 </h3>
                 {entry.description ? (
@@ -215,10 +123,24 @@ export function Timeline({ entries, className }: TimelineProps) {
                   </p>
                 ) : null}
               </div>
-            </motion.li>
+            </li>
           );
         })}
       </ol>
-    </div>
+
+      {canToggle ? (
+        <button
+          type="button"
+          aria-expanded={expanded}
+          aria-controls={listId}
+          onClick={() => setExpanded((v) => !v)}
+          className="mt-2 inline-flex min-h-11 cursor-pointer items-center text-sm text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
+        >
+          {expanded
+            ? "主要な項目だけ表示"
+            : `すべて見る（全 ${all.length} 件）`}
+        </button>
+      ) : null}
+    </Section>
   );
 }

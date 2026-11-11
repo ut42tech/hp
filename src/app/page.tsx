@@ -5,8 +5,10 @@ import { Highlights } from "@/components/home/highlights";
 import { Intro } from "@/components/home/intro";
 import { ProjectList } from "@/components/home/project-list";
 import { Skills } from "@/components/home/skills";
+import { Timeline } from "@/components/home/timeline";
 import { FadeIn } from "@/components/motion/fade-in";
 import { getHighlights } from "@/content/highlights";
+import { getFeaturedTimeline, getTimeline } from "@/content/timeline";
 
 export const revalidate = 3600;
 
@@ -31,6 +33,12 @@ export default function Home() {
       </FadeIn>
       <FadeIn>
         <Skills />
+      </FadeIn>
+      <FadeIn>
+        <Timeline
+          featured={getFeaturedTimeline()}
+          all={getTimeline({ includeLife: true })}
+        />
       </FadeIn>
       {/* 以降のセクションは <FadeIn><Section …/></FadeIn> の形でここに追加する */}
     </div>
