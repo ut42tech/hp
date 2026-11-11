@@ -26,13 +26,14 @@ relies on these string unions, so a typo fails `pnpm lint`/the typecheck:
 - `thumbnail?: string` — optional `public/`-relative path, e.g. `/photos/foo.jpg`.
 - `links: WorkLink[]` — each `{ label, href, kind }`, where
   `kind: "github" | "demo" | "paper" | "slide" | "article" | "other"`. Use `[]` if none.
-- `featured?: boolean` — `true` surfaces it on the Bento home **Featured** tile
-  (consumed by `getFeaturedWorks()`).
+- `highlight?: boolean` — `true` surfaces it in the home page **Highlights** section
+  (max 3 items overall, newest first; selected by `getHighlights()` together with
+  `highlight: true` Timeline entries). Leave unset for ordinary entries.
 
 ## Steps
 
 1. Gather (ask the user, or infer from context): slug, category, title, summary,
-   optional `body` paragraphs, date, tags, links, and whether it's `featured`.
+   optional `body` paragraphs, date, tags, links, and whether it's a `highlight`.
 2. Open `src/content/works.ts`. Append the new object **inside the matching category
    block**, delimited by comments like `// ─── project ───`, `// ─── oss ───`,
    `// ─── research ───`, `// ─── experience ───`. Keep entries roughly newest-first by `date`.
@@ -62,21 +63,20 @@ relies on these string unions, so a typo fails `pnpm lint`/the typecheck:
     { label: "GitHub", href: "https://github.com/ut42tech/my-new-app", kind: "github" },
     { label: "Demo", href: "https://my-new-app.example.com", kind: "demo" },
   ],
-  featured: true,
+  highlight: true,
 }
 ```
 
 ## Notes / gotchas (verified against the repo)
 
-- **Do not add a `src/app/works/[slug]/page.tsx` for the entry.** That route currently
-  just `redirect("/works")`, and `src/app/works/page.tsx` renders
-  `<UnderConstruction title="Works" />`. Adding a Work updates *data only*, not routing.
-- The **only** per-slug consumer is `src/app/works/[slug]/opengraph-image.tsx`, whose
-  `generateStaticParams()` maps over `works` to pre-render one OG image per slug. A
-  duplicate or malformed slug breaks that static generation at build time.
-- Gallery photos are a **separate** dataset (`PhotoEntry` in `src/content/gallery.ts`) —
-  out of scope for this skill.
+- **Do not add any per-slug page for the entry.** There is no `/works` route any more;
+  Works appear on the home page: the **Projects** section lists `getProjects()` (categories `project` / `oss` / `research`; `experience` is not shown there) and the
+  **Highlights** section lists items flagged `highlight: true`. Adding a Work updates
+  *data only*, not routing.
+- Gallery photos are a **separate** dataset (`PhotoEntry` in `src/content/types.ts`,
+  `profile.photos`) — out of scope for this skill.
 - The site is single-language (Japanese); keep `title` / `summary` / `body` in Japanese
   to match the convention notes in `types.ts`.
-- Read-side helpers in the same file (`getWorkBySlug`, `getFeaturedWorks`,
-  `getWorksByCategory`, `workCategories`) consume this array — you don't need to edit them.
+- Read-side helpers live in `src/content/works.ts` (`getProjects`) and
+  `src/content/highlights.ts` (`getHighlights`); you don't need to edit them.
+- After adding or editing prose, see `docs/content-update-checklist.md` for the review points.

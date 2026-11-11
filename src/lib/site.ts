@@ -5,7 +5,7 @@ export const site = {
   url: "https://ut42tech.com",
   name: "Takuya Uehara",
   description:
-    "Takuya Uehara のパーソナルサイト。ソフトウェア開発・HCI 研究・OSS・コミュニティ活動などの取り組みをまとめています。",
+    "Takuya Uehara（上原拓也）のパーソナルサイト。学生エンジニア / フルスタック・デザイン。制作物・経歴・ブログなどの取り組みをまとめています。",
   locale: "ja_JP",
   ogImage: "/opengraph-image",
   /** true にするとページ上部に工事中バナーを表示する */

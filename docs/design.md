@@ -4,18 +4,19 @@
 
 ## デザイン方向性
 
-- **Bento UI × Apple 風**
-- サイズの異なる角丸タイル(Bento)を 1 画面にまとめ、情報の優先度をタイルサイズで表現する
-- Apple の製品ページ(AirPods, Apple Watch 等)や Raycast / Linear の Bento セクションを参考
-- **モノクロ基調**(オフホワイトと near-black)に **GitHub Green アクセント**を 1 点使い
-- 余白は大きめ、ボーダーは極薄、角丸は深め(`rounded-3xl`)、ホバー時の反応は控えめ
+- **モバイルファースト × 低装飾のモノクロ**(詳細は [モバイルファースト・リニューアル設計書](./superpowers/specs/2026-11-03-mobile-first-renewal-design.md) §2)
+- 1 カラムの縦スクロール。幅 375px のスマホで開く「名刺代わり」の読者を最優先し、数秒で誰かが伝わることを重視する
+- **カード(枠・背景付きの箱)を原則使わない。** 情報の優先度は文字サイズ・太さ・余白・色の濃淡で表す。例外は Highlights の横スワイプカードのみ
+- **モノクロ基調**(オフホワイトと near-black)に **GitHub Green アクセント**を 1 点だけ使う
+- 余白は大きめ、区切りは細い罫線、ホバー時の反応は控えめ
 
 ### 避けるもの
 
+- カードやタイルの多用(Bento 型の箱組みレイアウトは廃止済み)
 - 派手なグラデーション、ネオン、発光エフェクト
 - 重いパララックス、スクロールジャック
 - 過剰なマイクロインタラクション
-- 装飾過多のイラスト・3D モデル
+- 装飾過多のイラスト・3D モデル、物理演算などの重い演出
 
 ## カラートークン
 
@@ -30,8 +31,8 @@
 | `--muted` | `oklch(0.97 0 0)` | 控えめな背景(副次要素) |
 | `--muted-foreground` | `oklch(0.45 0 0)` | 控えめなテキスト(キャプション等) |
 | `--border` | `oklch(0.92 0 0)` | ボーダー(極薄) |
-| `--card` | `oklch(1 0 0)` | Bento タイル背景 |
-| `--card-foreground` | `oklch(0.145 0 0)` | タイル内テキスト |
+| `--card` | `oklch(1 0 0)` | shadcn の Card 背景(Press カードなど限られた箇所のみ) |
+| `--card-foreground` | `oklch(0.145 0 0)` | Card 内テキスト |
 | `--accent` | `oklch(0.52 0.17 152)` | **GitHub Green アクセント** |
 | `--accent-foreground` | `oklch(0.985 0 0)` | アクセント上のテキスト |
 | `--ring` | `oklch(0.52 0.17 152)` | フォーカスリング |
@@ -48,8 +49,8 @@
 | `--muted` | `oklch(0.2 0.008 155)` | 副次背景 |
 | `--muted-foreground` | `oklch(0.7 0 0)` | 控えめテキスト |
 | `--border` | `oklch(0.25 0.008 155)` | 極薄ボーダー |
-| `--card` | `oklch(0.17 0.008 155)` | タイル背景(bg より微妙に明るい) |
-| `--card-foreground` | `oklch(0.96 0 0)` | タイル内テキスト |
+| `--card` | `oklch(0.17 0.008 155)` | Card 背景(bg より微妙に明るい) |
+| `--card-foreground` | `oklch(0.96 0 0)` | Card 内テキスト |
 | `--accent` | `oklch(0.65 0.19 150)` | Green（dark では少し明るく） |
 | `--accent-foreground` | `oklch(0.14 0.008 155)` | near-black |
 | `--ring` | `oklch(0.65 0.19 150)` | フォーカスリング |
@@ -153,88 +154,61 @@
 
 ### ウェイト
 
-使用するウェイトは以下 3 段階に絞る:
+使用するウェイトは以下に絞る:
 
 | ウェイト | 用途 |
 |---|---|
 | **400** Regular | 本文・説明文 |
-| **700** Bold | 見出し・強調 |
-| **800** ExtraBold | Hero の大きな名前表示 |
+| **500** Medium | 小見出し・カードタイトル |
+| **700** Bold | 名前・強調 |
 
 ### スケール(Tailwind 標準クラス)
 
 | 用途 | クラス | サイズ |
 |---|---|---|
-| Hero 名前 | `text-5xl md:text-7xl font-extrabold` | 3rem〜4.5rem |
-| セクション見出し | `text-2xl md:text-3xl font-bold` | 1.5〜1.875rem |
-| タイル見出し | `text-lg font-bold` | 1.125rem |
-| 本文 | `text-base` | 1rem |
-| キャプション | `text-sm text-muted-foreground` | 0.875rem |
+| Intro の名前 | `text-3xl md:text-4xl font-bold tracking-tight` | 1.875〜2.25rem |
+| 本文・headline | `text-base` | 1rem |
+| 補足・所属・モットー | `text-sm text-muted-foreground` | 0.875rem |
+| セクション見出しラベル | `text-xs font-medium uppercase tracking-widest text-muted-foreground` | 0.75rem |
+| 日付・キャプション | `text-xs tabular-nums text-muted-foreground` | 0.75rem |
 
-## Bento レイアウト
+## レイアウト
 
-### ブレークポイント戦略
+### 本文幅・余白
 
-- **Mobile**(`< md`): 1 カラムで縦積み
-- **Desktop**(`md:` 以上): 6 カラム × 4 行の Bento グリッド
+- ホームは 1 カラム。本文幅はモバイルで全幅(左右 `px-5`)、`md` 以上では `max-w-2xl` で中央寄せ。ヘッダー・フッターも同じ幅に揃える
+- セクション間の縦余白は `py-12 md:py-16`(共通コンポーネント `Section` で一元管理)
+- 横スクロールは発生させない。意図した横スワイプ領域は Highlights と About の写真帯のみ
 
-### トップページのタイル配置
+### セクション構成(上から順)
 
-```
-┌─────────────────────────────────────────────┐
-│  Hero                        (6×2)          │
-│                                              │
-├────────────────────────┬─────────┬──────────┤
-│  About          (4×2)  │ Tech    │ Contact  │
-│                        │ (2×1)   │ (2×1)    │
-│                        ├─────────┴──────────┤
-│                        │  (※Tech/Contact    │
-│                        │    は縦 1 段)      │
-├────────────────────────┴────────────────────┤
-│  Featured Works              (6×1)          │
-└─────────────────────────────────────────────┘
-```
-
-| タイル | Desktop スパン | 表示内容 |
+| # | セクション | 表現 |
 |---|---|---|
-| **Hero** | `md:col-span-6 md:row-span-2` | 名前、肩書き、一行紹介 |
-| **About** | `md:col-span-4 md:row-span-2` | 自己紹介文、所属、研究領域 |
-| **TechStack** | `md:col-span-2 md:row-span-1` | 主要技術のアイコン(lucide-react) |
-| **Contact** | `md:col-span-2 md:row-span-1` | SNS リンク群 |
-| **Featured** | `md:col-span-6 md:row-span-1` | 代表的な Works 2〜3 件の横並びカード |
+| 1 | **Intro** | アバター、名前(日本語 + 英語)、headline、所属、モットー、主要 SNS ボタン。ファーストビューに収める |
+| 2 | **Highlights** | 最大 3 件。`snap-x` の横スワイプカード(ホームで唯一のカード UI)。0 件なら非表示 |
+| 3 | **About** | `summary` の短文、`<details>` で `bio` を展開、役職の箇条書き、写真帯 |
+| 4 | **Projects** | 1 作品 1 行のリスト(作品名・summary・タグ・リンク) |
+| 5 | **Skills** | カテゴリ別の小チップ |
+| 6 | **Timeline** | 主要項目のみ → 「すべて見る」で全件(`aria-expanded` 付きトグル) |
+| 7 | **Writing** | Blog 最新 3 件。Press は 1 件以上あるときのみ併記 |
+| 8 | **Footer** | 全 SNS リンク、© 表記 |
 
-### グリッド実装(Tailwind 標準クラスのみ)
+### セクション見出し
+
+小さな英字ラベル(例: `Projects`)＋細い区切り線を共通コンポーネント(`src/components/home/section.tsx`)で統一する。
 
 ```tsx
-<section className="mx-auto max-w-6xl px-6 py-16">
-  <div className="grid grid-cols-1 gap-4 md:grid-cols-6 md:grid-rows-4">
-    <HeroTile      className="md:col-span-6 md:row-span-2" />
-    <AboutTile     className="md:col-span-4 md:row-span-2" />
-    <TechStackTile className="md:col-span-2 md:row-span-1" />
-    <ContactTile   className="md:col-span-2 md:row-span-1" />
-    <FeaturedTile  className="md:col-span-6 md:row-span-1" />
-  </div>
-</section>
+<div className="mx-auto max-w-2xl px-5">
+  <Intro />
+  <FadeIn><Highlights items={getHighlights()} /></FadeIn>
+  <FadeIn><About /></FadeIn>
+  {/* ... */}
+</div>
 ```
 
-arbitrary value は一切使っていない。全て Tailwind 標準スケール内。
+### ヘッダー
 
-## タイル共通スタイル
-
-全ての Bento タイルは shadcn `<Card>` をベースに、以下の共通クラスを当てる:
-
-```
-rounded-3xl border border-border bg-card p-6 md:p-8
-```
-
-要素別の補足:
-
-- **半径**: `rounded-3xl` で Apple 風の深めの角丸。shadcn の scale により `--radius(0.75rem) × 2.2 ≈ 1.65rem`
-- **ボーダー**: `border border-border` で極薄の 1px
-- **背景**: `bg-card`(light では白、dark では bg より微妙に明るい near-black)
-- **パディング**: mobile `p-6`、desktop `p-8`
-- **影**: 使わない(Apple 風は影に頼らず、ボーダーと背景差で奥行きを出す)
-- **ホバー**: Works カードなど操作可能なタイルのみ `transition-colors hover:bg-muted` 程度
+名前(ホームへのリンク)、`Blog` リンク、テーマ切替のみ。ハンバーガーメニューは持たない。
 
 ### フォーカスリング
 
@@ -255,8 +229,9 @@ import { motion } from 'motion/react';
 ### 基本原則
 
 - **Apple 的な ease-out** を基調とする(動きの最後でゆっくり減速)
-- 初回ロード時: Bento タイルを **fade-in + 下から軽く上昇**、stagger で順次出現
-- ホバー・クリックの反応は最小限(明確なフィードバックが必要な場所のみ)
+- 動きは各セクション入場時の軽いフェード(`components/motion/fade-in.tsx`、下から 16px の slide-up + fade、一度だけ再生)のみ
+- SSR・JS 無効・印刷では常に表示する(`FadeIn` はマウント後に初期状態を切り替える)
+- ホバー・クリックの反応は最小限
 - **派手なパララックス、スクロールハイジャック、自動再生動画は入れない**
 
 ### Easing 値
@@ -267,18 +242,8 @@ motion の props で渡す(arbitrary 値の CSS クラスを書かないため):
 const easeOutApple = [0.22, 1, 0.36, 1] as const;
 ```
 
-### 初回フェードイン(タイル共通)
-
-```tsx
-<motion.div
-  initial={{ opacity: 0, y: 16 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.6, ease: easeOutApple, delay: index * 0.08 }}
->
-```
-
-- `duration: 0.6`、stagger `0.08s` 間隔
-- reduced-motion ユーザー向けに `useReducedMotion()` で無効化する
+- `duration: 0.6`
+- `prefers-reduced-motion` のユーザーには `useReducedMotion()` でアニメーションを無効化する
 
 ## アクセシビリティ
 

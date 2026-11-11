@@ -10,13 +10,15 @@
 | ランタイム | **React** | 19.2.4 | Server Components 中心、Client Components は最小限 |
 | 言語 | **TypeScript** | 5.x | `strict: true`、`moduleResolution: "bundler"` |
 | スタイリング | **Tailwind CSS** | v4 | `@theme` でデザイントークン定義 |
-| UI プリミティブ | **shadcn/ui** | 最新(`base-nova` preset) | `button`, `card`, `badge`, `tabs`, `dropdown-menu`, `separator`。内部では `@base-ui/react`(Radix の後継)を使用 |
-| アイコン | **lucide-react** | 最新 | 他のアイコンライブラリは使わない |
+| UI プリミティブ | **shadcn/ui** | 最新(`base-nova` preset) | `button`, `card`, `badge`, `tooltip`。内部では `@base-ui/react`(Radix の後継)を使用 |
+| アイコン | **lucide-react** / **@icons-pack/react-simple-icons** | 最新 | 汎用アイコンは lucide-react、SNS・技術ブランドのロゴは simple-icons |
+| Blog 取得 | **fast-xml-parser** | ^5 | 外部プラットフォームの RSS を解析(`src/lib/blog/`) |
 | アニメーション | **motion** | 最新 | 旧 framer-motion、import は `motion/react` |
 | テーマ切替 | **next-themes** | 最新 | `class` 戦略、`suppressHydrationWarning` 必須 |
 | 多言語化 | **(未導入)** | — | 初期実装は日本語のみ。将来 **next-intl** で導入予定 |
 | フォント | **LINE Seed JP** | — | `next/font/google` 経由 |
 | Lint / Format | **Biome** | 2.2.0 | `noUnknownAtRules: off`(Tailwind v4 用) |
+| テスト | **Vitest** | ^4 | `pnpm test`。`src/content/` の選択関数と `src/lib/` のユーティリティをテスト |
 | パッケージマネージャ | **pnpm** | — | `pnpm-workspace.yaml` 使用 |
 | デプロイ | **Vercel** | — | 標準ビルド(`output: 'export'` は使わない) |
 
@@ -29,7 +31,7 @@ Next.js 16 には訓練データ以後の破壊的変更がいくつかある。
 - Server Component で受け取る `params` と `searchParams` は `Promise<...>` 型
 - 使用前に必ず `await` する必要がある
   ```ts
-  export default async function Page({ params }: PageProps<'/works/[slug]'>) {
+  export default async function Page({ params }: PageProps<'/foo/[slug]'>) {
     const { slug } = await params;
     // ...
   }
@@ -39,7 +41,7 @@ Next.js 16 には訓練データ以後の破壊的変更がいくつかある。
 
 - Next.js 16 ではルートパスから params の型を推論するグローバル型ヘルパーが提供される
 - import 不要、ファイルのどこでも使える
-- 例: `PageProps<'/works/[slug]'>` は `params: Promise<{ slug: string }>` を持つ
+- 例: `PageProps<'/foo/[slug]'>` は `params: Promise<{ slug: string }>` を持つ
 
 ### 3. Turbopack がデフォルト
 
@@ -61,8 +63,8 @@ Next.js 16 には訓練データ以後の破壊的変更がいくつかある。
 
 - v16 で導入された新しいキャッシュモデル(`'use cache'` ディレクティブ + `cacheLife`)
 - 有効化は `next.config.ts` の `cacheComponents: true`
-- 本プロジェクトは静的コンテンツのみで `generateStaticParams` による SSG で十分なため、**有効化しない**
-- 旧来の `dynamic = 'force-static'` や `revalidate` も使用しない
+- 本プロジェクトでは**有効化しない**
+- ホームと `/blogs` は外部記事の取得があるため、ページ単位の `export const revalidate = 3600`(ISR)で更新する
 
 ## 言語と将来の i18n 戦略
 
@@ -71,7 +73,7 @@ Next.js 16 には訓練データ以後の破壊的変更がいくつかある。
 - **日本語のみ**の単一言語サイト
 - `src/app/layout.tsx` に `<html lang="ja">` を固定で記述
 - UI 文言はコンポーネント内に日本語の文字列リテラルとして直接書く
-- コンテンツデータ(Profile / Work)も `string` 型で日本語固定
+- コンテンツデータ(Profile / Work / Timeline / Press)も `string` 型で日本語固定
 
 `[lang]` セグメント、`proxy.ts`、dictionaries、LocaleSwitcher などは **いずれも作らない**。
 
@@ -102,108 +104,135 @@ Next.js 16 には訓練データ以後の破壊的変更がいくつかある。
 portfolio/
 ├── next.config.ts                           # 空(Turbopack デフォルト)
 ├── postcss.config.mjs                       # @tailwindcss/postcss のみ
-├── components.json                          # shadcn/ui 設定(init で生成)
-├── biome.json                               # 変更なし
+├── components.json                          # shadcn/ui 設定
+├── biome.json
 ├── tsconfig.json                            # @/* エイリアス
 ├── docs/
 │   ├── requirements.md
 │   ├── architecture.md
-│   └── design.md
+│   ├── design.md
+│   ├── content-update-checklist.md          # 文面更新時の確認項目
+│   └── superpowers/                         # 設計書・実装計画
+├── scripts/
+│   └── check-layout.mjs                     # Playwright による見た目検査(手動実行)
 ├── public/
-│   └── favicon.ico
+│   ├── profile.jpg
+│   └── photos/
 └── src/
     ├── app/
     │   ├── globals.css                      # Tailwind v4 @theme + トークン
     │   ├── layout.tsx                       # ROOT layout(<html lang="ja">)
-    │   ├── page.tsx                         # Bento home
+    │   ├── page.tsx                         # ホーム(セクションを順に並べるだけ)
+    │   ├── blogs/                           # Blog 一覧(page.tsx / loading.tsx)
+    │   ├── press/page.tsx                   # 掲載 0 件のとき notFound()
     │   ├── not-found.tsx
     │   ├── robots.ts
-    │   ├── sitemap.ts
-    │   ├── opengraph-image.tsx
-    │   └── works/
-    │       ├── page.tsx                     # 一覧
-    │       └── [slug]/
-    │           ├── page.tsx
-    │           └── opengraph-image.tsx      # per-work OG
+    │   ├── sitemap.ts                       # /press は hasPress() のときのみ
+    │   └── opengraph-image.tsx
     ├── components/
-    │   ├── ui/                              # shadcn 生成
-    │   ├── providers/
-    │   │   └── theme-provider.tsx
-    │   ├── layout/
-    │   │   ├── header.tsx
-    │   │   ├── footer.tsx
-    │   │   └── theme-toggle.tsx
-    │   ├── bento/
-    │   │   ├── bento-grid.tsx
-    │   │   ├── hero-tile.tsx
-    │   │   ├── about-tile.tsx
-    │   │   ├── featured-tile.tsx
-    │   │   ├── tech-stack-tile.tsx
-    │   │   └── contact-tile.tsx
-    │   ├── works/
-    │   │   ├── work-card.tsx
-    │   │   ├── category-filter.tsx
-    │   │   ├── works-grid.tsx               # Client コンポーネント
-    │   │   └── work-detail.tsx
-    │   └── motion/
-    │       ├── fade-in.tsx
-    │       └── bento-tile-motion.tsx
+    │   ├── ui/                              # shadcn 生成(button / card / badge / tooltip)
+    │   ├── providers/theme-provider.tsx
+    │   ├── layout/                          # header / footer / theme-toggle
+    │   ├── home/                            # section / intro / highlights / about /
+    │   │                                    #   project-list / skills / timeline / writing
+    │   ├── blog/                            # blog-card / blog-filter / platform-meta
+    │   ├── press/                           # press-card / press-meta
+    │   ├── shared/                          # social-links / tech-stack-list
+    │   └── motion/fade-in.tsx
     ├── content/
     │   ├── types.ts
-    │   ├── profile.ts
-    │   └── works.ts
+    │   ├── profile.ts                       # headline / summary / bio / titles / social / techStack / timeline / photos
+    │   ├── works.ts                         # 制作物(getProjects)
+    │   ├── press.ts                         # 掲載記事(hasPress / getAllPress / getLatestPress)
+    │   ├── highlights.ts                    # getHighlights
+    │   ├── timeline.ts                      # getFeaturedTimeline / getTimeline
+    │   ├── social.ts                        # getPrimarySocial
+    │   └── *.test.ts                        # 選択関数の Vitest
     └── lib/
-        ├── site.ts
-        └── utils.ts
+        ├── site.ts                          # URL・description・工事中フラグ・OG カラー
+        ├── navigation.ts                    # ヘッダーのナビ項目
+        ├── utils.ts
+        └── blog/                            # RSS / Qiita 取得と整形
 ```
 
 将来 next-intl を導入する際には、この構成に `proxy.ts`(ルート直下)、`src/app/[locale]/` セグメント、`messages/ja.json` / `messages/en.json` を追加する想定(詳細は「言語と将来の i18n 戦略」参照)。
 
 ## データ型(主要なもの)
 
-初期実装は日本語のみなので、文言は全てプレーンな `string` で定義する。次節「言語と将来の i18n 戦略」に従い、翻訳が必要になった時点で next-intl の `messages/*.json` に機械的に移植できる前提で設計する。
+初期実装は日本語のみなので、文言は全てプレーンな `string` で定義する。次節「言語と将来の i18n 戦略」に従い、翻訳が必要になった時点で next-intl の `messages/*.json` に機械的に移植できる前提で設計する。完全な定義は [`src/content/types.ts`](../src/content/types.ts) を参照。ここでは表示の出し分けに関わるフィールドを示す。
 
 ```ts
-// src/content/types.ts
-
-export type WorkCategory = 'project' | 'oss' | 'research' | 'experience';
-export type LinkKind = 'github' | 'demo' | 'paper' | 'slide' | 'article' | 'other';
-
-export interface WorkLink {
-  label: string;
-  href: string;
-  kind: LinkKind;
-}
+// src/content/types.ts(抜粋)
 
 export interface Work {
   slug: string;
-  category: WorkCategory;
+  category: 'project' | 'oss' | 'research' | 'experience';
   title: string;
   summary: string;
-  body?: string[];                // 段落配列
+  body?: string[];
   date: string;                   // YYYY-MM-DD
   tags: string[];
-  thumbnail?: string;
   links: WorkLink[];
-  featured?: boolean;
+  highlight?: boolean;            // true で Highlights に載せる
 }
 
-export type SocialIcon = 'github' | 'x' | 'linkedin' | 'mail' | 'other';
+export interface TimelineEntry {
+  date: string;                   // YYYY-MM または YYYY-MM-DD
+  category: 'life' | 'education' | 'work' | 'event' | 'other';
+  title: string;
+  description?: string;
+  location?: string;
+  highlight?: boolean;            // true で Highlights に載せる
+  featured?: boolean;             // true で Timeline の折りたたみ時にも表示
+}
 
 export interface SocialLink {
   label: string;
   href: string;
   icon: SocialIcon;
+  primary?: boolean;              // true で Intro に表示(Footer は全件)
 }
+
+export type TechCategory = 'languages' | 'web' | 'infra' | 'creative' | 'academic';
 
 export interface Profile {
   name: string;
-  role: string;
-  affiliation: string;
-  bio: string;
+  nameJa: string;
+  headline: string;               // Intro の肩書き 1 行
+  summary: string[];              // About の短い自己紹介
+  bio?: string[];                 // 「続きを読む」の本文
+  affiliation: { role: string; school: string };
+  lab: { name: string; url: string };
+  titles: string[];
+  motto: string;
+  image?: string;
   social: SocialLink[];
-  techStack: string[];
+  techStack: Record<TechCategory, string[]>;
+  timeline: TimelineEntry[];
+  photos: PhotoEntry[];
 }
+```
+
+### 選択関数(純粋関数・Vitest でテスト)
+
+表示の絞り込み・並び替えは `src/content/` の純粋関数に切り出し、コンポーネントはそれを呼ぶだけにする。
+
+| 関数 | 置き場所 | 振る舞い |
+|---|---|---|
+| `getHighlights(n = 3)` | `highlights.ts` | Work と Timeline の `highlight: true` を `Highlight` 型に正規化し、日付降順で最大 n 件 |
+| `getFeaturedTimeline()` | `timeline.ts` | `featured: true` の項目を日付降順で返す |
+| `getTimeline({ includeLife })` | `timeline.ts` | 全件を日付降順で返す(`includeLife: false` で `life` を除外) |
+| `getPrimarySocial()` | `social.ts` | `primary: true` の SNS を定義順で返す |
+| `getProjects()` | `works.ts` | Projects セクション用の制作物一覧 |
+| `hasPress()` / `getAllPress()` / `getLatestPress(n)` | `press.ts` | 掲載記事。0 件のとき `/press` は 404、サイトマップ・Writing の Press 表示も出さない |
+
+## 見た目の検査
+
+`scripts/check-layout.mjs` は Playwright で `/` と `/blogs` を 375px / 1280px × light / dark で撮影し、横スクロールの有無と 375px での Intro のファーストビュー収まりを検査する。Playwright はプロジェクトの依存に含めず、グローバルのものを使う。ビルド済みアプリを起動した状態で実行する。
+
+```bash
+pnpm build && pnpm start -p 3100 &
+node scripts/check-layout.mjs http://localhost:3100 ./out
 ```
 
 ## デザイントークン方針
@@ -214,7 +243,7 @@ export interface Profile {
 - shadcn/ui のセマンティック命名(`background`, `foreground`, `muted`, `border`, `card`, `accent`, `ring` など)に準拠し、shadcn コンポーネントが追加設定なく動作するようにする
 - 数値(色・半径)は OKLCH で定義。RGB は使わない(広色域ディスプレイでの発色と将来性のため)
 
-詳細なトークン値と Bento レイアウトは [design.md](./design.md) を参照。
+詳細なトークン値とレイアウトは [design.md](./design.md) を参照。
 
 ## コーディング規約
 
@@ -237,7 +266,7 @@ export interface Profile {
 
 ### アイコン
 
-- **lucide-react のみ**を使用
+- 汎用アイコンは **lucide-react**、SNS・技術ブランドのロゴは **@icons-pack/react-simple-icons** を使用
 - react-icons, @heroicons/react, @radix-ui/react-icons などは追加しない
 
 ### アニメーション
@@ -255,7 +284,7 @@ export interface Profile {
 ### 型
 
 - `any` 禁止。どうしても必要なら `unknown` + type narrowing
-- 動的ルート(`works/[slug]`)の params は `PageProps<'/works/[slug]'>` 型ヘルパーを使う。Next.js 16 では `Promise<{ slug: string }>` 型になっている点に注意
+- 動的ルートを追加する場合、params は `PageProps<'/path/[slug]'>` 型ヘルパーを使う。Next.js 16 では `Promise<{ slug: string }>` 型になっている点に注意
 
 ### パス
 
