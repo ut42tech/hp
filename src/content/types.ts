@@ -130,6 +130,8 @@ export interface Highlight {
 
 export interface Profile {
   name: string;
+  /** 日本語表記の名前 */
+  nameJa: string;
   /** 肩書きの一文（例: 学生エンジニア / フルスタック・デザイン） */
   headline: string;
   /** ホームの自己紹介（短い文の配列） */

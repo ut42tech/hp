@@ -8,7 +8,7 @@ import { getPrimarySocial } from "@/content/social";
  * ホームのファーストビュー。ラベルなしで、名前・肩書き・所属・モットー・SNS を縦に並べる。
  */
 export function Intro() {
-  const { name, headline, affiliation, lab, motto, image } = profile;
+  const { name, nameJa, headline, affiliation, lab, motto, image } = profile;
 
   return (
     <section aria-label="自己紹介" className="pt-10 pb-12 md:pt-16 md:pb-16">
@@ -29,11 +29,13 @@ export function Intro() {
           {name.charAt(0)}
         </div>
       )}
-      <h1
-        data-intro-name
-        className="mt-5 text-3xl font-bold tracking-tight md:text-4xl"
-      >
-        {name}
+      <h1 data-intro-name className="mt-5">
+        <span className="block text-3xl font-bold tracking-tight md:text-4xl">
+          {name}
+        </span>
+        <span className="mt-1 block text-base text-muted-foreground">
+          {nameJa}
+        </span>
       </h1>
       <p data-intro-headline className="mt-2 text-base text-foreground">
         {headline}

@@ -2,6 +2,7 @@ import type { Profile } from "./types";
 
 export const profile: Profile = {
   name: "Takuya Uehara",
+  nameJa: "上原拓也",
   headline: "学生エンジニア / フルスタック・デザイン",
   summary: [
     "「デザインとテクノロジーで最高のユーザ体験を届けたい」がモットー。",
