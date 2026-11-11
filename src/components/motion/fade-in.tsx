@@ -10,7 +10,7 @@ interface FadeInProps {
 }
 
 /**
- * 単純な fade + slide-up 演出。Apple 風の ease-out カーブを使う。
+ * 単純な fade + slide-up 演出（ビューポートに入ったとき一度だけ再生）。Apple 風の ease-out カーブを使う。
  * `prefers-reduced-motion` を尊重し、低減設定なら即座に表示する。
  */
 export function FadeIn({ children, delay = 0, className }: FadeInProps) {
@@ -19,7 +19,8 @@ export function FadeIn({ children, delay = 0, className }: FadeInProps) {
   return (
     <motion.div
       initial={reduce ? false : { opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-10% 0px" }}
       transition={{
         duration: 0.6,
         delay,

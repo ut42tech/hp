@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { SocialLinks } from "@/components/shared/social-links";
 import { Separator } from "@/components/ui/separator";
+import { profile } from "@/content/profile";
 import { navItems } from "@/lib/navigation";
 import { site } from "@/lib/site";
 
@@ -35,7 +36,7 @@ export function Footer() {
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Contact
               </p>
-              <SocialLinks size="sm" />
+              <SocialLinks links={profile.social} size="sm" />
             </div>
           </div>
           <p className="text-center text-xs text-muted-foreground">

@@ -95,15 +95,6 @@ export interface PhotoEntry {
   date?: string;
 }
 
-/** Keywords タイルに表示する人物像キーワード。 */
-export interface Keyword {
-  label: string;
-  /** 重要度＝大きさ・中心への寄り。xl(主役) > lg > md > sm */
-  size: "xl" | "lg" | "md" | "sm";
-  /** true で accent（緑）バッジになる */
-  accent?: boolean;
-}
-
 /** Press エントリの種別。バッジ表示に使う。 */
 export type PressType = "interview" | "feature" | "award" | "event" | "media";
 
@@ -143,8 +134,6 @@ export interface Profile {
   headline: string;
   /** ホームの自己紹介（短い文の配列） */
   summary: string[];
-  /** 肩書きタグ（Hero でハッシュタグ表示。例: ["学生エンジニア", "フルスタック", "デザイン"]） */
-  roleTags: string[];
   /** 所属。Hero サイドバーで「role / at school」の2行に分けて表示する */
   affiliation: { role: string; school: string };
   /** 研究室。Hero でリンク表示する */
@@ -153,8 +142,6 @@ export interface Profile {
   titles: string[];
   /** Hero で語るモットー（日本語） */
   motto: string;
-  /** モットーの英語版（Hero のタイピングで日本語と交互にループ表示） */
-  mottoEn: string;
   /** 旧 About 本文。ホームでは未使用（データは保持可） */
   bio?: string[];
   image?: string;

@@ -17,8 +17,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { profile } from "@/content/profile";
-import type { SocialIcon } from "@/content/types";
+import type { SocialIcon, SocialLink } from "@/content/types";
 import { cn } from "@/lib/utils";
 
 type IconComponent = ComponentType<{ className?: string }>;
@@ -37,6 +36,7 @@ const iconMap: Record<SocialIcon, IconComponent> = {
 type SocialLinksSize = "default" | "sm";
 
 interface SocialLinksProps {
+  links: SocialLink[];
   size?: SocialLinksSize;
   className?: string;
 }
@@ -49,14 +49,18 @@ const sizeClasses: Record<SocialLinksSize, { wrapper: string; icon: string }> =
 
 /**
  * プロフィールのソーシャルリンク一覧を描画する共有コンポーネント。
- * Contact タイル・About ページ・Footer など複数箇所から呼び出される。
+ * Intro・Footer など複数箇所から呼び出される。
  */
-export function SocialLinks({ size = "default", className }: SocialLinksProps) {
+export function SocialLinks({
+  links,
+  size = "default",
+  className,
+}: SocialLinksProps) {
   const { wrapper, icon } = sizeClasses[size];
 
   return (
     <ul className={cn("flex flex-wrap gap-2", className)}>
-      {profile.social.map((link) => {
+      {links.map((link) => {
         const Icon = iconMap[link.icon];
         return (
           <li key={link.label}>
