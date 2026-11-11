@@ -26,3 +26,8 @@ export function getAllPress(): PressItem[] {
 export function getLatestPress(n: number): PressItem[] {
   return getAllPress().slice(0, n);
 }
+
+/** 掲載記事が 1 件以上あるか。 */
+export function hasPress(items: PressItem[] = press): boolean {
+  return items.length > 0;
+}

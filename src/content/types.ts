@@ -33,6 +33,8 @@ export interface Work {
   tags: string[];
   thumbnail?: string;
   links: WorkLink[];
+  /** true でホームのハイライトに載せる */
+  highlight?: boolean;
 }
 
 export type SocialIcon =
@@ -49,6 +51,8 @@ export interface SocialLink {
   label: string;
   href: string;
   icon: SocialIcon;
+  /** true でホームの主要 SNS として表示する */
+  primary?: boolean;
 }
 
 /**
@@ -74,6 +78,10 @@ export interface TimelineEntry {
   description?: string;
   /** 所属先や場所(任意) */
   location?: string;
+  /** true でホームのハイライトに載せる */
+  highlight?: boolean;
+  /** true でホームの主要タイムラインに載せる */
+  featured?: boolean;
 }
 
 export interface PhotoEntry {
@@ -112,8 +120,29 @@ export interface PressItem {
   excerpt?: string;
 }
 
+/** 技術スタックのカテゴリ。 */
+export type TechCategory =
+  | "languages"
+  | "web"
+  | "infra"
+  | "creative"
+  | "academic";
+
+/** ホームのハイライト表示用に Work / Timeline を正規化した形。 */
+export interface Highlight {
+  title: string;
+  date: string;
+  description?: string;
+  href?: string;
+  kind: "work" | "timeline";
+}
+
 export interface Profile {
   name: string;
+  /** 肩書きの一文（例: 学生エンジニア / フルスタック・デザイン） */
+  headline: string;
+  /** ホームの自己紹介（短い文の配列） */
+  summary: string[];
   /** 肩書きタグ（Hero でハッシュタグ表示。例: ["学生エンジニア", "フルスタック", "デザイン"]） */
   roleTags: string[];
   /** 所属。Hero サイドバーで「role / at school」の2行に分けて表示する */
@@ -130,7 +159,7 @@ export interface Profile {
   bio?: string[];
   image?: string;
   social: SocialLink[];
-  techStack: string[];
+  techStack: Record<TechCategory, string[]>;
   timeline: TimelineEntry[];
   photos: PhotoEntry[];
 }

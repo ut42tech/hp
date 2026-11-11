@@ -15,6 +15,7 @@ export const works: Work[] = [
     ],
     date: "2026-03-15",
     tags: ["Award", "Hackathon", "Team"],
+    highlight: true,
     links: [
       {
         label: "Demo",

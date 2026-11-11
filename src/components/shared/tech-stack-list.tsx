@@ -29,7 +29,6 @@ import {
 import type { ComponentType } from "react";
 
 import { Badge } from "@/components/ui/badge";
-import { profile } from "@/content/profile";
 import { cn } from "@/lib/utils";
 
 type IconComponent = ComponentType<{ className?: string }>;
@@ -68,17 +67,18 @@ const techIconMap: Record<string, IconComponent> = {
 };
 
 interface TechStackListProps {
+  items: string[];
   className?: string;
 }
 
 /**
- * プロフィールの技術スタックをアイコン付き Badge で列挙する共有コンポーネント。
+ * 技術名の配列をアイコン付き Badge で列挙する共有コンポーネント。
  * Bento タイルと About ページから呼び出される。
  */
-export function TechStackList({ className }: TechStackListProps) {
+export function TechStackList({ items, className }: TechStackListProps) {
   return (
     <ul className={cn("flex flex-wrap gap-2", className)}>
-      {profile.techStack.map((tech) => {
+      {items.map((tech) => {
         const Icon = techIconMap[tech];
         return (
           <li key={tech}>

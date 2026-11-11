@@ -2,6 +2,12 @@ import type { Profile } from "./types";
 
 export const profile: Profile = {
   name: "Takuya Uehara",
+  headline: "学生エンジニア / フルスタック・デザイン",
+  summary: [
+    "「デザインとテクノロジーで最高のユーザ体験を届けたい」がモットー。",
+    "卒業研究では生成AIを用いたコミュニケーション支援メタバースプラットフォームをWeb技術をメインにフルスクラッチで開発。",
+    "長崎のテックカルチャーを盛り上げたいという想いから、学生エンジニアコミュニティChoTechを創設し、地域の技術コミュニティの活性化にも取り組んでいます。",
+  ],
   roleTags: ["学生エンジニア", "フルスタック", "デザイン", "INFJ"],
   affiliation: { role: "Master's Student", school: "Nagasaki University" },
   lab: { name: "Setozaki Lab", url: "https://www.setozakilab.com" },
@@ -26,11 +32,13 @@ export const profile: Profile = {
       label: "X",
       href: "https://x.com/ut42tech",
       icon: "x",
+      primary: true,
     },
     {
       label: "GitHub",
       href: "https://github.com/ut42tech",
       icon: "github",
+      primary: true,
     },
     {
       label: "Qiita",
@@ -41,6 +49,7 @@ export const profile: Profile = {
       label: "Zenn",
       href: "https://zenn.dev/ut42tech",
       icon: "zenn",
+      primary: true,
     },
     {
       label: "note",
@@ -56,47 +65,37 @@ export const profile: Profile = {
       label: "Wantedly",
       href: "https://www.wantedly.com/id/tuehara",
       icon: "wantedly",
+      primary: true,
     },
   ],
-  techStack: [
-    // Languages
-    "TypeScript",
-    "Python",
-    "C#",
-    "Swift",
-    "Java",
-    // Web Frameworks
-    "React",
-    "Next.js",
-    "FastAPI",
-    "Flask",
-    "Tailwind CSS",
-    "Three.js",
-    // Infra / Cloud
-    "AWS",
-    "GCP",
-    "Vercel",
-    "Supabase",
-    "Heroku",
-    "Cloudflare",
-    "Docker",
-    "Proxmox",
-    "Linux",
-    "Git",
-    // Creative
-    "Unity",
-    "Blender",
-    "Cinema 4D",
-    "After Effects",
-    "Premiere Pro",
-    "Photoshop",
-    "Adobe XD",
-    "Final Cut Pro",
-    "Figma",
-    // Academic
-    "LaTeX",
-    "Typst",
-  ],
+  techStack: {
+    languages: ["TypeScript", "Python", "C#", "Swift", "Java"],
+    web: ["React", "Next.js", "FastAPI", "Flask", "Tailwind CSS", "Three.js"],
+    infra: [
+      "AWS",
+      "GCP",
+      "Vercel",
+      "Supabase",
+      "Heroku",
+      "Cloudflare",
+      "Docker",
+      "Proxmox",
+      "Linux",
+      "Git",
+    ],
+    creative: [
+      "Unity",
+      "Blender",
+      "Cinema 4D",
+      "After Effects",
+      "Premiere Pro",
+      "Photoshop",
+      "Adobe XD",
+      "Final Cut Pro",
+      "Figma",
+    ],
+    academic: ["LaTeX", "Typst"],
+  },
   timeline: [
     {
       date: "2026-05-24",
@@ -120,11 +119,14 @@ export const profile: Profile = {
       title: "長崎大学大学院 総合生産科学研究科に進学",
       description:
         "瀬戸崎研究室に継続所属し、さらに高度な研究に取り組む予定です。",
+      featured: true,
     },
     {
       date: "2026-03",
       category: "event",
       title: "長崎大学 学長賞（学術研究活動分野）受賞",
+      featured: true,
+      highlight: true,
     },
     {
       date: "2026-03",
@@ -132,6 +134,7 @@ export const profile: Profile = {
       title: "ガバイソン2026春 最優秀賞&特別賞 受賞",
       description:
         "佐賀のハッカソンにて2人チーム「じげもんテック」として「コトコトバ」を開発し、最優秀賞と特別賞のダブル受賞を果たしました。",
+      featured: true,
     },
     {
       date: "2026-03",
@@ -167,6 +170,7 @@ export const profile: Profile = {
       description:
         "長崎の学生エンジニアコミュニティを立ち上げ、代表を務めています。2026年度から長崎大学の公認団体に認定されました。主にNUTIC（長崎スタジアムシティ）を拠点に活動しています。",
       location: "長崎",
+      featured: true,
     },
     {
       date: "2025-04",
@@ -182,6 +186,7 @@ export const profile: Profile = {
       description:
         "IIIT-D（Indian Institutes of Information Technology, Delhi）へ短期留学しました。Richa Gupta先生の指導のもと、深度センサと触覚フィードバックを活用した視覚障がい者向け空間認識支援アプリ（LiDAR Vision）を開発しました。",
       location: "インド・ニューデリー",
+      featured: true,
     },
     {
       date: "2025-01",
@@ -226,6 +231,8 @@ export const profile: Profile = {
       description:
         "多言語コミュニケーション支援AIの研究で、学部2年次に論文を執筆しました。口頭発表を行い、最年少で優秀賞を受賞しました。",
       location: "熊本大学",
+      featured: true,
+      highlight: true,
     },
     {
       date: "2023-09",

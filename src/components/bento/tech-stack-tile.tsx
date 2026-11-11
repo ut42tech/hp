@@ -1,5 +1,6 @@
 import { TechStackList } from "@/components/shared/tech-stack-list";
 import { Card } from "@/components/ui/card";
+import { profile } from "@/content/profile";
 import { cn } from "@/lib/utils";
 
 interface TechStackTileProps {
@@ -15,7 +16,7 @@ export function TechStackTile({ className }: TechStackTileProps) {
       )}
     >
       <h2 className="text-lg font-bold">Tech Stack</h2>
-      <TechStackList />
+      <TechStackList items={Object.values(profile.techStack).flat()} />
     </Card>
   );
 }
