@@ -7,10 +7,7 @@ interface Props {
 const { receded = false } = Astro.props;
 ---
 
-<section
-  class:list={["sheet", { "is-receded": receded }]}
-  aria-hidden={receded ? "true" : undefined}
->
+<section class:list={["sheet", { "is-receded": receded }]} inert={receded || undefined}>
   <div class="grabber-row" aria-hidden="true">
     <span class="grabber"></span>
   </div>

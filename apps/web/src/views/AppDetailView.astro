@@ -1,0 +1,60 @@
+---
+import AppDetail from "../components/AppDetail.astro";
+import PageHead from "../components/PageHead.astro";
+import Sheet from "../components/Sheet.astro";
+import WorksList from "../components/WorksList.astro";
+import WorksNav from "../components/WorksNav.astro";
+import type { Locale } from "../i18n/config";
+import { useTranslations } from "../i18n/t";
+import Site from "../layouts/Site.astro";
+import { getWorks } from "../lib/content";
+import type { Localized } from "../lib/localized";
+import type { Category } from "../lib/works";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  entry: Localized<CollectionEntry<"apps">>;
+  locale: Locale;
+}
+
+const { entry, locale } = Astro.props;
+const t = useTranslations(locale);
+const counts = Object.fromEntries(
+  await Promise.all(
+    (["apps", "career", "awards", "events"] as const).map(
+      async (c) => [c, (await getWorks(c, locale)).length] as const,
+    ),
+  ),
+) as Record<Category, number>;
+---
+
+<Site locale={locale} section="works" title={entry.data.title}>
+  <!-- Mobile: the Works list stays behind the detail sheet, pushed back and inert. -->
+  <Sheet receded>
+    <div class="flex flex-col gap-3">
+      <PageHead title={t("nav.works")} as="h2" show="mobile" locale={locale} />
+      <WorksNav current="apps" counts={counts} locale={locale} part="segmented" />
+      <WorksList category="apps" locale={locale} />
+    </div>
+  </Sheet>
+  <WorksNav current="apps" counts={counts} locale={locale} part="sidebar" />
+  <div class="detail-region">
+    <div class="detail-column">
+      <AppDetail entry={entry} locale={locale} />
+    </div>
+  </div>
+</Site>
+
+<style>
+  /* Desktop: a reading-width column centred between the sidebar's right edge and the window's. */
+  @media (width >= 64rem) {
+    .detail-region {
+      padding: 104px 0 64px 248px;
+    }
+
+    .detail-column {
+      width: min(var(--ut-width-reading), 100% - 64px);
+      margin-inline: auto;
+    }
+  }
+</style>

@@ -7,9 +7,11 @@ interface Props {
   current: Category;
   counts: Record<Category, number>;
   locale: Locale;
+  // The detail page places the segments inside the receded sheet and the sidebar outside it.
+  part?: "both" | "segmented" | "sidebar";
 }
 
-const { current, counts, locale } = Astro.props;
+const { current, counts, locale, part = "both" } = Astro.props;
 const t = useTranslations(locale);
 const items = categories.map((category) => ({
   category,
@@ -20,35 +22,42 @@ const items = categories.map((category) => ({
 ---
 
 <!-- Mobile: one row of segments under the sheet heading. -->
-<nav class="segmented" aria-label={t("works.label")}>
-  {items.map((item) => (
-    <a
-      href={item.href}
-      class:list={["segment text-callout", item.active ? "bg-fg font-bold text-bg" : "text-muted"]}
-      aria-current={item.active ? "page" : undefined}
-      data-cursor="block"
-    >
-      {item.label}
-    </a>
-  ))}
-</nav>
+{part !== "sidebar" && (
+  <nav class="segmented" aria-label={t("works.label")}>
+    {items.map((item) => (
+      <a
+        href={item.href}
+        class:list={[
+          "segment text-callout",
+          item.active ? "bg-fg font-bold text-bg" : "text-muted",
+        ]}
+        aria-current={item.active ? "page" : undefined}
+        data-cursor="block"
+      >
+        {item.label}
+      </a>
+    ))}
+  </nav>
+)}
 
 <!-- Desktop: a card fixed at the vertical centre of the left edge. -->
-<nav class="sidebar" aria-label={t("works.label")}>
-  {items.map((item) => (
-    <a
-      href={item.href}
-      class:list={["side-item", item.active ? "bg-fg text-bg" : "text-fg"]}
-      aria-current={item.active ? "page" : undefined}
-      data-cursor="block"
-    >
-      <span class="text-headline">{item.label}</span>
-      <span class:list={["text-caption", item.active ? "text-bg" : "text-muted"]}>
-        {counts[item.category]}
-      </span>
-    </a>
-  ))}
-</nav>
+{part !== "segmented" && (
+  <nav class="sidebar" aria-label={t("works.label")}>
+    {items.map((item) => (
+      <a
+        href={item.href}
+        class:list={["side-item", item.active ? "bg-fg text-bg" : "text-fg"]}
+        aria-current={item.active ? "page" : undefined}
+        data-cursor="block"
+      >
+        <span class="text-headline">{item.label}</span>
+        <span class:list={["text-caption", item.active ? "text-bg" : "text-muted"]}>
+          {counts[item.category]}
+        </span>
+      </a>
+    ))}
+  </nav>
+)}
 
 <style>
   .segmented {
