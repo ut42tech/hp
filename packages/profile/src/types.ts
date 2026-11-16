@@ -1,4 +1,12 @@
-export type SocialIcon = "x" | "github" | "qiita" | "zenn" | "note" | "youtube" | "wantedly";
+export type SocialIcon =
+  | "x"
+  | "github"
+  | "linkedin"
+  | "qiita"
+  | "zenn"
+  | "note"
+  | "youtube"
+  | "wantedly";
 
 export interface SocialLink {
   label: string;
@@ -13,5 +21,6 @@ export interface Profile {
   affiliation: { role: string; school: string };
   motto: string;
   mottoEn: string;
+  email: string;
   social: SocialLink[];
 }
