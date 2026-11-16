@@ -38,10 +38,12 @@
 ### Task 1: ワークスペースのルートとツールチェーン
 
 **Files:**
+
 - Create: `package.json`, `pnpm-workspace.yaml`, `.node-version`, `.gitignore`, `vite.config.ts`
 - Create: `packages/config/package.json`, `packages/config/tsconfig.base.json`
 
 **Interfaces:**
+
 - Produces: `@ut42tech/config/tsconfig.base.json`（各パッケージが `"extends": "@ut42tech/config/tsconfig.base.json"` で使う）。ルートスクリプト `check` と `dev`。
 
 - [ ] **Step 1: 作業ブランチを作る**
@@ -61,6 +63,7 @@ Run: `git switch -c feat/monorepo-foundation`
 - [ ] **Step 3: `vite.config.ts` を作る**
 
 `import { defineConfig } from 'vite-plus'` で次を設定する:
+
 - `lint`: `plugins: ['typescript', 'vue']`, `options: { typeAware: true, typeCheck: true }`, `ignorePatterns: ['**/dist/**', '**/.astro/**', '**/.vercel/**']`
 - `fmt`: `astro: true`, `ignorePatterns` は lint と同じ（キー名は Oxfmt の設定リファレンスに従う）
 - `run`: 設定しない（キャッシュはコマンドの `--cache` で明示する）
@@ -87,10 +90,12 @@ git commit -m "chore: set up pnpm workspace with Vite+ toolchain"
 ### Task 2: `@ut42tech/profile`
 
 **Files:**
+
 - Create: `packages/profile/package.json`, `packages/profile/tsconfig.json`, `packages/profile/src/index.ts`, `packages/profile/src/types.ts`, `packages/profile/src/profile.ts`
 - Test: `packages/profile/src/profile.test.ts`
 
 **Interfaces:**
+
 - Consumes: `@ut42tech/config/tsconfig.base.json`
 - Produces（`@ut42tech/profile` から export）:
   - `type SocialIcon = 'x' | 'github' | 'qiita' | 'zenn' | 'note' | 'youtube' | 'wantedly'`
@@ -105,22 +110,22 @@ git commit -m "chore: set up pnpm workspace with Vite+ toolchain"
 - [ ] **Step 2: 失敗するテストを書く**（`src/profile.test.ts`）
 
 ```ts
-import { describe, expect, test } from 'vitest'
-import { profile } from './index'
+import { describe, expect, test } from "vitest";
+import { profile } from "./index";
 
-describe('profile', () => {
-  test('identity', () => {
-    expect(profile.name).toBe('Takuya Uehara')
-    expect(profile.handle).toBe('ut42tech')
-    expect(profile.motto).toBe('デザインとテクノロジーで、最高のユーザ体験を届けたい。')
-    expect(profile.mottoEn).toBe('Delivering the best experiences with design & technology.')
-  })
-  test('social links are https and unique per icon', () => {
-    expect(profile.social.length).toBe(7)
-    for (const link of profile.social) expect(new URL(link.href).protocol).toBe('https:')
-    expect(new Set(profile.social.map((l) => l.icon)).size).toBe(profile.social.length)
-  })
-})
+describe("profile", () => {
+  test("identity", () => {
+    expect(profile.name).toBe("Takuya Uehara");
+    expect(profile.handle).toBe("ut42tech");
+    expect(profile.motto).toBe("デザインとテクノロジーで、最高のユーザ体験を届けたい。");
+    expect(profile.mottoEn).toBe("Delivering the best experiences with design & technology.");
+  });
+  test("social links are https and unique per icon", () => {
+    expect(profile.social.length).toBe(7);
+    for (const link of profile.social) expect(new URL(link.href).protocol).toBe("https:");
+    expect(new Set(profile.social.map((l) => l.icon)).size).toBe(profile.social.length);
+  });
+});
 ```
 
 - [ ] **Step 3: テストが失敗することを確認する**
@@ -131,6 +136,7 @@ Expected: FAIL（`./index` が存在しない）
 - [ ] **Step 4: 型とデータを実装する**
 
 `types.ts` に Interfaces の型、`profile.ts` にデータ、`index.ts` で両方を re-export する。データの値（旧サイト `ut42tech/hp-v1` の `src/content/profile.ts` から転記）:
+
 - `roleTags`: `['学生エンジニア', 'フルスタック', 'デザイン', 'INFJ']`
 - `affiliation`: `{ role: "Master's Student", school: 'Nagasaki University' }`
 - `social`（この順）: X `https://x.com/ut42tech` / GitHub `https://github.com/ut42tech` / Qiita `https://qiita.com/ut42tech` / Zenn `https://zenn.dev/ut42tech` / note `https://note.com/ut42tech` / YouTube `https://www.youtube.com/@ut42tech` / Wantedly `https://www.wantedly.com/id/tuehara`
@@ -152,12 +158,14 @@ git commit -m "feat(profile): add shared profile data package"
 ### Task 3: `@ut42tech/tokens` と `@ut42tech/assets`
 
 **Files:**
+
 - Create: `packages/tokens/package.json`, `packages/tokens/tokens.css`, `packages/tokens/theme.css`
 - Test: `packages/tokens/tokens.test.ts`
 - Create: `packages/assets/package.json`, `packages/assets/favicon.ico`, `packages/assets/profile.jpg`
 - Test: `packages/assets/assets.test.ts`
 
 **Interfaces:**
+
 - Produces:
   - `@ut42tech/tokens/tokens.css`: CSS 変数 `--ut-color-bg`, `--ut-color-fg`, `--ut-color-muted`, `--ut-color-accent`, `--ut-color-border`, `--ut-font-sans`, `--ut-font-mono`, `--ut-radius`
   - `@ut42tech/tokens/theme.css`: `tokens.css` を import し、Tailwind ユーティリティ `bg-bg`, `text-fg`, `text-muted`, `text-accent`, `border-border`, `font-sans`, `font-mono`, `rounded-ut` を生む
@@ -166,10 +174,12 @@ git commit -m "feat(profile): add shared profile data package"
 - [ ] **Step 1: 失敗するテストを書く**
 
 `packages/tokens/tokens.test.ts`（`node:fs` で CSS を文字列として読む）:
+
 - `test('dark mode defines every light color token')`: `:root { … }`（最初のブロック）、`@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { … } }`、`:root[data-theme="dark"] { … }` の3ブロックから `--ut-color-*` の名前を抽出し、3つの集合が等しく、かつ 5 個であることを assert する。
 - `test('theme.css maps every color token')`: `theme.css` の `@theme inline { … }` に、各 `--ut-color-X` に対応する `--color-X: var(--ut-color-X)` が存在することを assert する。
 
 `packages/assets/assets.test.ts`:
+
 - `test('every export points to an existing file')`: `package.json` の `exports` の各値について `existsSync` が true。
 
 - [ ] **Step 2: テストが失敗することを確認する**
@@ -181,11 +191,11 @@ Expected: tokens と assets のテストが FAIL（ファイルがない）
 
 プレースホルダー値（最終値はデザインの設計で決める）:
 
-| 変数 | light | dark |
-|---|---|---|
-| `--ut-color-bg` | `#ffffff` | `#0a0a0a` |
-| `--ut-color-fg` | `#0a0a0a` | `#fafafa` |
-| `--ut-color-muted` | `#6b7280` | `#9ca3af` |
+| 変数                | light     | dark      |
+| ------------------- | --------- | --------- |
+| `--ut-color-bg`     | `#ffffff` | `#0a0a0a` |
+| `--ut-color-fg`     | `#0a0a0a` | `#fafafa` |
+| `--ut-color-muted`  | `#6b7280` | `#9ca3af` |
 | `--ut-color-accent` | `#2563eb` | `#60a5fa` |
 | `--ut-color-border` | `#e5e7eb` | `#27272a` |
 
@@ -216,12 +226,14 @@ git commit -m "feat: add shared design tokens and assets packages"
 ### Task 4: `apps/web`（Astro 7 + Vue + Tailwind v4）
 
 **Files:**
+
 - Create: `apps/web/package.json`, `apps/web/astro.config.mjs`, `apps/web/tsconfig.json`
 - Create: `apps/web/src/styles/global.css`, `apps/web/src/layouts/Base.astro`, `apps/web/src/pages/index.astro`
 - Create: `apps/web/src/lib/theme.ts`, `apps/web/src/components/ThemeToggle.vue`
 - Test: `apps/web/src/lib/theme.test.ts`, `apps/web/test/build-output.test.ts`
 
 **Interfaces:**
+
 - Consumes: `profile` / `Profile`（Task 2）、`@ut42tech/tokens/theme.css`（Task 3）、`@ut42tech/assets/favicon.ico`（Task 3）
 - Produces（`src/lib/theme.ts`）:
   - `type Theme = 'light' | 'dark'`
@@ -233,6 +245,7 @@ git commit -m "feat: add shared design tokens and assets packages"
 - [ ] **Step 1: パッケージの枠を作る**
 
 `package.json`: `name: "@ut42tech/web"`。dependencies: `astro`, `@astrojs/vue`, `vue`, `tailwindcss`, `@tailwindcss/vite`, `@ut42tech/profile`, `@ut42tech/tokens`, `@ut42tech/assets`（内部は `workspace:*`）。devDependencies: `@astrojs/check`, `vue-tsc`, `typescript`, `@ut42tech/config`。scripts:
+
 - `"dev": "astro dev"`, `"build": "astro build"`, `"preview": "astro preview"`
 - `"typecheck": "astro check && vue-tsc --noEmit"`
 - `"test": "vp test run"`
@@ -242,17 +255,29 @@ git commit -m "feat: add shared design tokens and assets packages"
 - [ ] **Step 2: `theme.ts` の失敗するテストを書く**（`src/lib/theme.test.ts`）
 
 ```ts
-const throwing = { getItem: () => { throw new Error('denied') }, setItem: () => { throw new Error('denied') } }
+const throwing = {
+  getItem: () => {
+    throw new Error("denied");
+  },
+  setItem: () => {
+    throw new Error("denied");
+  },
+};
 
-test('readStoredTheme returns null when storage throws', () => expect(readStoredTheme(throwing)).toBeNull())
-test('readStoredTheme returns null for unknown values', () => expect(readStoredTheme({ getItem: () => 'sepia' })).toBeNull())
-test('readStoredTheme returns null without storage', () => expect(readStoredTheme(undefined)).toBeNull())
-test('stored theme wins over system preference', () => expect(resolveTheme('light', true)).toBe('light'))
-test('falls back to system preference', () => {
-  expect(resolveTheme(null, true)).toBe('dark')
-  expect(resolveTheme(null, false)).toBe('light')
-})
-test('storeTheme swallows storage errors', () => expect(() => storeTheme(throwing, 'dark')).not.toThrow())
+test("readStoredTheme returns null when storage throws", () =>
+  expect(readStoredTheme(throwing)).toBeNull());
+test("readStoredTheme returns null for unknown values", () =>
+  expect(readStoredTheme({ getItem: () => "sepia" })).toBeNull());
+test("readStoredTheme returns null without storage", () =>
+  expect(readStoredTheme(undefined)).toBeNull());
+test("stored theme wins over system preference", () =>
+  expect(resolveTheme("light", true)).toBe("light"));
+test("falls back to system preference", () => {
+  expect(resolveTheme(null, true)).toBe("dark");
+  expect(resolveTheme(null, false)).toBe("light");
+});
+test("storeTheme swallows storage errors", () =>
+  expect(() => storeTheme(throwing, "dark")).not.toThrow());
 ```
 
 - [ ] **Step 3: テストが失敗することを確認する**
@@ -305,14 +330,17 @@ git commit -m "feat(web): scaffold Astro app with shared tokens and profile"
 ### Task 5: CI と README
 
 **Files:**
+
 - Create: `.github/workflows/ci.yml`, `README.md`
 
 **Interfaces:**
+
 - Consumes: ルートスクリプト `check`（Task 1）、各パッケージの `build` / `test`（Task 2〜4）
 
 - [ ] **Step 1: CI を書く**
 
 `on: pull_request` と `push: branches: [main]`。job は `ubuntu-latest` で:
+
 1. `actions/checkout`（バージョンはタグではなく commit SHA で固定）
 2. `voidzero-dev/setup-vp@v1.22.0` を `with: { node-version-file: '.node-version', cache: true }`（既定で `vp install` が走る）
 3. `vp run -r --cache build`
