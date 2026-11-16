@@ -5,6 +5,12 @@ import { defineConfig } from "astro/config";
 export default defineConfig({
   site: "https://ut42tech.com",
   output: "static",
+  i18n: {
+    locales: ["ja", "en"],
+    defaultLocale: "ja",
+    // Both languages live under a prefix; "/" is routed by vercel.json (this redirect is the fallback elsewhere).
+    routing: { prefixDefaultLocale: true, redirectToDefaultLocale: true },
+  },
   integrations: [vue()],
   vite: {
     plugins: [tailwindcss()],
