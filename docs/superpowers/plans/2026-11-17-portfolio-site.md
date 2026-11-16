@@ -205,34 +205,33 @@ git commit -m "feat(tokens): apply portfolio visual design tokens"
   - `Profile.email: string`
   - `profile.social` の順: X、GitHub、LinkedIn、Qiita、Zenn、note、YouTube、Wantedly
 
-- [ ] **Step 1: 本人に LinkedIn のプロフィール URL を聞く**
+- [ ] **Step 1: 失敗するテストを書く**
 
-推測で書かない。返事が来るまで、このタスクは止める。
-
-- [ ] **Step 2: 失敗するテストを書く**
+LinkedIn の URL は `https://www.linkedin.com/in/ut42tech/`（本人から受け取った値）。
 
 ```ts
 test("contact", () => {
   expect(profile.email).toBe("hello@ut42tech.com");
   expect(profile.social.map((l) => l.icon)).toEqual(["x", "github", "linkedin", "qiita", "zenn", "note", "youtube", "wantedly"]);
+  expect(profile.social.find((l) => l.icon === "linkedin")!.href).toBe("https://www.linkedin.com/in/ut42tech/");
 });
 ```
 
 既存の `expect(profile.social.length).toBe(7)` は 8 に変える。
 
-- [ ] **Step 3: 失敗を確かめる**
+- [ ] **Step 2: 失敗を確かめる**
 
 Run: `vp test packages/profile`
 Expected: FAIL
 
-- [ ] **Step 4: 型と値を足す**
+- [ ] **Step 3: 型と値を足す**
 
-- [ ] **Step 5: 通ることを確かめる**
+- [ ] **Step 4: 通ることを確かめる**
 
 Run: `vp test packages/profile`
 Expected: PASS
 
-- [ ] **Step 6: コミット**
+- [ ] **Step 5: コミット**
 
 ```bash
 git commit -am "feat(profile): add email and LinkedIn"
@@ -258,7 +257,7 @@ git commit -am "feat(profile): add email and LinkedIn"
 
 ```ts
 // lib/icons.ts
-export type UiIconName = "chevron-left" | "x" | "arrow-up-right" | "arrows-sort" | "sun" | "moon" | "device-desktop" | "copy" | "mail";
+export type UiIconName = "chevron-left" | "x" | "arrow-up-right" | "arrows-sort" | "sun" | "moon" | "device-desktop" | "copy" | "mail" | "language";
 export type SkillIcon = "typescript" | "python" | "swift" | "react" | "nextdotjs" | "vuedotjs" | "astro" | "threedotjs" | "unity" | "blender" | "figma";
 export type BrandIconName = SocialIcon | SkillIcon | "speakerdeck";
 export const uiIcons: Record<UiIconName, Component>;   // Tabler の部品（IconChevronLeft など）
@@ -361,6 +360,8 @@ export const publishedLocales: readonly Locale[] = ["ja"];
 export function localizePath(path: string, locale: Locale): string; // ("/about","ja") → "/ja/about"、("/","ja") → "/ja/"、("/about","en") → "/en/about"
 export function localeStaticPaths(): { params: { locale: Locale } }[]; // publishedLocales だけ
 export function alternates(path: string): { hreflang: string; href: string }[]; // 公開中の言語と x-default（"/"）
+export function switchLocalePath(path: string, to: Locale): string; // ("/ja/works/apps","en") → "/en/works/apps"
+export const LOCALE_COOKIE = "ut42tech-lang";
 
 // i18n/messages/ja.ts
 export const ja = { ... } as const; // 平たい鍵（例 "nav.label"）
@@ -389,6 +390,7 @@ export function pickLocalized<T extends { id: string }>(entries: T[], locale: Lo
 | `nav.about` / `nav.works` / `nav.press` | About / Works / Press | About / Works / Press |
 | `skip` | 本文へ移動 | Skip to content |
 | `theme.auto` / `theme.light` / `theme.dark` | 表示: 自動 / 表示: ライト / 表示: ダーク | Theme: Auto / Theme: Light / Theme: Dark |
+| `locale.switch` | English で見る | 日本語で見る |
 | `works.label` | Works の分類 | Works categories |
 | `works.apps` / `.career` / `.awards` / `.events` | Apps / Career / Awards / Events | 同じ |
 | `count` | {n} 件 | {n} items |
@@ -434,6 +436,10 @@ test("localizePath prefixes every locale", () => {
   expect(localizePath("/about", "ja")).toBe("/ja/about");
   expect(localizePath("/", "ja")).toBe("/ja/");
   expect(localizePath("/about", "en")).toBe("/en/about");
+});
+test("switchLocalePath keeps the page", () => {
+  expect(switchLocalePath("/ja/works/apps/tangi", "en")).toBe("/en/works/apps/tangi");
+  expect(switchLocalePath("/en/", "ja")).toBe("/ja/");
 });
 test("alternates list published locales and x-default", () => {
   expect(alternates("/about")).toEqual([{ hreflang: "ja", href: "/ja/about" }, { hreflang: "x-default", href: "/" }]);
@@ -488,6 +494,8 @@ git commit -m "feat(web): add i18n dictionaries and hardcode guard"
 - Rewrite: `apps/web/src/components/ThemeToggle.vue`
 - Create: `apps/web/src/layouts/Site.astro`（`Base.astro` を置き換え、`Base.astro` は消す）
 - Create: `apps/web/src/components/SiteHeader.astro`
+- Create: `apps/web/src/components/LocaleSwitch.astro`
+- Create: `apps/web/src/scripts/locale-switch.ts`
 - Create: `apps/web/src/components/NavBar.astro`
 - Create: `apps/web/src/components/HelloStage.astro`
 - Create: `apps/web/src/views/HelloView.astro`
@@ -587,6 +595,7 @@ test("handle links home", () => expect(hello.querySelector('header a[href="/ja/"
 test("declares alternates", () => expect(hello.querySelector('link[rel="alternate"][hreflang="x-default"]')).not.toBeNull());
 test("has a favicon", () => expect(hello.querySelector('link[rel="icon"]')).not.toBeNull());
 test("English is not published yet", () => expect(existsSync(new URL("../dist/en", import.meta.url))).toBe(false));
+test("no language switch while only one locale is published", () => expect(hello.querySelector('a[hreflang="en"]')).toBeNull());
 ```
 
 - [ ] **Step 2: 失敗を確かめる**
@@ -611,7 +620,9 @@ Expected: FAIL
 **ヘッダー**（`SiteHeader.astro`）
 
 - 左: ハンドルのリンク `@ut42tech`（`localizePath("/", locale)`、`text-headline`）。
-- 右: `ThemeToggle`。
+- 右: `LocaleSwitch`（`publishedLocales` が2つ以上のときだけ）と `ThemeToggle` を、この順に並べる。
+  - `LocaleSwitch`: アイコン `language`（20）だけのリンク。`href` は `switchLocalePath(今のパス, もう一方)`、`hreflang` と `lang` はもう一方の言語、`aria-label` は `t("locale.switch")`。押せる範囲は 44×44。
+  - `scripts/locale-switch.ts`: 押したら、クッキー `ut42tech-lang` に行き先の言語を書く（1年、`path=/`、`SameSite=Lax`）。
 - スマホ:
   - 上の段に置く。上端は `max(env(safe-area-inset-top), 12px)`、高さ 44。
   - 横の余白 20。表示の切り替えは、アイコンの右端を余白にそろえる。
@@ -1298,7 +1309,7 @@ git commit -m "test(web): check names, headings and pointer opt-in on every page
      1. クッキー `ut42tech-lang` が `en` なら `/en/`
      2. `Accept-Language` が英語で始まるなら `/en/`
      3. それ以外は `/ja/`
-  5. 言語の切り替え（選ぶとクッキーを書く）の置き場所と見た目を、デザインで決めて作る。
+  5. 言語の切り替えは、公開中の言語が2つになると自動で出る。英語のページで見た目と動きを確かめる。
 - **公開前に本人が書くもの**:
   - About の自己紹介と、これまで（「（仮）」の文）
   - 素材に無かった Press（note、Zenn、Qiita、YouTube、Speaker Deck）
