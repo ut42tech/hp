@@ -52,18 +52,18 @@
   - 色の変数（コレクション `ut42tech`、モード `Light` / `Dark`）。名前は設計書 5 章の表のとおり。
   - 数値の変数（コレクション `ut42tech/size`）: `radius/card`、`radius/row`、`radius/control`、`radius/segment`、`radius/sheet`、`radius/full`、`space/1`〜`space/14`、`width/content`、`width/reading`。
 
-- [ ] **Step 1: 既存の `ut42tech` コレクションを読み、変数を整理する**
+- [x] **Step 1: 既存の `ut42tech` コレクションを読み、変数を整理する**
   - 設計書の表にある名前は、値を上書きする。
   - 表にない `color/cursor/*`、`color/on-cursor`、`color/grid-dot` は消す。
   - `color/accent` は消さず、`color/fg` を参照する別名にする（コードの `--ut-color-accent` と合わせるため）。
-- [ ] **Step 2: 表にない新しい変数を作る**
+- [x] **Step 2: 表にない新しい変数を作る**
   - 新しく作るのは `color/fill`、`color/placeholder`、`color/glass`、`color/glass-edge`、`color/glass-line`、`color/curtain`、`color/on-curtain`。
   - 不透明度付きの色は、`{ r, g, b, a }` の値で作る。
   - `scopes` も設定する（面は `FRAME_FILL`・`SHAPE_FILL`、文字は `TEXT_FILL`、線は `STROKE_COLOR`）。
-- [ ] **Step 3: 数値の変数を作る**
+- [x] **Step 3: 数値の変数を作る**
   - `ut42tech/size` コレクションに、上の名前と設計書 7 章の値で作る。
   - `scopes` は、角丸が `CORNER_RADIUS`、余白が `GAP`、幅が `WIDTH_HEIGHT`。
-- [ ] **Step 4: 検証**
+- [x] **Step 4: 検証**
   - スクリプトで、両モードの次の組み合わせのコントラスト比を計算する。
     - `fg` / `bg`、`fg` / `surface`: 7 以上。
     - `muted` / `bg`、`muted` / `surface`、`on-curtain` / `curtain`: 4.5 以上。
@@ -78,8 +78,8 @@
   - `Display` は最大の 176px で作る。スマホの画面では、インスタンスの文字の大きさを 64px に変える。
   - `Loader` は 24px で作る。スマホでは 17px にする。
 
-- [ ] **Step 1: 12 の文字スタイルを作る**（行間と字間は `{ unit, value }` で指定する）
-- [ ] **Step 2: 検証**: Foundations の見本は作らない（範囲外）。スタイルの数と、書体・太さを読み返す
+- [x] **Step 1: 12 の文字スタイルを作る**（行間と字間は `{ unit, value }` で指定する）
+- [x] **Step 2: 検証**: Foundations の見本は作らない（範囲外）。スタイルの数と、書体・太さを読み返す
 
 ---
 
@@ -103,19 +103,19 @@
 | `UI/RowCard` | `layout` = wide / compact、`media` = image / fallback | 左にサムネイル（wide 160×100、compact 96×72）。カードの高さはサムネイルと同じ |
 | `UI/Button` | `variant` = primary / secondary | primary は `fg` の面に `bg` の文字、secondary は `border` の線。`arrow-up-right` を右に付ける |
 
-- [ ] **Step 1: Lucide の SVG を取得する**
+- [x] **Step 1: Lucide の SVG を取得する**
   - `https://unpkg.com/lucide-static@1.73.0/icons/<name>.svg` から、上の7つを取得する。
   - `stroke-width` を 1.75 に、`width`・`height` を 16 にしてから、`figma.createNodeFromSvg` で取り込んで部品にする。
   - 線の色は `fg` に結び付ける。
-- [ ] **Step 2: `figma:figma-generate-library` を読み込み、上の部品を作る**
+- [x] **Step 2: `figma:figma-generate-library` を読み込み、上の部品を作る**
   - 色・角丸・余白は変数に、文字は文字スタイルに結び付ける。
-- [ ] **Step 3: 検証（題名の長さ）**: `UI/Card` のインスタンスを2つ作り、高さが同じであることを確かめたら、インスタンスは消す
+- [x] **Step 3: 検証（題名の長さ）**: `UI/Card` のインスタンスを2つ作り、高さが同じであることを確かめたら、インスタンスは消す
   - 1つには、60文字の日本語の題名を入れる。
   - もう1つには、`tangi` と入れる。
-- [ ] **Step 4: 検証（結び付け・潰れ）**: ページ内について、スクリプトで次を確かめる
+- [x] **Step 4: 検証（結び付け・潰れ）**: ページ内について、スクリプトで次を確かめる
   - 変数に結び付いていない塗りと線が0件である。例外は、仮画像のグラデーションと影だけ。
   - 子要素が親より高い auto layout のフレームが0件である。
-- [ ] **Step 5: 検証（見た目）**: ページを Light と Dark でスクリーンショットする
+- [x] **Step 5: 検証（見た目）**: ページを Light と Dark でスクリーンショットする
 
 ---
 
