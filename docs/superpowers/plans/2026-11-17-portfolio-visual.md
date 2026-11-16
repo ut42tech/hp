@@ -48,6 +48,7 @@
 ### Task 1: 変数
 
 **Interfaces:**
+
 - Produces:
   - 色の変数（コレクション `ut42tech`、モード `Light` / `Dark`）。名前は設計書 5 章の表のとおり。
   - 数値の変数（コレクション `ut42tech/size`）: `radius/card`、`radius/row`、`radius/control`、`radius/segment`、`radius/sheet`、`radius/full`、`space/1`〜`space/14`、`width/content`、`width/reading`。
@@ -74,6 +75,7 @@
 ### Task 2: 文字スタイル
 
 **Interfaces:**
+
 - Produces: 文字スタイル `Display`、`Title L`、`Title L (mobile)`、`Title M`、`Headline`、`Card Title`、`Body`、`Callout`、`Callout Bold`、`Caption`、`Mono`、`Loader`。値は設計書 6 章のとおり。
   - `Display` は最大の 176px で作る。スマホの画面では、インスタンスの文字の大きさを 64px に変える。
   - `Loader` は 24px で作る。スマホでは 17px にする。
@@ -86,22 +88,23 @@
 ### Task 3: 部品（Components ページを新設）
 
 **Interfaces:**
+
 - Consumes: Task 1・2 の変数と文字スタイル。
 - Produces: 新しいページ `UI — Components` と、次の部品。
 
-| 部品 | バリアント・プロパティ | 見た目 |
-| --- | --- | --- |
-| `UI/Icon/*` | `chevron-left`、`arrow-up-right`、`arrow-up-down`、`sun`、`moon`、`monitor`、`copy` | Lucide の SVG を 16px で取り込む。線の太さ 1.75、色は `fg` |
-| `UI/TabBar` | `active` = none / about / works / press | すりガラス。文字だけの3項目。選択中は `fg` の丸い面に `bg` の文字 |
-| `UI/Toolbar` | `active` = none / about / works / press | すりガラス。左は `@ut42tech`、中央は切り替え、右は表示の切り替えボタン（アイコン） |
-| `UI/Sheet` | `height` = full / half、テキスト `title` | `surface` の面。上端の角丸は `radius/sheet`。取っ手と `Title L (mobile)` の見出し |
-| `UI/Segmented` | `active` = apps / career / awards / events | `fill` の地。選択中は `fg` の面 |
-| `UI/SideNav` | `active` = apps / career / awards / events | 縦並び。選択中は `fg` の面。件数は `Caption` |
-| `UI/Sort` | `order` = newest / oldest | `arrow-up-down` のアイコンとラベル。枠線は `border` |
-| `UI/ThemeSwitch` | `value` = auto / light / dark | 3つの切り替え（`monitor` / `sun` / `moon`）。About の最後に置く |
-| `UI/Card` | `media` = image / fallback、テキスト `title`・`meta`・`fallback` | `surface` の面、`border` の線、角丸 `radius/card`。サムネイルは 16:10。題名は `Card Title`（2行で高さ固定）、補足は `Mono` |
-| `UI/RowCard` | `layout` = wide / compact、`media` = image / fallback | 左にサムネイル（wide 160×100、compact 96×72）。カードの高さはサムネイルと同じ |
-| `UI/Button` | `variant` = primary / secondary | primary は `fg` の面に `bg` の文字、secondary は `border` の線。`arrow-up-right` を右に付ける |
+| 部品             | バリアント・プロパティ                                                              | 見た目                                                                                                                     |
+| ---------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `UI/Icon/*`      | `chevron-left`、`arrow-up-right`、`arrow-up-down`、`sun`、`moon`、`monitor`、`copy` | Lucide の SVG を 16px で取り込む。線の太さ 1.75、色は `fg`                                                                 |
+| `UI/TabBar`      | `active` = none / about / works / press                                             | すりガラス。文字だけの3項目。選択中は `fg` の丸い面に `bg` の文字                                                          |
+| `UI/Toolbar`     | `active` = none / about / works / press                                             | すりガラス。左は `@ut42tech`、中央は切り替え、右は表示の切り替えボタン（アイコン）                                         |
+| `UI/Sheet`       | `height` = full / half、テキスト `title`                                            | `surface` の面。上端の角丸は `radius/sheet`。取っ手と `Title L (mobile)` の見出し                                          |
+| `UI/Segmented`   | `active` = apps / career / awards / events                                          | `fill` の地。選択中は `fg` の面                                                                                            |
+| `UI/SideNav`     | `active` = apps / career / awards / events                                          | 縦並び。選択中は `fg` の面。件数は `Caption`                                                                               |
+| `UI/Sort`        | `order` = newest / oldest                                                           | `arrow-up-down` のアイコンとラベル。枠線は `border`                                                                        |
+| `UI/ThemeSwitch` | `value` = auto / light / dark                                                       | 3つの切り替え（`monitor` / `sun` / `moon`）。About の最後に置く                                                            |
+| `UI/Card`        | `media` = image / fallback、テキスト `title`・`meta`・`fallback`                    | `surface` の面、`border` の線、角丸 `radius/card`。サムネイルは 16:10。題名は `Card Title`（2行で高さ固定）、補足は `Mono` |
+| `UI/RowCard`     | `layout` = wide / compact、`media` = image / fallback                               | 左にサムネイル（wide 160×100、compact 96×72）。カードの高さはサムネイルと同じ                                              |
+| `UI/Button`      | `variant` = primary / secondary                                                     | primary は `fg` の面に `bg` の文字、secondary は `border` の線。`arrow-up-right` を右に付ける                              |
 
 - [x] **Step 1: Lucide の SVG を取得する**
   - `https://unpkg.com/lucide-static@1.73.0/icons/<name>.svg` から、上の7つを取得する。
@@ -122,6 +125,7 @@
 ### Task 4: 画面（スマホ）
 
 **Interfaces:**
+
 - Consumes: Task 3 の部品。
 - Produces: 新しいページ `Visual — Mobile` と、次のフレーム（すべて 390×844）。
   - `V-M/Loader`、`V-M/Hello`、`V-M/About`、`V-M/Works (Apps)`、`V-M/App detail`、`V-M/Works (Career)`、`V-M/Press`、`V-M/Press (half over detail)`
@@ -129,16 +133,16 @@
 
 **画面の中身**（設計書と構造の設計書に沿う）
 
-| フレーム | 中身 |
-| --- | --- |
-| Loader | `curtain` の面に、`Loader` のスタイルで「Takuya Uehara」を中央に置く |
-| Hello | `bg` の地に「Welcome.」（`Display`、64px）と「to ut42tech」（`Callout`、`muted`）。左上に `@ut42tech`、下に `UI/TabBar`（none） |
-| About | 全画面のシート。スクロールした先の状態で、写真、名前、所属、自己紹介、技術、これまで、Contact（SNS 7つ・メール）、`UI/ThemeSwitch` の順に並べる |
-| Works (Apps) | 全画面のシート。`UI/Segmented`（apps）、件数と `UI/Sort`、`UI/Card` の2列（8枚、うち2枚はフォールバック） |
-| App detail | 全画面の層。上に仮画像、`‹ Apps` ボタン、題名（`Title M`）、本文、`UI/Button`（Demo・GitHub）、Stack、Related |
-| Works (Career) | `UI/RowCard`（compact）を5枚。うち2枚はフォールバック |
-| Press | `UI/Card` の2列（6枚） |
-| Press (half over detail) | App detail の上を `#000` 25% で暗くし、Press の半分のシートを重ねる。タブバーは press |
+| フレーム                 | 中身                                                                                                                                            |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Loader                   | `curtain` の面に、`Loader` のスタイルで「Takuya Uehara」を中央に置く                                                                            |
+| Hello                    | `bg` の地に「Welcome.」（`Display`、64px）と「to ut42tech」（`Callout`、`muted`）。左上に `@ut42tech`、下に `UI/TabBar`（none）                 |
+| About                    | 全画面のシート。スクロールした先の状態で、写真、名前、所属、自己紹介、技術、これまで、Contact（SNS 7つ・メール）、`UI/ThemeSwitch` の順に並べる |
+| Works (Apps)             | 全画面のシート。`UI/Segmented`（apps）、件数と `UI/Sort`、`UI/Card` の2列（8枚、うち2枚はフォールバック）                                       |
+| App detail               | 全画面の層。上に仮画像、`‹ Apps` ボタン、題名（`Title M`）、本文、`UI/Button`（Demo・GitHub）、Stack、Related                                   |
+| Works (Career)           | `UI/RowCard`（compact）を5枚。うち2枚はフォールバック                                                                                           |
+| Press                    | `UI/Card` の2列（6枚）                                                                                                                          |
+| Press (half over detail) | App detail の上を `#000` 25% で暗くし、Press の半分のシートを重ねる。タブバーは press                                                           |
 
 - [x] **Step 1: `figma:figma-generate-design` を読み込み、上の 8 フレームを作る**
   - 仮の作品画像は、作品ごとに違う色のグラデーションにする。
@@ -155,6 +159,7 @@
 ### Task 5: 画面（パソコン）
 
 **Interfaces:**
+
 - Consumes: Task 3 の部品。
 - Produces: 新しいページ `Visual — Desktop` と、次のフレーム（すべて 1440×900、About だけは中身に合わせた高さ）。
   - `V-D/Loader`、`V-D/Hello`、`V-D/About`、`V-D/Works (Apps)`、`V-D/App detail`、`V-D/Works (Career)`、`V-D/Press`
@@ -162,15 +167,15 @@
 
 **画面の中身**
 
-| フレーム | 中身 |
-| --- | --- |
-| Loader | スマホと同じ（文字は 24px） |
-| Hello | `UI/Toolbar`（none）。下の領域の中央に「Welcome.」（176px）と「to ut42tech」 |
-| About | 幅 720 の1列。スマホと同じ並び。表示の切り替えはツールバーにあるので、ここには置かない |
-| Works (Apps) | 左に `UI/SideNav`（サイドバー 280）。右は幅 960 の中央寄せで、`UI/Card` を3列 |
-| App detail | 同じサイドバー。右は幅 960 で、仮画像、題名、本文、ボタン、Stack、Related |
-| Works (Career) | `UI/RowCard`（wide）を幅 960 で5枚 |
-| Press | 幅 960 の中央寄せで、`UI/Card` を3列 |
+| フレーム       | 中身                                                                                   |
+| -------------- | -------------------------------------------------------------------------------------- |
+| Loader         | スマホと同じ（文字は 24px）                                                            |
+| Hello          | `UI/Toolbar`（none）。下の領域の中央に「Welcome.」（176px）と「to ut42tech」           |
+| About          | 幅 720 の1列。スマホと同じ並び。表示の切り替えはツールバーにあるので、ここには置かない |
+| Works (Apps)   | 左に `UI/SideNav`（サイドバー 280）。右は幅 960 の中央寄せで、`UI/Card` を3列          |
+| App detail     | 同じサイドバー。右は幅 960 で、仮画像、題名、本文、ボタン、Stack、Related              |
+| Works (Career) | `UI/RowCard`（wide）を幅 960 で5枚                                                     |
+| Press          | 幅 960 の中央寄せで、`UI/Card` を3列                                                   |
 
 - [x] **Step 1: 上の 7 フレームを作る**
 - [x] **Step 2: Dark の版を作る**

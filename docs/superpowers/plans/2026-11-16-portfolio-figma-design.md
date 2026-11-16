@@ -39,6 +39,7 @@
 ### Task 1: ファイルの作成と書体の確認
 
 **Interfaces:**
+
 - Produces: `fileKey`、`sessionId`、ページ `Direction`、LINE Seed JP の使えるウェイト一覧。
 
 - [x] **Step 1: `figma:figma-create-new-file` スキルを読み込む。`create_new_file` でチーム「ut42tech」にファイルを作り、`create_session` を呼ぶ**
@@ -68,6 +69,7 @@ git commit -m "docs: link portfolio Figma file"
 ### Task 2: トップページの大まかな画面（PC・スマホ）
 
 **Interfaces:**
+
 - Consumes: Task 1 の変数とウェイト一覧。
 - Produces: `Direction` ページ上のトップレベルフレーム `Top / Desktop`（幅 1440）と `Top / Mobile`（幅 390）。Hello フレーム内の要素のレイヤー名は、Task 3 が動かす対象になる: `Hello/frame`、`Hello/label`、`Hello/name`、`Hello/motto`、`Hello/motto-en`、`Hello/tags`、`Hello/affiliation`、`Hello/3d`、`Cursor/design`、`Cursor/frontend`、`Cursor/3d`、`Cursor/you`、`Status`。
 
@@ -106,20 +108,21 @@ git commit -m "docs: link portfolio Figma file"
 ### Task 3: Hello が組み上がる動き
 
 **Interfaces:**
+
 - Consumes: Task 2 の `Top / Desktop` 内のレイヤー（名前は Task 2 の Interfaces のとおり）。
 - Produces: `Direction` ページ上のトップレベルフレーム `Build / Hello / Desktop`。`Top / Desktop` の上部（ヘッダーと Hello）を複製したもので、約8秒のタイムラインを持つ。
 
 タイムライン（設計書 5.1 に沿う。秒は目安で、気持ちよさを優先して調整してよい）:
 
-| 時刻 | 動き |
-| --- | --- |
-| 0.0–0.8s | カーソル3つが画面の外から入ってくる。`Hello/frame` 以下はすべて見えない |
+| 時刻     | 動き                                                                                                                         |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| 0.0–0.8s | カーソル3つが画面の外から入ってくる。`Hello/frame` 以下はすべて見えない                                                      |
 | 0.8–2.0s | design のカーソルが左上から右下へ動き、それに合わせて `Hello/frame` が大きさ0から広がる。`Status`: `Design framing "Hello"…` |
-| 2.0–3.0s | 点線の箱が3つ現れる（ワイヤー）。`Status`: `Design wireframing…` |
-| 3.0–4.6s | frontend のカーソルに合わせて、`Hello/name` が1文字ずつ打ち込まれる（TextStagger）。`Status`: `Frontend typing…` |
-| 4.6–5.6s | 点線の箱が消え、`Hello/motto`・`Hello/motto-en`・`Hello/tags`・`Hello/affiliation` が順に現れる |
-| 5.6–6.6s | 3d のカーソルが `Hello/3d` を上から置く。`Status`: `ready — say hi 👋` |
-| 6.6–8.0s | `Cursor/you` が現れ、3つのカーソルがそのそばへ集まる |
+| 2.0–3.0s | 点線の箱が3つ現れる（ワイヤー）。`Status`: `Design wireframing…`                                                             |
+| 3.0–4.6s | frontend のカーソルに合わせて、`Hello/name` が1文字ずつ打ち込まれる（TextStagger）。`Status`: `Frontend typing…`             |
+| 4.6–5.6s | 点線の箱が消え、`Hello/motto`・`Hello/motto-en`・`Hello/tags`・`Hello/affiliation` が順に現れる                              |
+| 5.6–6.6s | 3d のカーソルが `Hello/3d` を上から置く。`Status`: `ready — say hi 👋`                                                       |
+| 6.6–8.0s | `Cursor/you` が現れ、3つのカーソルがそのそばへ集まる                                                                         |
 
 - [x] **Step 1: `figma:figma-use-motion` スキルを読み込み、Motion が使えるかを読み取りだけのスクリプトで確かめる（`node.timelines` を読む）**
 
