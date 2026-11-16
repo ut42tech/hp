@@ -118,7 +118,9 @@ const links = [
     margin: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
-    padding: 0 var(--gutter-right) calc(var(--bottom-inset) + 24px) var(--gutter-left);
+    padding: 0 max(var(--gutter-right), calc((100% - var(--ut-width-reading)) / 2))
+      calc(var(--bottom-inset) + 24px)
+      max(var(--gutter-left), calc((100% - var(--ut-width-reading)) / 2));
     border: 0;
     border-radius: var(--ut-radius-sheet) var(--ut-radius-sheet) 0 0;
     background: var(--ut-color-surface);

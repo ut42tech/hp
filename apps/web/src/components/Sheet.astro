@@ -22,7 +22,9 @@ const { receded = false } = Astro.props;
     z-index: 10;
     overflow-y: auto;
     overscroll-behavior: contain;
-    padding: 0 var(--gutter-right) var(--nav-clearance) var(--gutter-left);
+    /* On tablets the content keeps the reading width instead of stretching. */
+    padding: 0 max(var(--gutter-right), calc((100% - var(--ut-width-reading)) / 2))
+      var(--nav-clearance) max(var(--gutter-left), calc((100% - var(--ut-width-reading)) / 2));
     border-radius: var(--ut-radius-sheet) var(--ut-radius-sheet) 0 0;
     background: var(--ut-color-surface);
     box-shadow: var(--ut-shadow-sheet);
