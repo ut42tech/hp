@@ -84,7 +84,7 @@
 | プロフィール画像 | 96px | 144px |
 | ページ | Hello の上に重なるシート | `bg` の上に直接 |
 | Works の分類 | シートの見出しの下の切り替え（カプセル） | 左のサイドバー。面も影もなく、ページの地にそのまま置く。上端は見出しと同じ 104px。見出しは選んだ分類名（Apps など）。サイドバーには見出しを付けない（上のナビゲーションで Works が選ばれていて、重ねて書くと冗長なため） |
-| 一覧 | カード2列、横長カード1列 | カード3列、横長カード1列（中身の幅 960） |
+| 一覧 | カード2列、横長カード1列 | カード3列（264 幅、間 24）、横長カード1列。中身の幅 840。Works ではサイドバーの右端から画面の右端までの中央、Press では画面の中央に置く。カードの大きさはどのページでも同じ |
 | 横長カード | 高さ 100、画像 96 幅 | 高さ 100、画像 160 幅 |
 | Skills | 48px のタイルを折り返し（6個ずつ） | 48px のタイルを1行 |
 | SNS | 2列×4段のボタン（幅 171） | 4列×2段のボタン（幅 174） |
@@ -144,7 +144,7 @@ Figma のコレクション `ut42tech`（モード Light / Dark）を、次の�
 ## 7. 形・余白・影・トークン（Claude の提案）
 
 - **角丸**: カード・詳細の画像 16、横長カード・タイル・メール欄・サイドバーの項目 12、シート上端 28、押して操作する部品はすべて 999（カプセル。3.2 の規則）。
-- **余白**: 4 の倍数（4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 48 / 56）。パソコンの中身の最大幅は 960（構造の設計書のとおり）。
+- **余白**: 4 の倍数（4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 48 / 56）。パソコンの中身の最大幅は 840（一覧）と 720（About、Apps の詳細）。Works の中身は、サイドバーの右端（左から 248px）から画面の右端までの中央に置く。
 - **安全な領域**（本人の指摘を受けて決めた）:
   - スマホ: 上は状態バーの 47px、下はホームインジケーターの 34px を空ける（Figma のフレームでは赤い帯のガイドで示す）。実装では `viewport-fit=cover` にして、`env(safe-area-inset-top / bottom / left / right)` を足す。値が 0 の端末でも、上下に最低 12px は空ける。
   - スマホの横の余白は 20px。横向きのときは `env(safe-area-inset-left / right)` を足す。
@@ -158,7 +158,7 @@ Figma のコレクション `ut42tech`（モード Light / Dark）を、次の�
 | --- | --- | --- | --- |
 | 角丸 | `radius/card`、`radius/row`、`radius/control`、`radius/segment`、`radius/sheet`、`radius/full` | `--ut-radius-card` など同名 | 16 / 12 / 999 / 999 / 28 / 999（`control` と `segment` は `full` の別名） |
 | 余白 | `space/1`〜`space/14` | `--ut-space-1` など | 4 の倍数（4〜56） |
-| 中身の幅 | `width/content`、`width/reading` | `--ut-width-content`、`--ut-width-reading` | 960 / 720 |
+| 中身の幅 | `width/content`、`width/reading` | `--ut-width-content`、`--ut-width-reading` | 840 / 720 |
 | イージング | — | `--ut-ease-out`、`--ut-ease-rise`、`--ut-ease-curtain`、`--ut-ease-in-out` | 9 章のとおり |
 | 時間 | — | `--ut-duration-fast`、`--ut-duration-base`、`--ut-duration-slow` | 180 / 250 / 600ms |
 | 影 | 効果のスタイル `shadow/float`、`shadow/sheet` | `--ut-shadow-float`、`--ut-shadow-sheet` | `0 8px 24px` 黒 18% / `0 -8px 30px` 黒 8% |
