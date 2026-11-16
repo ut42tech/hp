@@ -1,0 +1,36 @@
+/* Placeholder values. The final palette and type come from the Figma design pass. */
+:root {
+  color-scheme: light dark;
+  --ut-color-bg: #ffffff;
+  --ut-color-fg: #0a0a0a;
+  --ut-color-muted: #6b7280;
+  --ut-color-accent: #2563eb;
+  --ut-color-border: #e5e7eb;
+  --ut-font-sans: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+  --ut-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ut-radius: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ut-color-bg: #0a0a0a;
+    --ut-color-fg: #fafafa;
+    --ut-color-muted: #9ca3af;
+    --ut-color-accent: #60a5fa;
+    --ut-color-border: #27272a;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ut-color-bg: #0a0a0a;
+  --ut-color-fg: #fafafa;
+  --ut-color-muted: #9ca3af;
+  --ut-color-accent: #60a5fa;
+  --ut-color-border: #27272a;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}

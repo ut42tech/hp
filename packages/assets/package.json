@@ -1,0 +1,10 @@
+{
+  "name": "@ut42tech/assets",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./favicon.ico": "./favicon.ico",
+    "./profile.jpg": "./profile.jpg"
+  }
+}
