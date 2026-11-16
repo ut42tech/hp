@@ -29,6 +29,6 @@ export function nextOrder(order: SortOrder): SortOrder {
 
 export function initialOf(title: string, override?: string): string {
   if (override) return override;
-  const [first = ""] = [...title.trim()];
-  return first.toUpperCase();
+  const [first] = new Intl.Segmenter("ja", { granularity: "grapheme" }).segment(title.trim());
+  return (first?.segment ?? "").toUpperCase();
 }
