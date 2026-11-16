@@ -140,11 +140,11 @@
 | Press | `UI/Card` の2列（6枚） |
 | Press (half over detail) | App detail の上を `#000` 25% で暗くし、Press の半分のシートを重ねる。タブバーは press |
 
-- [ ] **Step 1: `figma:figma-generate-design` を読み込み、上の 8 フレームを作る**
+- [x] **Step 1: `figma:figma-generate-design` を読み込み、上の 8 フレームを作る**
   - 仮の作品画像は、作品ごとに違う色のグラデーションにする。
-- [ ] **Step 2: Dark の版を作る**
+- [x] **Step 2: Dark の版を作る**
   - Hello と Works (Apps) を複製し、`setExplicitVariableModeForCollection` で Dark モードにする。
-- [ ] **Step 3: 検証**: スクリプトで次を確かめたうえで、ページ全体をスクリーンショットする
+- [x] **Step 3: 検証**: スクリプトで次を確かめたうえで、ページ全体をスクリーンショットする
   - 「Welcome.」の幅が 358 以下である。
   - 変数に結び付いていない塗りが0件である（仮画像と影は除く）。
   - 潰れたフレームが0件である。
