@@ -17,9 +17,11 @@
   - 1024px 以上: 上にツールバー、中身をページに直接置く。
 - ページの間のつながりは、ブラウザ標準の画面遷移（`@view-transition { navigation: auto; }`）で取る。JavaScript のルーターは使わない。
 - 言語:
-  - 日本語を `/`、英語を `/en/` に置く（Astro の i18n ルーティング）。
-  - ページの本体は `src/views/` の部品にし、`locale` を受け取る。`src/pages/` には、言語ごとの薄い入口だけを置く。
-  - 英語は、翻訳がそろうまで入口を作らない（書き出さない）。
+  - 英語は日本語と対等に扱う（本人の決定）。URL は、日本語を `/ja/`、英語を `/en/` にそろえる（Astro の i18n ルーティング、`prefixDefaultLocale: true`）。
+  - ページは `src/pages/[locale]/` に置き、`getStaticPaths` で `publishedLocales` の言語だけを書き出す。ページの本体は `src/views/` の部品にし、`locale` を受け取る。
+  - `/` は、ページを読む前に Vercel の転送（`apps/web/vercel.json` の `redirects`）で言語へ振り分ける。強制はしない。
+    - 順番: 言語の切り替えで選んだ記憶（クッキー `ut42tech-lang`）、端末の言語（`Accept-Language`）、どちらも無ければ `/ja/`。
+    - 英語は、翻訳がそろうまで書き出さない。それまでは `/` → `/ja/` の1本だけを置く。
 - 動きは、**この計画に含めない**。この計画が終わった後に、別の計画「動き」で足す。この計画では、その土台（要素の名前、`data-cursor`、`view-transition-name`）だけを置く。
   - 対象: 登場演出、文字の吸い付き、ポインター、シートを払う操作、詳細へ広がる遷移。
 
@@ -63,8 +65,10 @@
   - パソコンの Works の中身は、サイドバーの右端（248px）から画面の右端までの中央に置く。幅は最大 840px。
   - 幅が足りないときは、左右に 32px を残して縮める。
 - **言語**:
-  - 対応する言語は `ja`（既定。接頭辞なし）と `en`（`/en/...`）。
+  - 対応する言語は `ja`（`/ja/...`）と `en`（`/en/...`）。既定は `ja`。どちらも接頭辞を付ける。
   - 書き出すのは `publishedLocales`（今は `["ja"]`）だけ。
+  - `/` の振り分けは `vercel.json` の転送（307）で行う。ページの中の JavaScript で振り分けない（一瞬違うページが見えるため）。
+  - 検索エンジン向けに、各ページに `hreflang` の代替リンクを出す。公開中の言語すべてと、`x-default`（`/`）を含める。
   - `<html lang>` は言語に合わせる。
   - ページの間のリンクは、すべて `localizePath` で作る。
 - **安全な領域**:
@@ -89,7 +93,7 @@
 1. **ページを移るとライト／ダークが元に戻る、または一瞬光る**。保存値が `auto` や壊れた値のときも同じ。
    - Task 5 で、`readPreference` が壊れた値と例外のときに `auto` を返すことを確かめる。
    - Task 5 で、全ページの `<head>` に最初の描画より前に動くスクリプトがあることを確かめる。
-2. **共有された `/works/apps/<slug>` を直接開く**。一覧へ戻れること、JavaScript が無くても読めることが必要。
+2. **共有された `/ja/works/apps/<slug>` を直接開く**。一覧へ戻れること、JavaScript が無くても読めることが必要。
    - Task 9 で、ビルド結果に `<dialog open` と、一覧へ戻るリンクがあることを確かめる。
 3. **長い題名・画像なし・Demo や GitHub なしの作品**で、カードの高さがそろい、無いボタンは出さないこと。
    - Task 6 で、`initialOf` と書式化の関数を確かめる。
@@ -333,7 +337,8 @@ git commit -m "feat(web): add Tabler and Simple Icons components"
 **Files:**
 
 - Modify: `apps/web/astro.config.mjs`
-  - `i18n: { locales: ["ja", "en"], defaultLocale: "ja", routing: { prefixDefaultLocale: false } }` を足す。
+  - `i18n: { locales: ["ja", "en"], defaultLocale: "ja", routing: { prefixDefaultLocale: true, redirectToDefaultLocale: true } }` を足す（`/` の静的な転送は、Vercel の外で開いたときの予備になる）。
+- Create: `apps/web/vercel.json`（`/` → `/ja/` の転送。307、`permanent: false`）
 - Create: `apps/web/src/i18n/config.ts`
 - Create: `apps/web/src/i18n/messages/ja.ts`
 - Create: `apps/web/src/i18n/messages/en.ts`
@@ -353,7 +358,9 @@ export const locales = ["ja", "en"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "ja";
 export const publishedLocales: readonly Locale[] = ["ja"];
-export function localizePath(path: string, locale: Locale): string; // ("/about","ja") → "/about"、("/about","en") → "/en/about"、("/","en") → "/en"
+export function localizePath(path: string, locale: Locale): string; // ("/about","ja") → "/ja/about"、("/","ja") → "/ja/"、("/about","en") → "/en/about"
+export function localeStaticPaths(): { params: { locale: Locale } }[]; // publishedLocales だけ
+export function alternates(path: string): { hreflang: string; href: string }[]; // 公開中の言語と x-default（"/"）
 
 // i18n/messages/ja.ts
 export const ja = { ... } as const; // 平たい鍵（例 "nav.label"）
@@ -423,10 +430,17 @@ test("en has every ja key and no empty values", () => {
   expect(Object.keys(en).sort()).toEqual(Object.keys(ja).sort());
   for (const [k, v] of Object.entries(en)) expect(v.trim(), k).not.toBe("");
 });
-test("localizePath", () => {
-  expect(localizePath("/about", "ja")).toBe("/about");
+test("localizePath prefixes every locale", () => {
+  expect(localizePath("/about", "ja")).toBe("/ja/about");
+  expect(localizePath("/", "ja")).toBe("/ja/");
   expect(localizePath("/about", "en")).toBe("/en/about");
-  expect(localizePath("/", "en")).toBe("/en");
+});
+test("alternates list published locales and x-default", () => {
+  expect(alternates("/about")).toEqual([{ hreflang: "ja", href: "/ja/about" }, { hreflang: "x-default", href: "/" }]);
+});
+test("vercel sends / to Japanese without a permanent redirect", () => {
+  const { redirects } = JSON.parse(readFileSync(new URL("../../vercel.json", import.meta.url), "utf8"));
+  expect(redirects).toContainEqual(expect.objectContaining({ source: "/", destination: "/ja/", permanent: false }));
 });
 test("interpolates", () => expect(useTranslations("ja")("count", { n: 10 })).toBe("10 件"));
 test("only Japanese is published for now", () => expect(publishedLocales).toEqual(["ja"]));
@@ -478,7 +492,8 @@ git commit -m "feat(web): add i18n dictionaries and hardcode guard"
 - Create: `apps/web/src/components/HelloStage.astro`
 - Create: `apps/web/src/views/HelloView.astro`
 - Modify: `apps/web/src/styles/global.css`
-- Rewrite: `apps/web/src/pages/index.astro`（`<HelloView locale="ja" />` だけ）
+- Delete: `apps/web/src/pages/index.astro`（`/` は Task 4 の転送が受け持つ）
+- Create: `apps/web/src/pages/[locale]/index.astro`（`getStaticPaths = localeStaticPaths`、`<HelloView locale={…} />` だけ）
 - Create: `apps/web/test/html.ts`
 - Rewrite: `apps/web/test/build-output.test.ts`
 
@@ -516,7 +531,7 @@ interface Props {
 3. `<main id="content" data-section={section}>`（中身は slot）
 4. `NavBar current={section}`
 
-`publishedLocales` が2つ以上になったら、`<link rel="alternate" hreflang>` を出す。今は1つなので出ない。
+`<head>` に `alternates(path)` の `<link rel="alternate" hreflang>` を出す。
 
 `ThemeToggle.vue` は、文言を props（`labels: Record<ThemePreference, string>`）で受け取る。島（Vue）の中で辞書を読まない。
 
@@ -556,7 +571,7 @@ test("storePreference swallows storage errors", () => expect(() => storePreferen
 `build-output.test.ts` を書き直す。
 
 ```ts
-const hello = loadPage("/");
+const hello = loadPage("/ja/");
 test("is Japanese with a safe-area viewport", () => {
   expect(hello.querySelector("html")!.getAttribute("lang")).toBe("ja");
   expect(hello.querySelector('meta[name="viewport"]')!.getAttribute("content")).toContain("viewport-fit=cover");
@@ -566,9 +581,10 @@ test("sets the theme before first paint", () =>
 test("hello greets without selecting a nav item", () => {
   expect(hello.querySelector('[aria-label="Welcome."]')).not.toBeNull();
   expect(hello.querySelector('nav [aria-current="page"]')).toBeNull();
-  expect(hello.querySelectorAll('nav[aria-label="メイン"] a').map((a) => a.getAttribute("href"))).toEqual(["/about", "/works/apps", "/press"]);
+  expect(hello.querySelectorAll('nav[aria-label="メイン"] a').map((a) => a.getAttribute("href"))).toEqual(["/ja/about", "/ja/works/apps", "/ja/press"]);
 });
-test("handle links home", () => expect(hello.querySelector('header a[href="/"]')!.textContent).toContain("@ut42tech"));
+test("handle links home", () => expect(hello.querySelector('header a[href="/ja/"]')!.textContent).toContain("@ut42tech"));
+test("declares alternates", () => expect(hello.querySelector('link[rel="alternate"][hreflang="x-default"]')).not.toBeNull());
 test("has a favicon", () => expect(hello.querySelector('link[rel="icon"]')).not.toBeNull());
 test("English is not published yet", () => expect(existsSync(new URL("../dist/en", import.meta.url))).toBe(false));
 ```
@@ -845,8 +861,8 @@ git commit -m "feat(web): add card, row card and sort button"
 - Create: `apps/web/src/components/WorksNav.astro`
 - Create: `apps/web/src/components/WorksList.astro`
 - Create: `apps/web/src/views/WorksView.astro`
-- Create: `apps/web/src/pages/works/[category].astro`
-- Create: `apps/web/src/pages/works/index.astro`（`localizePath("/works/apps")` への redirect）
+- Create: `apps/web/src/pages/[locale]/works/[category].astro`
+- Create: `apps/web/src/pages/[locale]/works/index.astro`（`localizePath("/works/apps", locale)` への redirect）
 - Test: `apps/web/test/works.test.ts`
 
 **Interfaces:**
@@ -884,19 +900,19 @@ git commit -m "feat(web): add card, row card and sort button"
 - [ ] **Step 1: 失敗するテストを書く**
 
 ```ts
-test.each(["apps", "career", "awards", "events"])("/works/%s lists its items", (c) => {
-  const page = loadPage(`/works/${c}`);
-  expect(page.querySelector('nav[aria-label="メイン"] [aria-current="page"]')!.getAttribute("href")).toBe("/works/apps");
-  expect(page.querySelectorAll(`a[href="/works/${c}"][aria-current="page"]`).length).toBe(2); // 切り替えとサイドバー
+test.each(["apps", "career", "awards", "events"])("/ja/works/%s lists its items", (c) => {
+  const page = loadPage(`/ja/works/${c}`);
+  expect(page.querySelector('nav[aria-label="メイン"] [aria-current="page"]')!.getAttribute("href")).toBe("/ja/works/apps");
+  expect(page.querySelectorAll(`a[href="/ja/works/${c}"][aria-current="page"]`).length).toBe(2); // 切り替えとサイドバー
   expect(page.querySelector("#works-list")!.childNodes.length).toBeGreaterThan(0);
 });
 test("apps cards link to their detail pages", () => {
-  const hrefs = loadPage("/works/apps").querySelectorAll("#works-list a").map((a) => a.getAttribute("href"));
-  expect(hrefs.every((h) => /^\/works\/apps\/[\w-]+$/.test(h!))).toBe(true);
+  const hrefs = loadPage("/ja/works/apps").querySelectorAll("#works-list a").map((a) => a.getAttribute("href"));
+  expect(hrefs.every((h) => /^\/ja\/works\/apps\/[\w-]+$/.test(h!))).toBe(true);
 });
-test("/works redirects to apps", () => expect(readDist("works/index.html")).toContain("/works/apps"));
+test("/ja/works redirects to apps", () => expect(readDist("ja/works/index.html")).toContain("/ja/works/apps"));
 test("default order is newest first", () => {
-  const dates = loadPage("/works/apps").querySelectorAll("#works-list .meta").map((m) => m.textContent);
+  const dates = loadPage("/ja/works/apps").querySelectorAll("#works-list .meta").map((m) => m.textContent);
   expect(dates).toEqual([...dates].sort().reverse());
 });
 ```
@@ -908,7 +924,7 @@ Expected: FAIL
 
 - [ ] **Step 3: 実装する**
 
-- `pages/works/[category].astro`: `getStaticPaths` で4分類を返し、`<WorksView locale="ja" category={…} />` を描くだけにする。
+- `pages/[locale]/works/[category].astro`: `getStaticPaths` で、公開中の言語 × 4分類を返す。`<WorksView locale={…} category={…} />` を描くだけにする。
 - 中身の並べ方:
 
 | 分類 | 部品 | スマホ | パソコン |
@@ -949,7 +965,7 @@ git commit -m "feat(web): add works category pages"
 
 - Create: `apps/web/src/components/AppDetail.astro`
 - Create: `apps/web/src/views/AppDetailView.astro`
-- Create: `apps/web/src/pages/works/apps/[slug].astro`
+- Create: `apps/web/src/pages/[locale]/works/apps/[slug].astro`（公開中の言語 × 作品）
 - Create: `apps/web/src/scripts/detail-sheet.ts`
 - Test: `apps/web/test/app-detail.test.ts`
 
@@ -958,7 +974,7 @@ git commit -m "feat(web): add works category pages"
 - Consumes: `Sheet` / `PageHead` / `WorksNav` / `WorksList`（Task 8）、`Thumb`（Task 7）、`UiIcon` / `BrandIcon` / `brandIcons`（Task 3）
 - Produces:
   - `AppDetail.astro`: `{ entry: LocalizedEntry<"apps">; locale: Locale }`。
-  - 描き方: `<dialog open class="app-detail" data-close-href={localizePath("/works/apps")}>`。中の順は次のとおり。
+  - 描き方: `<dialog open class="app-detail" data-close-href={localizePath("/works/apps", locale)}>`。中の順は次のとおり。
     1. 閉じる（スマホ）: `x`、32px の `fill` の丸、`aria-label={t("detail.close")}`
     2. 戻る（パソコン）: `chevron-left` 14 と `t("detail.back")`。`fill` のカプセル、高さ 36
     3. 画像（16:10）
@@ -973,17 +989,17 @@ git commit -m "feat(web): add works category pages"
 
 ```ts
 const slugs = readdirSync(new URL("../src/content/apps/ja/", import.meta.url)).map((f) => f.replace(/\.md$/, ""));
-test.each(slugs)("/works/apps/%s renders a readable detail without JS", (slug) => {
-  const page = loadPage(`/works/apps/${slug}`);
+test.each(slugs)("/ja/works/apps/%s renders a readable detail without JS", (slug) => {
+  const page = loadPage(`/ja/works/apps/${slug}`);
   const dialog = page.querySelector("dialog.app-detail")!;
   expect(dialog.hasAttribute("open")).toBe(true);
   expect(dialog.querySelector("h1")!.textContent.trim().length).toBeGreaterThan(0);
-  expect(dialog.querySelectorAll('a[href="/works/apps"]').length).toBe(2); // 閉じる・戻る
+  expect(dialog.querySelectorAll('a[href="/ja/works/apps"]').length).toBe(2); // 閉じる・戻る
   expect(page.querySelectorAll("h1").length).toBe(1);
 });
 test("missing links are not rendered", () => {
   for (const slug of slugs) {
-    const page = loadPage(`/works/apps/${slug}`);
+    const page = loadPage(`/ja/works/apps/${slug}`);
     const fm = readFrontmatter(`apps/ja/${slug}.md`);
     expect(page.querySelector('dialog a[data-link="demo"]') !== null).toBe(Boolean(fm.demo));
     expect(page.querySelector('dialog a[data-link="github"]') !== null).toBe(Boolean(fm.github));
@@ -1058,7 +1074,7 @@ git commit -m "feat(web): add app detail sheet"
 - Create: `apps/web/src/data/skills.ts`
   - `export const skills: readonly SkillIcon[] = ["typescript", "python", "swift", "react", "nextdotjs", "vuedotjs", "astro", "threedotjs", "unity", "blender", "figma"]`
 - Create: `apps/web/src/views/AboutView.astro`
-- Create: `apps/web/src/pages/about.astro`
+- Create: `apps/web/src/pages/[locale]/about.astro`
 - Create: `apps/web/src/scripts/copy-email.ts`
 - Test: `apps/web/test/about.test.ts`
 
@@ -1100,11 +1116,11 @@ git commit -m "feat(web): add app detail sheet"
 - [ ] **Step 1: 失敗するテストを書く**
 
 ```ts
-const about = loadPage("/about");
+const about = loadPage("/ja/about");
 test("renders identity and contact without JavaScript", () => {
   expect(about.textContent).toContain(profile.name);
   expect(about.textContent).toContain(profile.motto);
-  expect(about.querySelector('nav[aria-label="メイン"] [aria-current="page"]')!.getAttribute("href")).toBe("/about");
+  expect(about.querySelector('nav[aria-label="メイン"] [aria-current="page"]')!.getAttribute("href")).toBe("/ja/about");
   const contact = about.querySelector("#contact")!;
   for (const link of profile.social) expect(contact.querySelector(`a[href="${link.href}"]`)).not.toBeNull();
   expect(contact.querySelector(`a[href="mailto:${profile.email}"]`)).not.toBeNull();
@@ -1143,7 +1159,7 @@ git commit -m "feat(web): add about page with contact"
 **Files:**
 
 - Create: `apps/web/src/views/PressView.astro`
-- Create: `apps/web/src/pages/press.astro`
+- Create: `apps/web/src/pages/[locale]/press.astro`
 - Test: `apps/web/test/press.test.ts`
 
 **Interfaces:**
@@ -1164,7 +1180,7 @@ git commit -m "feat(web): add about page with contact"
 - [ ] **Step 1: 失敗するテストを書く**
 
 ```ts
-const press = loadPage("/press");
+const press = loadPage("/ja/press");
 test("press cards open outside", () => {
   const links = press.querySelectorAll("#press-list a");
   expect(links.length).toBeGreaterThan(0);
@@ -1173,7 +1189,7 @@ test("press cards open outside", () => {
     expect(a.getAttribute("rel")).toContain("noopener");
   }
 });
-test("nav marks press", () => expect(press.querySelector('nav[aria-label="メイン"] [aria-current="page"]')!.getAttribute("href")).toBe("/press"));
+test("nav marks press", () => expect(press.querySelector('nav[aria-label="メイン"] [aria-current="page"]')!.getAttribute("href")).toBe("/ja/press"));
 ```
 
 - [ ] **Step 2: 失敗を確かめる**
@@ -1211,7 +1227,7 @@ git commit -m "feat(web): add press page"
 - [ ] **Step 1: 失敗するテストを書く**
 
 ```ts
-const routes = ["/", "/about", "/works/apps", "/works/career", "/works/awards", "/works/events", "/press", ...appRoutes()];
+const routes = ["/ja/", "/ja/about", "/ja/works/apps", "/ja/works/career", "/ja/works/awards", "/ja/works/events", "/ja/press", ...appRoutes("ja")];
 test.each(routes)("%s: every link and button has a name", (route) => {
   for (const el of loadPage(route).querySelectorAll("a, button")) {
     const name = el.getAttribute("aria-label") ?? el.textContent.trim();
@@ -1224,7 +1240,7 @@ test.each(routes)("%s: interactive elements opt into the pointer", (route) => {
 test.each(routes)("%s: one h1", (route) => expect(loadPage(route).querySelectorAll("h1").length).toBe(1));
 ```
 
-`appRoutes()` を `test/html.ts` に足す。`/works/apps/<slug>` の一覧を返す。
+`appRoutes(locale)` を `test/html.ts` に足す。`/<locale>/works/apps/<slug>` の一覧を返す。
 
 - [ ] **Step 2: 失敗を確かめ、直し、通す**
 
@@ -1277,9 +1293,12 @@ git commit -m "test(web): check names, headings and pointer opt-in on every page
 - **英語を公開する手順**:
   1. `en` の辞書を本番の文に直す。
   2. `src/content/*/en/` に翻訳を足す。
-  3. `src/pages/en/` に入口を足す（日本語の入口を写して、`locale="en"` にする）。
-  4. `publishedLocales` に `"en"` を足す。
-  5. 言語の切り替えの置き場所を、デザインで決める。
+  3. `publishedLocales` に `"en"` を足す（ページは `[locale]` から自動で書き出される）。
+  4. `vercel.json` の `/` の振り分けを、3本にする。
+     1. クッキー `ut42tech-lang` が `en` なら `/en/`
+     2. `Accept-Language` が英語で始まるなら `/en/`
+     3. それ以外は `/ja/`
+  5. 言語の切り替え（選ぶとクッキーを書く）の置き場所と見た目を、デザインで決めて作る。
 - **公開前に本人が書くもの**:
   - About の自己紹介と、これまで（「（仮）」の文）
   - 素材に無かった Press（note、Zenn、Qiita、YouTube、Speaker Deck）
