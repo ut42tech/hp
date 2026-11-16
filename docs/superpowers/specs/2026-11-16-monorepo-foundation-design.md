@@ -19,7 +19,7 @@ ut42tech.com（Takuya Uehara のポートフォリオ）をリニューアルす
 ### ゴール
 - pnpm workspaces と Vite+ による monorepo が動いている。
 - 共有パッケージ（`tokens` / `assets` / `profile` / `config`）が存在し、`apps/web` から使われている。
-- `apps/web`（Astro 6 + Vue + Tailwind v4）の雛形が、Vercel のプレビュー環境にデプロイできている。
+- `apps/web`（Astro 7 + Vue + Tailwind v4）の雛形が、Vercel のプレビュー環境にデプロイできている。
 - リポジトリのルートから、lint・format・型チェック・ビルドを一括で実行できる。CI でも同じものが走る。
 - 新しいアプリ（Astro、Nuxt、Vite + Vue、Next.js、Hono など）を `apps/` に足すときの手順が、README で分かる。
 
@@ -63,7 +63,7 @@ ut42tech.com（Takuya Uehara のポートフォリオ）をリニューアルす
 ### 4.3 `apps/web` のフレームワーク
 | 案 | 判断 |
 |---|---|
-| **Astro 6 + Vue（アイランド）** | **採用**。State of JS 2025 のメタフレームワーク部門で満足度1位。標準では JS を送らず、静的サイトとの相性が一番よい。Vue と React のどちらの部品も使える |
+| **Astro 7 + Vue（アイランド）** | **採用**。State of JS 2025 のメタフレームワーク部門で満足度1位。標準では JS を送らず、静的サイトとの相性が一番よい。Vue と React のどちらの部品も使える |
 | Nuxt（静的出力） | 有力な対抗馬だが、ページ全体に Vue のランタイムが載る。アプリ寄りのもの（名刺、遊びのページ）向けに残しておく |
 | Next.js / React 系 | 不採用。現行サイトへの違和感をそのまま引き継いでしまう |
 
@@ -86,7 +86,7 @@ Vite+ はまだリモートキャッシュを持っていない（ロードマ�
 | デプロイ | Vercel（アプリごとに1プロジェクト） | 本人 |
 | ツールチェーン | Vite+（`vp`） | 本人 |
 | パッケージマネージャー | pnpm（workspaces） | 提案、本人了承 |
-| `apps/web` | Astro 6 + `@astrojs/vue` | 選定基準から |
+| `apps/web` | Astro 7 + `@astrojs/vue` | 選定基準から |
 | スタイル | Tailwind CSS v4（`@tailwindcss/vite`） | 提案、本人了承 |
 | 言語 / 実行環境 | TypeScript（strict, ESM）/ Node 24 | 提案、本人了承 |
 | 将来のバックエンド | Hono（`apps/api`） | 本人 |
@@ -96,7 +96,7 @@ Vite+ はまだリモートキャッシュを持っていない（ロードマ�
 ```
 hp/
 ├─ apps/
-│  └─ web/                 ut42tech.com（Astro 6 + Vue）
+│  └─ web/                 ut42tech.com（Astro 7 + Vue）
 ├─ packages/
 │  ├─ tokens/              デザイントークン
 │  ├─ assets/              フォント・ロゴ・アイコン
@@ -144,7 +144,7 @@ hp/
 - Lint と整形の設定は、ルートの `vite.config.ts`（Vite+）にまとめる。
 
 ### 6.6 `apps/web`
-- Astro 6、`@astrojs/vue`、Tailwind v4（`@tailwindcss/vite`）。
+- Astro 7、`@astrojs/vue`、Tailwind v4（`@tailwindcss/vite`）。
 - 出力は静的（`output: 'static'`）。サーバー機能が必要になったら `@astrojs/vercel` を足す。
 - 雛形の中身:
   - トップページ1枚。`@ut42tech/profile` の名前と SNS リンクを表示し、`@ut42tech/tokens` の色とフォントが効いていることが分かるもの。
