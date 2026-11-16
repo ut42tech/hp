@@ -69,8 +69,8 @@ git commit -m "docs: link portfolio Figma file"
 - Consumes: Task 1 の変数とウェイト一覧。
 - Produces: `Direction` ページ上のトップレベルフレーム `Top / Desktop`（幅 1440）と `Top / Mobile`（幅 390）。Hello フレーム内の要素のレイヤー名は、Task 3 が動かす対象になる: `Hello/frame`、`Hello/label`、`Hello/name`、`Hello/motto`、`Hello/motto-en`、`Hello/tags`、`Hello/affiliation`、`Hello/3d`、`Cursor/design`、`Cursor/frontend`、`Cursor/3d`、`Cursor/you`、`Status`。
 
-- [ ] **Step 1: `figma:figma-generate-design` スキルを読み込む**
-- [ ] **Step 2: `Top / Desktop` を作る**
+- [x] **Step 1: `figma:figma-generate-design` スキルを読み込む**
+- [x] **Step 2: `Top / Desktop` を作る**
 
 キャンバス:
 
@@ -86,14 +86,14 @@ git commit -m "docs: link portfolio Figma file"
   - **Press**: 4行。記事、動画、登壇、掲載を1つずつ。
 - **フッター**: SNS 7つとメールアドレス。
 
-- [ ] **Step 3: `Top / Mobile` を作る**
+- [x] **Step 3: `Top / Mobile` を作る**
 
 - 同じ並びを1列で作る。左右の余白は 16 以上。
 - ヘッダーのナビはメニューボタンに畳む。
 - Hello の 3D 枠は縦に積む。
 - 右下に「スキップ」ボタンを置く。
 
-- [ ] **Step 4: 検証**
+- [x] **Step 4: 検証**
 
 - すべての塗りと線のうち、変数に結び付いていないものが 0 件であることをスクリプトで確かめる。透明な塗りとテキスト内の範囲指定の色は除く。
 - 名前・モットー・SNS 7つが `profile.ts` と一致していることを、テキストノードを読んで確かめる。
@@ -119,12 +119,12 @@ git commit -m "docs: link portfolio Figma file"
 | 5.6–6.6s | 3d のカーソルが `Hello/3d` を上から置く。`Status`: `ready — say hi 👋` |
 | 6.6–8.0s | `Cursor/you` が現れ、3つのカーソルがそのそばへ集まる |
 
-- [ ] **Step 1: `figma:figma-use-motion` スキルを読み込み、Motion が使えるかを読み取りだけのスクリプトで確かめる（`node.timelines` を読む）**
+- [x] **Step 1: `figma:figma-use-motion` スキルを読み込み、Motion が使えるかを読み取りだけのスクリプトで確かめる（`node.timelines` を読む）**
 
 `not a supported API` が出たら、Motion は使わない。代わりに上の表の 0.8s・3.0s・4.6s・8.0s 時点の状態を静止画の4コマで作り、本人に「Motion が有効でなかった」と伝える。
 
-- [ ] **Step 2: `Top / Desktop` のヘッダーと Hello を複製して `Build / Hello / Desktop` を作り、上の表のとおりキーフレームを付ける。`Hello/name` の打ち込みには `figma.motion.figmaAnimationStyles()` で見つけた `TextStagger` を使う。タイムラインの長さを `setTimelineDuration` で 8 秒にする**
-- [ ] **Step 3: 検証**
+- [x] **Step 2: `Top / Desktop` のヘッダーと Hello を複製して `Build / Hello / Desktop` を作り、上の表のとおりキーフレームを付ける。`Hello/name` の打ち込みには `figma.motion.figmaAnimationStyles()` で見つけた `TextStagger` を使う。タイムラインの長さを `setTimelineDuration` で 8 秒にする**
+- [x] **Step 3: 検証**
 
 - 各レイヤーの `manualKeyframeTracks` と `animationStyles` を読み返し、上の表の時刻どおりにキーフレームがあることを確かめる。
 - `export_video`（幅 768、`quality: "low"`、`fps: 5`）で書き出し、動画のリンクを本人に渡す。
