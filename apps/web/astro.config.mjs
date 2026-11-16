@@ -8,8 +8,8 @@ export default defineConfig({
   i18n: {
     locales: ["ja", "en"],
     defaultLocale: "ja",
-    // Both languages live under a prefix; "/" is routed by vercel.json (this redirect is the fallback elsewhere).
-    routing: { prefixDefaultLocale: true, redirectToDefaultLocale: true },
+    // Both languages live under a prefix; "/" is routed by vercel.json (src/pages/index.astro is the fallback elsewhere).
+    routing: { prefixDefaultLocale: true, redirectToDefaultLocale: false },
   },
   integrations: [vue()],
   vite: {

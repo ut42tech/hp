@@ -1,26 +1,43 @@
-import { existsSync, readFileSync } from "node:fs";
-import { profile } from "@ut42tech/profile";
-import { beforeAll, describe, expect, test } from "vite-plus/test";
+import { existsSync } from "node:fs";
+import { expect, test } from "vite-plus/test";
+import { loadPage } from "./html";
 
-const indexHtml = new URL("../dist/index.html", import.meta.url);
-let html = "";
+const hello = loadPage("/ja/");
 
-describe("built index.html", () => {
-  beforeAll(() => {
-    if (!existsSync(indexHtml)) {
-      throw new Error(
-        "apps/web/dist/index.html is missing: run `vp run @ut42tech/web#build` first",
-      );
-    }
-    html = readFileSync(indexHtml, "utf8");
-  });
+test("is Japanese with a safe-area viewport", () => {
+  expect(hello.querySelector("html")!.getAttribute("lang")).toBe("ja");
+  expect(hello.querySelector('meta[name="viewport"]')!.getAttribute("content")).toContain(
+    "viewport-fit=cover",
+  );
+});
 
-  test("is Japanese", () => expect(html).toContain('lang="ja"'));
-  test("renders the profile without JavaScript", () => {
-    expect(html).toContain(profile.name);
-    expect(html).toContain(profile.motto);
-    for (const link of profile.social) expect(html).toContain(`href="${link.href}"`);
-  });
-  test("sets the theme before first paint", () => expect(html).toContain("ut42tech:theme"));
-  test("has a favicon", () => expect(html).toContain('<link rel="icon"'));
+test("sets the theme before first paint", () => {
+  const scripts = hello.querySelectorAll("head script");
+  expect(scripts.some((s) => s.textContent.includes("ut42tech:theme"))).toBe(true);
+});
+
+test("hello greets without selecting a nav item", () => {
+  expect(hello.querySelector('[aria-label="Welcome."]')).not.toBeNull();
+  expect(hello.querySelector('nav [aria-current="page"]')).toBeNull();
+  expect(
+    hello.querySelectorAll('nav[aria-label="メイン"] a').map((a) => a.getAttribute("href")),
+  ).toEqual(["/ja/about", "/ja/works/apps", "/ja/press"]);
+});
+
+test("handle links home", () => {
+  expect(hello.querySelector('header a[href="/ja/"]')!.textContent).toContain("@ut42tech");
+});
+
+test("declares alternates", () => {
+  expect(hello.querySelector('link[rel="alternate"][hreflang="x-default"]')).not.toBeNull();
+});
+
+test("has a favicon", () => expect(hello.querySelector('link[rel="icon"]')).not.toBeNull());
+
+test("English is not published yet", () => {
+  expect(existsSync(new URL("../dist/en", import.meta.url))).toBe(false);
+});
+
+test("no language switch while only one locale is published", () => {
+  expect(hello.querySelector('a[hreflang="en"]')).toBeNull();
 });

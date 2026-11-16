@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@astrojs/vue": "^7.1.6",
+    "@fontsource/geist-mono": "5.3.0",
+    "@fontsource/line-seed-jp": "5.3.2",
     "@tabler/icons-vue": "3.52.0",
     "@tailwindcss/vite": "^4.3.5",
     "@ut42tech/assets": "workspace:*",
@@ -24,6 +26,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "node-html-parser": "^9.0.7",
     "typescript": "^6.0.3",
     "vue-tsc": "^3.3.14"
   }
