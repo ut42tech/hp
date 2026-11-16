@@ -56,7 +56,7 @@
 
 ## デザインへの引き継ぎ
 
-今のトークンの値と `apps/web` の画面は、配線を確認するための**仮のもの**。Figma でデザインを決めるときに触るのは次の場所。
+今のトークンの値と `apps/web` の画面は、配線を確認するための**仮のもの**。デザインは Figma の [ut42tech — Portfolio](https://www.figma.com/design/ZPaC9SNAfMyKTROfRvAJyT) で作っている（設計: [`docs/superpowers/specs/2026-11-16-portfolio-figma-design.md`](docs/superpowers/specs/2026-11-16-portfolio-figma-design.md)）。Figma でデザインを決めるときに触るのは次の場所。
 
 - 色・フォント・角丸: `packages/tokens/tokens.css` の `--ut-*`。ライト（`:root`）とダーク（`prefers-color-scheme` と `[data-theme="dark"]` の2か所）を揃えて書く。ここを差し替えれば全アプリに反映される。
 - Tailwind の `dark:` は OS 設定ではなく `[data-theme]`（トグル）に連動する（`theme.css` の `@custom-variant dark`）。
