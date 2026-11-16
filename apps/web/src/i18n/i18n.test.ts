@@ -40,3 +40,14 @@ test("vercel sends / to Japanese without a permanent redirect", () => {
     expect.objectContaining({ source: "/", destination: "/ja/", permanent: false }),
   );
 });
+
+test("vercel sends /<locale>/works to Apps before any page loads", () => {
+  const { redirects } = JSON.parse(
+    readFileSync(new URL("../../vercel.json", import.meta.url), "utf8"),
+  );
+  for (const source of ["/:locale(ja|en)/works", "/:locale(ja|en)/works/"]) {
+    expect(redirects).toContainEqual(
+      expect.objectContaining({ source, destination: "/:locale/works/apps", permanent: false }),
+    );
+  }
+});

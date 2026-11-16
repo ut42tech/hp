@@ -31,16 +31,23 @@
     outline: 2px solid var(--ut-color-fg);
     outline-offset: 2px;
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    @view-transition {
-      navigation: none;
-    }
-  }
 }
 
 @layer utilities {
   .sr-only-until-focus:not(:focus) {
     @apply sr-only;
+  }
+}
+
+/* Reduced motion: no movement between pages, only a short fade (visual spec §9.4).
+   Kept outside @layer so it wins over the default transitions. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*) {
+    animation-duration: 0s;
+  }
+
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 150ms;
   }
 }
