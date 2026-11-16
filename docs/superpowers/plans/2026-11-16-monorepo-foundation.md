@@ -267,6 +267,8 @@ Expected: PASS
 
 - [ ] **Step 5: 画面を実装する**
 
+この画面は**配線を確認するための仮のもの**で、デザインは後の別セッション（Figma）で決める。レイアウトや装飾は作り込まず、トークンのユーティリティ（`bg-bg`, `text-fg`, `text-muted`, `text-accent`, `border-border`）が効いていることが分かる最小限にとどめる。
+
 - `src/styles/global.css`: `@import "tailwindcss";` → `@import "@ut42tech/tokens/theme.css";`。`body` に `bg-bg text-fg font-sans` を `@layer base` で当てる。
 - `Base.astro`: `<html lang="ja">`。`<head>` に charset、viewport、`<title>{profile.name}</title>`、`description` と `og:description` に `profile.mottoEn`、`og:title` に `profile.name`、`og:type` に `website`、favicon は `import faviconUrl from '@ut42tech/assets/favicon.ico?url'` で `<link rel="icon">`。**`<script is:inline>`** で `localStorage` の `ut42tech:theme`（try/catch 付き）と `matchMedia('(prefers-color-scheme: dark)')` から `document.documentElement.dataset.theme` を描画前に設定する（`theme.ts` とキー・判定を揃える旨をコメントに書く）。
 - `index.astro`: `Base` の中に、`profile.name`（h1）、`profile.motto`、`profile.mottoEn`、`profile.social` のリンク一覧（`<a href rel="me noopener">`）、`<ThemeToggle client:load />`。
@@ -319,7 +321,7 @@ git commit -m "feat(web): scaffold Astro app with shared tokens and profile"
 
 - [ ] **Step 2: README を書く**
 
-次の節を持つ: 構成（apps / packages の表と各サブドメイン）、前提（Node 24、`vp` のインストール方法）、コマンド（`vp install` / `vp run dev` / `vp run -r --cache build` / `vp run check` / `vp run -r --cache test`）、新しいアプリの追加手順（`apps/<name>` を作る → `@ut42tech/*` を `workspace:*` で依存 → `dev` / `build` / `typecheck` / `test` スクリプトを揃える → Vercel プロジェクト作成）、サブドメインの追加手順（Vercel プロジェクトを作り Root Directory を設定 → Vercel でドメイン追加 → Cloudflare に CNAME を追加し、プロキシはオフ（DNS only））、ツール選定の注記（Oxlint はテンプレートを Lint しないため `astro check` と `vue-tsc` で補っていること、TypeScript を 6 に留めている理由）。
+次の節を持つ: 構成（apps / packages の表と各サブドメイン）、前提（Node 24、`vp` のインストール方法）、コマンド（`vp install` / `vp run dev` / `vp run -r --cache build` / `vp run check` / `vp run -r --cache test`）、新しいアプリの追加手順（`apps/<name>` を作る → `@ut42tech/*` を `workspace:*` で依存 → `dev` / `build` / `typecheck` / `test` スクリプトを揃える → Vercel プロジェクト作成）、サブドメインの追加手順（Vercel プロジェクトを作り Root Directory を設定 → Vercel でドメイン追加 → Cloudflare に CNAME を追加し、プロキシはオフ（DNS only））、ツール選定の注記（Oxlint はテンプレートを Lint しないため `astro check` と `vue-tsc` で補っていること、TypeScript を 6 に留めている理由）、**デザインへの引き継ぎ**（次のセッションで Figma からデザインを決めるときに触るファイルの一覧: 色・フォント・角丸は `packages/tokens/tokens.css` の `--ut-*` を差し替えれば全アプリに反映されること、Tailwind のユーティリティ名は `packages/tokens/theme.css` で決まること、フォントやロゴの置き場所は `packages/assets`、ページ本体は `apps/web/src`。今のトークンの値と画面はすべて仮のものであること）。
 
 - [ ] **Step 3: CI 相当をローカルで確認する**
 
