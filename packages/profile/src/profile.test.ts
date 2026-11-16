@@ -28,7 +28,7 @@ describe("profile", () => {
       "wantedly",
     ]);
     expect(profile.social.find((l) => l.icon === "linkedin")!.href).toBe(
-      "https://www.linkedin.com/in/ut42tech/",
+      "https://www.linkedin.com/in/ut42tech",
     );
   });
 });
