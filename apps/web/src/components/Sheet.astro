@@ -1,0 +1,71 @@
+---
+interface Props {
+  // Pushed back behind a sheet stacked on top of it (mobile app detail).
+  receded?: boolean;
+}
+
+const { receded = false } = Astro.props;
+---
+
+<section
+  class:list={["sheet", { "is-receded": receded }]}
+  aria-hidden={receded ? "true" : undefined}
+>
+  <div class="grabber-row" aria-hidden="true">
+    <span class="grabber"></span>
+  </div>
+  <slot />
+</section>
+
+<style>
+  /* Mobile: a surface that rises over Hello and scrolls on its own. */
+  .sheet {
+    position: fixed;
+    inset: var(--sheet-top) 0 0;
+    z-index: 10;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 var(--gutter-right) var(--nav-clearance) var(--gutter-left);
+    border-radius: var(--ut-radius-sheet) var(--ut-radius-sheet) 0 0;
+    background: var(--ut-color-surface);
+    box-shadow: var(--ut-shadow-sheet);
+    view-transition-name: sheet;
+  }
+
+  .sheet.is-receded {
+    inset-inline: 12px;
+    top: calc(var(--sheet-top) - 10px);
+    overflow: hidden;
+    view-transition-name: sheet-receded;
+  }
+
+  .grabber-row {
+    display: flex;
+    justify-content: center;
+    padding: 8px 0 16px;
+  }
+
+  .grabber {
+    width: 36px;
+    height: 5px;
+    border-radius: var(--ut-radius-full);
+    background: var(--ut-color-border);
+  }
+
+  /* Desktop: no sheet, the content sits on the page below the toolbar. */
+  @media (width >= 64rem) {
+    .sheet {
+      position: static;
+      overflow: visible;
+      padding: 104px 32px 64px;
+      border-radius: 0;
+      background: none;
+      box-shadow: none;
+    }
+
+    .sheet.is-receded,
+    .grabber-row {
+      display: none;
+    }
+  }
+</style>

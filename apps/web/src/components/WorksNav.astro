@@ -1,0 +1,114 @@
+---
+import { localizePath, type Locale } from "../i18n/config";
+import { useTranslations } from "../i18n/t";
+import { categories, type Category } from "../lib/works";
+
+interface Props {
+  current: Category;
+  counts: Record<Category, number>;
+  locale: Locale;
+}
+
+const { current, counts, locale } = Astro.props;
+const t = useTranslations(locale);
+const items = categories.map((category) => ({
+  category,
+  href: localizePath(`/works/${category}`, locale),
+  label: t(`works.${category}`),
+  active: category === current,
+}));
+---
+
+<!-- Mobile: one row of segments under the sheet heading. -->
+<nav class="segmented" aria-label={t("works.label")}>
+  {items.map((item) => (
+    <a
+      href={item.href}
+      class:list={["segment text-callout", item.active ? "bg-fg font-bold text-bg" : "text-muted"]}
+      aria-current={item.active ? "page" : undefined}
+      data-cursor="block"
+    >
+      {item.label}
+    </a>
+  ))}
+</nav>
+
+<!-- Desktop: a card fixed at the vertical centre of the left edge. -->
+<nav class="sidebar" aria-label={t("works.label")}>
+  {items.map((item) => (
+    <a
+      href={item.href}
+      class:list={["side-item", item.active ? "bg-fg text-bg" : "text-fg"]}
+      aria-current={item.active ? "page" : undefined}
+      data-cursor="block"
+    >
+      <span class="text-headline">{item.label}</span>
+      <span class:list={["text-caption", item.active ? "text-bg" : "text-muted"]}>
+        {counts[item.category]}
+      </span>
+    </a>
+  ))}
+</nav>
+
+<style>
+  .segmented {
+    display: flex;
+    gap: 2px;
+    height: 40px;
+    padding: 4px;
+    border-radius: var(--ut-radius-full);
+    background: var(--ut-color-fill);
+  }
+
+  .segment {
+    display: grid;
+    flex: 1;
+    place-items: center;
+    border-radius: var(--ut-radius-full);
+    transition:
+      background-color var(--ut-duration-base) var(--ut-ease-out),
+      color var(--ut-duration-base) var(--ut-ease-out);
+  }
+
+  /* Component styles are unlayered and win over Tailwind utilities, so visibility is set here. */
+  .sidebar {
+    display: none;
+  }
+
+  @media (width >= 64rem) {
+    .segmented {
+      display: none;
+    }
+
+    .sidebar {
+      display: flex;
+    }
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 50%;
+    left: 32px;
+    z-index: 15;
+    flex-direction: column;
+    gap: 4px;
+    width: 216px;
+    padding: 4px;
+    translate: 0 -50%;
+    border: 1px solid var(--ut-color-border);
+    border-radius: var(--ut-radius-card);
+    background: var(--ut-color-surface);
+  }
+
+  .side-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 44px;
+    padding: 0 16px;
+    border-radius: var(--ut-radius-row);
+    transition:
+      background-color var(--ut-duration-base) var(--ut-ease-out),
+      color var(--ut-duration-base) var(--ut-ease-out);
+  }
+</style>
