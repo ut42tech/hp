@@ -1,5 +1,7 @@
 # ポートフォリオ Figma デザイン 第1段階（方向性の確認）実装計画
 
+> **中止（2026-11-16）**: Task 1〜3 まで実施したところで方針を転換した。後継は [`../specs/2026-11-16-portfolio-wireframe-design.md`](../specs/2026-11-16-portfolio-wireframe-design.md)。
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** 本人が全体の方向性を判断できる最小限のものを Figma に作る。中身は、トップページの大まかな画面（PC・スマホ）と、Hello が組み上がる動き。
