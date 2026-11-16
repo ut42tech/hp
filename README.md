@@ -59,6 +59,7 @@
 今のトークンの値と `apps/web` の画面は、配線を確認するための**仮のもの**。Figma でデザインを決めるときに触るのは次の場所。
 
 - 色・フォント・角丸: `packages/tokens/tokens.css` の `--ut-*`。ライト（`:root`）とダーク（`prefers-color-scheme` と `[data-theme="dark"]` の2か所）を揃えて書く。ここを差し替えれば全アプリに反映される。
+- Tailwind の `dark:` は OS 設定ではなく `[data-theme]`（トグル）に連動する（`theme.css` の `@custom-variant dark`）。
 - Tailwind のユーティリティ名（`bg-bg`, `text-fg`, `text-muted`, `text-accent`, `border-border`, `rounded-ut` など）: `packages/tokens/theme.css`。
 - フォントファイル・ロゴ: `packages/assets` に置き、`exports` に追加する。
 - ページ本体: `apps/web/src`。

@@ -1,5 +1,8 @@
 @import "./tokens.css";
 
+/* The site theme lives on [data-theme] (set before first paint), so `dark:` follows it, not only the OS. */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 /* `inline` keeps utilities pointing at the variables, so theme switching recolors at runtime. */
 @theme inline {
   --color-bg: var(--ut-color-bg);

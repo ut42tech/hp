@@ -1,2 +1,2 @@
-export type { Profile, SocialIcon, SocialLink } from "./types";
-export { profile } from "./profile";
+export type { Profile, SocialIcon, SocialLink } from "./types.ts";
+export { profile } from "./profile.ts";

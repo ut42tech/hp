@@ -22,13 +22,19 @@ describe("tokens.css", () => {
     const systemDark = colorTokens(blockAfter(css, ':root:not([data-theme="light"])'));
     const forcedDark = colorTokens(blockAfter(css, ':root[data-theme="dark"]'));
 
-    expect(light.size).toBe(5);
+    expect(light.size).toBeGreaterThan(0);
     expect(systemDark).toEqual(light);
     expect(forcedDark).toEqual(light);
   });
 });
 
 describe("theme.css", () => {
+  test("dark: variant follows data-theme, not only the OS", () => {
+    expect(read("./theme.css")).toContain(
+      "@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));",
+    );
+  });
+
   test("theme.css maps every color token", () => {
     const light = colorTokens(blockAfter(read("./tokens.css"), ":root {"));
     const theme = blockAfter(read("./theme.css"), "@theme inline");

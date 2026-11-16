@@ -257,6 +257,9 @@ importers:
 
   packages/profile:
     devDependencies:
+      '@types/node':
+        specifier: ^24.19.2
+        version: 24.19.2
       '@ut42tech/config':
         specifier: workspace:*
         version: link:../config
