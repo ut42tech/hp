@@ -1,0 +1,4 @@
+{
+  "extends": "@ut42tech/config/tsconfig.base.json",
+  "include": ["src"]
+}

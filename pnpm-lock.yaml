@@ -213,6 +213,12 @@ importers:
 
   packages/config: {}
 
+  packages/profile:
+    devDependencies:
+      '@ut42tech/config':
+        specifier: workspace:*
+        version: link:../config
+
 packages:
 
   '@astrojs/compiler-binding-android-arm64@0.5.3':
