@@ -1,0 +1,16 @@
+{
+  "name": "@ut42tech/profile",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "@ut42tech/config": "workspace:*"
+  }
+}

@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@import "@ut42tech/tokens/theme.css";
+
+@layer base {
+  body {
+    @apply bg-bg text-fg font-sans;
+  }
+}

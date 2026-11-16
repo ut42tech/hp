@@ -1,0 +1,27 @@
+{
+  "name": "@ut42tech/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "typecheck": "astro check && vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@astrojs/vue": "^7.1.6",
+    "@tailwindcss/vite": "^4.3.5",
+    "@ut42tech/assets": "workspace:*",
+    "@ut42tech/profile": "workspace:*",
+    "@ut42tech/tokens": "workspace:*",
+    "astro": "^7.4.12",
+    "tailwindcss": "^4.3.5",
+    "vue": "^3.5.45"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "typescript": "^6.0.3",
+    "vue-tsc": "^3.3.14"
+  }
+}
