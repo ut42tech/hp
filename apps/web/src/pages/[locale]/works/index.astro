@@ -1,8 +1,0 @@
----
-import { localeStaticPaths, localizePath, type Locale } from "../../../i18n/config";
-
-export const getStaticPaths = localeStaticPaths;
-const { locale } = Astro.params as { locale: Locale };
-
-return Astro.redirect(localizePath("/works/apps", locale));
----

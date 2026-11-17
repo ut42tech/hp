@@ -1,7 +1,0 @@
----
-// On Vercel, "/" is routed by vercel.json before this page is reached. Elsewhere (preview, other hosts)
-// this static redirect sends visitors to the default language.
-import { defaultLocale, localizePath } from "../i18n/config";
-
-return Astro.redirect(localizePath("/", defaultLocale));
----

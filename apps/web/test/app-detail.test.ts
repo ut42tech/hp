@@ -2,7 +2,7 @@ import { readdirSync } from "node:fs";
 import { expect, test } from "vite-plus/test";
 import { loadPage, readFrontmatter } from "./html";
 
-const slugs = readdirSync(new URL("../src/content/apps/ja/", import.meta.url)).map((f) =>
+const slugs = readdirSync(new URL("../content/apps/ja/", import.meta.url)).map((f) =>
   f.replace(/\.md$/, ""),
 );
 

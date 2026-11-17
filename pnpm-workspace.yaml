@@ -1,3 +1,6 @@
 packages:
   - apps/*
   - packages/*
+allowBuilds:
+  # The platform binary comes from @esbuild/*; its install script only re-checks it.
+  esbuild: false
