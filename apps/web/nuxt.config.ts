@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 import { defineNuxtConfig } from "nuxt/config";
 
@@ -33,8 +34,9 @@ export default defineNuxtConfig({
     provider: "ipxStatic",
     format: ["webp"],
     screens: { lg: 1024 },
-    // The profile photo stays in the shared assets package.
-    dirs: ["../../packages/assets"],
+    // The profile photo stays in the shared assets package. Each listed folder is also published as is,
+    // so this points at the photos only (not the package's manifest and tests).
+    dirs: [fileURLToPath(new URL("../../packages/assets/photos", import.meta.url))],
   },
   content: {
     experimental: { sqliteConnector: "native" },
