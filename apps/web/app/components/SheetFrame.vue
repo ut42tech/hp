@@ -1,10 +1,11 @@
 <script setup lang="ts">
-// Pushed back behind a sheet stacked on top of it (mobile app detail).
+// Pushed back behind a sheet stacked on top of it (mobile app detail). Nothing behind needs `inert`:
+// the detail opens as a modal dialog, which makes the rest of the page inert on its own.
 defineProps<{ receded?: boolean }>();
 </script>
 
 <template>
-  <section class="sheet" :class="{ 'is-receded': receded }" :inert="receded || undefined">
+  <section class="sheet" :class="{ 'is-receded': receded }">
     <div class="grabber-row" aria-hidden="true">
       <span class="grabber" />
     </div>
@@ -58,7 +59,6 @@ defineProps<{ receded?: boolean }>();
     box-shadow: none;
   }
 
-  .sheet.is-receded,
   .grabber-row {
     display: none;
   }

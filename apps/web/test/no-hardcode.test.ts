@@ -3,7 +3,7 @@ import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "vite-plus/test";
 
-const src = fileURLToPath(new URL("../src", import.meta.url));
+const src = fileURLToPath(new URL("../app", import.meta.url));
 
 function sourceFiles(dir: string): string[] {
   return readdirSync(dir).flatMap((name) => {
@@ -26,7 +26,9 @@ function violations(files: string[], pattern: RegExp): string[] {
 const files = sourceFiles(src);
 // BrandIcon.vue draws simple-icons path data in an <svg>; the shape itself is bound, never written.
 const shapeFiles = files.filter((f) => !f.endsWith("BrandIcon.vue"));
-const uiFiles = files.filter((f) => /[/\\](components|views|layouts)[/\\]/.test(f));
+const uiFiles = files.filter(
+  (f) => /[/\\](components|pages)[/\\]/.test(f) || /[/\\](app|error)\.vue$/.test(f),
+);
 
 test("no SVG shapes are written in source", () => {
   expect(violations(shapeFiles, /<svg|<path|<circle|\sd="M/)).toEqual([]);

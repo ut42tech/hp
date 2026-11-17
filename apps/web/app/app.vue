@@ -13,11 +13,13 @@ const section = computed(() => {
   return (meta.section as Section | undefined) ?? sectionOf(path);
 });
 const hasSheet = computed(() => ["about", "works", "press"].includes(section.value));
+// An app detail is open on top of the Works sheet.
+const receded = computed(() => Boolean(router.currentRoute.value.params.slug));
 </script>
 
 <template>
   <SiteShell :section="section">
-    <SheetFrame v-if="hasSheet">
+    <SheetFrame v-if="hasSheet" :receded="receded">
       <NuxtPage />
     </SheetFrame>
     <NuxtPage v-else />
