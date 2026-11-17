@@ -41,4 +41,7 @@ export const en = {
   "about.copy": "Copy email address",
   "about.copied": "Copied",
   "press.title": "Press",
+  "notFound.code": "404",
+  "notFound.title": "Page not found",
+  "notFound.home": "Back to home",
 } satisfies Record<MessageKey, string>;

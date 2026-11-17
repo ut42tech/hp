@@ -7,7 +7,7 @@ import { alternates, localizePath, type Locale } from "../i18n/config";
 import { mottoFor, useTranslations } from "../i18n/t";
 import "../styles/global.css";
 
-type Section = "hello" | "about" | "works" | "press";
+type Section = "hello" | "about" | "works" | "press" | "not-found";
 
 interface Props {
   locale: Locale;
@@ -26,6 +26,8 @@ const path =
   Astro.url.pathname.replace(new RegExp(`^/${locale}(?=/|$)`), "").replace(/(.)\/$/, "$1") || "/";
 // Search engines need absolute URLs for hreflang and canonical.
 const absolute = (href: string) => new URL(href, Astro.site).href;
+// The 404 page is served at any missing URL, so it has no address of its own to declare.
+const indexable = section !== "not-found";
 ---
 
 <!doctype html>
@@ -39,10 +41,16 @@ const absolute = (href: string) => new URL(href, Astro.site).href;
     <meta property="og:description" content={pageDescription} />
     <meta property="og:type" content="website" />
     <link rel="icon" href={faviconUrl} />
-    <link rel="canonical" href={absolute(localizePath(path, locale))} />
-    {alternates(path).map((link) => (
-      <link rel="alternate" hreflang={link.hreflang} href={absolute(link.href)} />
-    ))}
+    {indexable ? (
+      <>
+        <link rel="canonical" href={absolute(localizePath(path, locale))} />
+        {alternates(path).map((link) => (
+          <link rel="alternate" hreflang={link.hreflang} href={absolute(link.href)} />
+        ))}
+      </>
+    ) : (
+      <meta name="robots" content="noindex" />
+    )}
     <!-- Sets the theme before first paint. Keep the key and rules in sync with src/lib/theme.ts. -->
     <script is:inline>
       (() => {
@@ -73,7 +81,7 @@ const absolute = (href: string) => new URL(href, Astro.site).href;
       {t("skip")}
     </a>
     <SiteHeader locale={locale} />
-    {section !== "hello" && <HelloStage locale={locale} decorative />}
+    {section !== "hello" && section !== "not-found" && <HelloStage locale={locale} decorative />}
     <main id="content" data-section={section}>
       {section === "hello" && <HelloStage locale={locale} />}
       <slot />
