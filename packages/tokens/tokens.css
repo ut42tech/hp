@@ -1,34 +1,102 @@
-/* Placeholder values. The final palette and type come from the Figma design pass. */
+/* Values come from the visual design spec (docs/superpowers/specs/2026-11-17-portfolio-visual-design.md §5–§7). */
 :root {
   color-scheme: light dark;
-  --ut-color-bg: #ffffff;
-  --ut-color-fg: #0a0a0a;
-  --ut-color-muted: #6b7280;
-  --ut-color-accent: #2563eb;
-  --ut-color-border: #e5e7eb;
-  --ut-font-sans: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
-  --ut-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
-  --ut-radius: 0.5rem;
+
+  --ut-color-bg: #f4f4f3;
+  --ut-color-surface: #ffffff;
+  --ut-color-fg: #141414;
+  --ut-color-muted: #6b6b6b;
+  --ut-color-border: #e3e3e3;
+  --ut-color-fill: rgb(0 0 0 / 7%);
+  --ut-color-placeholder: #ececeb;
+  --ut-color-bar: #141414;
+  --ut-color-bar-active: #363638;
+  --ut-color-on-bar: #f4f4f3;
+  --ut-color-on-bar-muted: #a3a3a3;
+  --ut-color-scrim: rgb(0 0 0 / 25%);
+  --ut-color-curtain: #141414;
+  --ut-color-on-curtain: #f4f4f3;
+  --ut-color-accent: var(--ut-color-fg);
+
+  --ut-font-sans: "LINE Seed JP", system-ui, sans-serif;
+  --ut-font-mono: "Geist Mono", ui-monospace, monospace;
+
+  --ut-radius-card: 16px;
+  --ut-radius-row: 12px;
+  --ut-radius-full: 999px;
+  --ut-radius-control: var(--ut-radius-full);
+  --ut-radius-segment: var(--ut-radius-full);
+  --ut-radius-sheet: 28px;
+  --ut-radius: var(--ut-radius-row);
+
+  --ut-space-1: 4px;
+  --ut-space-2: 8px;
+  --ut-space-3: 12px;
+  --ut-space-4: 16px;
+  --ut-space-5: 20px;
+  --ut-space-6: 24px;
+  --ut-space-7: 28px;
+  --ut-space-8: 32px;
+  --ut-space-9: 36px;
+  --ut-space-10: 40px;
+  --ut-space-11: 44px;
+  --ut-space-12: 48px;
+  --ut-space-13: 52px;
+  --ut-space-14: 56px;
+
+  --ut-width-content: 840px;
+  --ut-width-reading: 720px;
+
+  --ut-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ut-ease-rise: cubic-bezier(0.2, 1, 0.3, 1);
+  --ut-ease-curtain: cubic-bezier(0.76, 0, 0.24, 1);
+  --ut-ease-in-out: cubic-bezier(0.7, 0, 0.3, 1);
+  --ut-duration-fast: 180ms;
+  --ut-duration-base: 250ms;
+  --ut-duration-slow: 600ms;
+
+  --ut-shadow-float: 0 8px 24px rgb(0 0 0 / 18%);
+  --ut-shadow-sheet: 0 -8px 30px rgb(0 0 0 / 8%);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --ut-color-bg: #0a0a0a;
-    --ut-color-fg: #fafafa;
-    --ut-color-muted: #9ca3af;
-    --ut-color-accent: #60a5fa;
-    --ut-color-border: #27272a;
+    --ut-color-bg: #111112;
+    --ut-color-surface: #1c1c1e;
+    --ut-color-fg: #f2f2f2;
+    --ut-color-muted: #8d8d92;
+    --ut-color-border: #2c2c2e;
+    --ut-color-fill: rgb(255 255 255 / 10%);
+    --ut-color-placeholder: #232325;
+    --ut-color-bar: #f2f2f2;
+    --ut-color-bar-active: #d4d4d4;
+    --ut-color-on-bar: #111112;
+    --ut-color-on-bar-muted: #6b6b6b;
+    --ut-color-scrim: rgb(0 0 0 / 50%);
+    --ut-color-curtain: #f2f2f2;
+    --ut-color-on-curtain: #111112;
+    --ut-color-accent: var(--ut-color-fg);
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --ut-color-bg: #0a0a0a;
-  --ut-color-fg: #fafafa;
-  --ut-color-muted: #9ca3af;
-  --ut-color-accent: #60a5fa;
-  --ut-color-border: #27272a;
+  --ut-color-bg: #111112;
+  --ut-color-surface: #1c1c1e;
+  --ut-color-fg: #f2f2f2;
+  --ut-color-muted: #8d8d92;
+  --ut-color-border: #2c2c2e;
+  --ut-color-fill: rgb(255 255 255 / 10%);
+  --ut-color-placeholder: #232325;
+  --ut-color-bar: #f2f2f2;
+  --ut-color-bar-active: #d4d4d4;
+  --ut-color-on-bar: #111112;
+  --ut-color-on-bar-muted: #6b6b6b;
+  --ut-color-scrim: rgb(0 0 0 / 50%);
+  --ut-color-curtain: #f2f2f2;
+  --ut-color-on-curtain: #111112;
+  --ut-color-accent: var(--ut-color-fg);
 }
 
 :root[data-theme="light"] {

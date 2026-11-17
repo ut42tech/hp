@@ -1,8 +1,19 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { readStoredTheme, resolveTheme, storeTheme, type Theme } from "../lib/theme";
+import { onBeforeUnmount, onMounted, ref } from "vue";
+import {
+  nextPreference,
+  readPreference,
+  resolveTheme,
+  storePreference,
+  type ThemePreference,
+} from "../lib/theme";
+import UiIcon from "./UiIcon.vue";
 
-const theme = ref<Theme>("light");
+const props = defineProps<{ labels: Record<ThemePreference, string> }>();
+
+const pref = ref<ThemePreference>("auto");
+const icon = { auto: "device-desktop", light: "sun", dark: "moon" } as const;
+let media: MediaQueryList | undefined;
 
 const safeStorage = (): Storage | undefined => {
   try {
@@ -12,26 +23,33 @@ const safeStorage = (): Storage | undefined => {
   }
 };
 
+function apply() {
+  document.documentElement.dataset.theme = resolveTheme(pref.value, media?.matches ?? false);
+}
+
 onMounted(() => {
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  theme.value = resolveTheme(readStoredTheme(safeStorage()), prefersDark);
+  media = window.matchMedia("(prefers-color-scheme: dark)");
+  pref.value = readPreference(safeStorage());
+  media.addEventListener("change", apply);
 });
 
-function toggle() {
-  theme.value = theme.value === "dark" ? "light" : "dark";
-  document.documentElement.dataset.theme = theme.value;
-  storeTheme(safeStorage(), theme.value);
+onBeforeUnmount(() => media?.removeEventListener("change", apply));
+
+function cycle() {
+  pref.value = nextPreference(pref.value);
+  storePreference(safeStorage(), pref.value);
+  apply();
 }
 </script>
 
 <template>
   <button
     type="button"
-    class="rounded-ut border border-border px-3 py-1 text-sm"
-    aria-label="ダークモードを切り替える"
-    :aria-pressed="theme === 'dark'"
-    @click="toggle"
+    class="grid size-11 place-items-center text-fg"
+    :aria-label="props.labels[pref]"
+    data-cursor="block"
+    @click="cycle"
   >
-    {{ theme === "dark" ? "Dark" : "Light" }}
+    <UiIcon :name="icon[pref]" :size="20" />
   </button>
 </template>

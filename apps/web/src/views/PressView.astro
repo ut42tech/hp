@@ -1,0 +1,60 @@
+---
+import Card from "../components/Card.astro";
+import PageHead from "../components/PageHead.astro";
+import Sheet from "../components/Sheet.astro";
+import type { Locale } from "../i18n/config";
+import { useTranslations } from "../i18n/t";
+import Site from "../layouts/Site.astro";
+import { getWorks } from "../lib/content";
+import type { BrandIconName } from "../lib/icons";
+import { formatMonth, initialOf } from "../lib/works";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const items = await getWorks("press", locale);
+// Known sources show their brand mark when there is no thumbnail; others fall back to an initial.
+const brandOf = (source: string): BrandIconName | undefined =>
+  source === "other" ? undefined : (source as BrandIconName);
+---
+
+<Site locale={locale} section="press" title={t("press.title")}>
+  <Sheet>
+    <div class="press flex flex-col gap-4 lg:gap-6">
+      <PageHead
+        title={t("press.title")}
+        count={items.length}
+        sortList="press-list"
+        locale={locale}
+      />
+      <ul id="press-list" class="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6">
+        {items.map((entry) => (
+          <li>
+            <Card
+              href={entry.data.url}
+              external
+              title={entry.data.title}
+              meta={`${formatMonth(entry.data.date)} · ${entry.data.outlet}`}
+              image={entry.data.thumbnail}
+              initial={initialOf(entry.data.outlet)}
+              brand={brandOf(entry.data.source)}
+              lang={entry.lang === locale ? undefined : entry.lang}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Sheet>
+</Site>
+
+<style>
+  @media (width >= 64rem) {
+    .press {
+      width: min(var(--ut-width-content), 100%);
+      margin-inline: auto;
+    }
+  }
+</style>

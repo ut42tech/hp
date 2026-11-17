@@ -10,8 +10,25 @@ describe("profile", () => {
   });
 
   test("social links are https and unique per icon", () => {
-    expect(profile.social.length).toBe(7);
+    expect(profile.social.length).toBe(8);
     for (const link of profile.social) expect(new URL(link.href).protocol).toBe("https:");
     expect(new Set(profile.social.map((l) => l.icon)).size).toBe(profile.social.length);
+  });
+
+  test("contact", () => {
+    expect(profile.email).toBe("hello@ut42tech.com");
+    expect(profile.social.map((l) => l.icon)).toEqual([
+      "x",
+      "github",
+      "linkedin",
+      "qiita",
+      "zenn",
+      "note",
+      "youtube",
+      "wantedly",
+    ]);
+    expect(profile.social.find((l) => l.icon === "linkedin")!.href).toBe(
+      "https://www.linkedin.com/in/ut42tech",
+    );
   });
 });

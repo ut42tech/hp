@@ -1,0 +1,58 @@
+---
+import PageHead from "../components/PageHead.astro";
+import Sheet from "../components/Sheet.astro";
+import WorksList from "../components/WorksList.astro";
+import WorksNav from "../components/WorksNav.astro";
+import type { Locale } from "../i18n/config";
+import { useTranslations } from "../i18n/t";
+import Site from "../layouts/Site.astro";
+import { getWorks } from "../lib/content";
+import type { Category } from "../lib/works";
+
+interface Props {
+  category: Category;
+  locale: Locale;
+}
+
+const { category, locale } = Astro.props;
+const t = useTranslations(locale);
+const counts = Object.fromEntries(
+  await Promise.all(
+    (["apps", "career", "awards", "events"] as const).map(
+      async (c) => [c, (await getWorks(c, locale)).length] as const,
+    ),
+  ),
+) as Record<Category, number>;
+---
+
+<Site locale={locale} section="works" title={t(`works.${category}`)}>
+  <Sheet>
+    <div class="flex flex-col gap-3 lg:gap-0">
+      <PageHead title={t("nav.works")} show="mobile" locale={locale} />
+      <WorksNav current={category} counts={counts} locale={locale} />
+      <div class="works-region">
+        <div class="works-column">
+          <WorksList category={category} locale={locale} />
+        </div>
+      </div>
+    </div>
+  </Sheet>
+</Site>
+
+<style>
+  .works-region {
+    margin-top: 4px;
+  }
+
+  /* Desktop: centre the content between the sidebar's right edge (248px) and the window's right edge. */
+  @media (width >= 64rem) {
+    .works-region {
+      margin: 0 -32px 0 216px;
+    }
+
+    .works-column {
+      width: min(var(--ut-width-content), 100% - 64px);
+      margin-inline: auto;
+    }
+  }
+</style>

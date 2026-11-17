@@ -41,15 +41,15 @@
 - 構造: `docs/superpowers/specs/2026-11-16-portfolio-wireframe-design.md`
 - Figma: ファイル `ZPaC9SNAfMyKTROfRvAJyT`
 
-| 画面 | スマホ | パソコン |
-| --- | --- | --- |
-| Hello | `43:435` | `44:496` |
-| About | `43:458` | `44:523` |
-| Works（Apps） | `43:602` | `44:669` |
-| Apps の詳細 | `43:691` | `44:770` |
+| 画面            | スマホ   | パソコン |
+| --------------- | -------- | -------- |
+| Hello           | `43:435` | `44:496` |
+| About           | `43:458` | `44:523` |
+| Works（Apps）   | `43:602` | `44:669` |
+| Apps の詳細     | `43:691` | `44:770` |
 | Works（Career） | `43:766` | `44:862` |
-| Press | `43:845` | `44:949` |
-| 部品 | `32:2` | — |
+| Press           | `43:845` | `44:949` |
+| 部品            | `32:2`   | —        |
 
 ## Global Constraints
 
@@ -141,14 +141,23 @@ describe("contrast (WCAG AA)", () => {
     ["--ut-color-on-curtain", "--ut-color-curtain", 4.5],
   ];
   test.each(["light", "dark"] as const)("%s mode meets the minimums", (mode) => {
-    for (const [fg, bg, min] of pairs) expect(contrast(color(mode, fg), color(mode, bg))).toBeGreaterThanOrEqual(min);
+    for (const [fg, bg, min] of pairs)
+      expect(contrast(color(mode, fg), color(mode, bg))).toBeGreaterThanOrEqual(min);
   });
 });
 test("theme.css maps radius, shadow and type tokens", () => {
   const theme = read("./theme.css");
-  for (const name of ["--radius-card", "--radius-row", "--radius-sheet", "--radius-control", "--shadow-float", "--shadow-sheet"])
+  for (const name of [
+    "--radius-card",
+    "--radius-row",
+    "--radius-sheet",
+    "--radius-control",
+    "--shadow-float",
+    "--shadow-sheet",
+  ])
     expect(theme).toContain(name);
-  for (const u of ["text-display", "text-title-l", "text-card-title", "text-mono"]) expect(theme).toContain(`@utility ${u}`);
+  for (const u of ["text-display", "text-title-l", "text-card-title", "text-mono"])
+    expect(theme).toContain(`@utility ${u}`);
 });
 ```
 
@@ -212,8 +221,19 @@ LinkedIn の URL は `https://www.linkedin.com/in/ut42tech/`（本人から受�
 ```ts
 test("contact", () => {
   expect(profile.email).toBe("hello@ut42tech.com");
-  expect(profile.social.map((l) => l.icon)).toEqual(["x", "github", "linkedin", "qiita", "zenn", "note", "youtube", "wantedly"]);
-  expect(profile.social.find((l) => l.icon === "linkedin")!.href).toBe("https://www.linkedin.com/in/ut42tech/");
+  expect(profile.social.map((l) => l.icon)).toEqual([
+    "x",
+    "github",
+    "linkedin",
+    "qiita",
+    "zenn",
+    "note",
+    "youtube",
+    "wantedly",
+  ]);
+  expect(profile.social.find((l) => l.icon === "linkedin")!.href).toBe(
+    "https://www.linkedin.com/in/ut42tech/",
+  );
 });
 ```
 
@@ -267,11 +287,17 @@ export const UI_ICON_STROKE = 1.75;
 
 ```ts
 // UiIcon.vue props
-{ name: UiIconName; size: number }
+{
+  name: UiIconName;
+  size: number;
+}
 // → <component :is="uiIcons[name]" :size :stroke="UI_ICON_STROKE" aria-hidden="true" focusable="false" />
 
 // BrandIcon.vue props
-{ name: BrandIconName; size: number }
+{
+  name: BrandIconName;
+  size: number;
+}
 // → 24 の正方形の SVG に、brandIcons[name].path を :d で結び付ける。fill は currentColor、aria-hidden="true"。
 ```
 
@@ -294,7 +320,8 @@ test("every ui icon renders a Tabler outline at stroke 1.75", async () => {
   }
 });
 test("every brand comes from a simple-icons package", () => {
-  for (const [name, icon] of Object.entries(brandIcons)) expect(icon.path.length, name).toBeGreaterThan(10);
+  for (const [name, icon] of Object.entries(brandIcons))
+    expect(icon.path.length, name).toBeGreaterThan(10);
   expect(brandIcons.linkedin.title).toBe("LinkedIn");
 });
 test("brand icons render as filled single-color shapes", async () => {
@@ -381,36 +408,36 @@ export function pickLocalized<T extends { id: string }>(entries: T[], locale: Lo
 
 **辞書の鍵**（この計画で使うものすべて。値は日本語 / 英語）
 
-| 鍵 | ja | en |
-| --- | --- | --- |
-| `site.name` | ut42tech | ut42tech |
-| `hello.title` | Welcome. | Welcome. |
-| `hello.sub` | to ut42tech | to ut42tech |
-| `nav.label` | メイン | Main |
-| `nav.about` / `nav.works` / `nav.press` | About / Works / Press | About / Works / Press |
-| `skip` | 本文へ移動 | Skip to content |
-| `theme.auto` / `theme.light` / `theme.dark` | 表示: 自動 / 表示: ライト / 表示: ダーク | Theme: Auto / Theme: Light / Theme: Dark |
-| `locale.switch` | English で見る | 日本語で見る |
-| `works.label` | Works の分類 | Works categories |
-| `works.apps` / `.career` / `.awards` / `.events` | Apps / Career / Awards / Events | 同じ |
-| `count` | {n} 件 | {n} items |
-| `sort.newest` / `sort.oldest` | 新しい順 / 古い順 | Newest / Oldest |
-| `detail.close` | 閉じる | Close |
-| `detail.back` | Apps | Apps |
-| `detail.demo` / `detail.github` | Demo / GitHub | Demo / GitHub |
-| `detail.stack` | Stack | Stack |
-| `about.title` | About | About |
-| `about.affiliation1` / `about.affiliation2` | 長崎大学大学院 総合生産科学研究科 / 瀬戸崎研究室 | Graduate School of Integrated Science and Technology, Nagasaki University / Setozaki Lab |
-| `about.intro` | （仮）長崎大学大学院の修士学生。デザインとエンジニアリングの両方から、触って気持ちのいい体験をつくっています。画面の設計から実装、動きの調整まで、ひとりで通して作るのが好きです。 | (Draft) A master's student at Nagasaki University, crafting experiences that feel good to touch — from both design and engineering. |
-| `about.skills` | Skills | Skills |
-| `about.history.title` | これまで | Background |
-| `about.history` | （仮）長崎県で生まれ、横浜で育つ。長崎大学 情報データ科学部を卒業し、大学院へ。インドとタイへの短期留学も経験。 | (Draft) Born in Nagasaki, raised in Yokohama. Graduated from Nagasaki University and went on to graduate school. |
-| `about.contact` | Contact | Contact |
-| `about.note.sns` | 気軽なご連絡は、SNS へどうぞ。 | For casual messages, reach me on social media. |
-| `about.note.email` | お仕事のご依頼など、正式なご連絡はメールでお願いします。 | For work and other formal inquiries, please email me. |
-| `about.copy` | メールアドレスをコピー | Copy email address |
-| `about.copied` | コピーしました | Copied |
-| `press.title` | Press | Press |
+| 鍵                                               | ja                                                                                                                                                                                 | en                                                                                                                                  |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `site.name`                                      | ut42tech                                                                                                                                                                           | ut42tech                                                                                                                            |
+| `hello.title`                                    | Welcome.                                                                                                                                                                           | Welcome.                                                                                                                            |
+| `hello.sub`                                      | to ut42tech                                                                                                                                                                        | to ut42tech                                                                                                                         |
+| `nav.label`                                      | メイン                                                                                                                                                                             | Main                                                                                                                                |
+| `nav.about` / `nav.works` / `nav.press`          | About / Works / Press                                                                                                                                                              | About / Works / Press                                                                                                               |
+| `skip`                                           | 本文へ移動                                                                                                                                                                         | Skip to content                                                                                                                     |
+| `theme.auto` / `theme.light` / `theme.dark`      | 表示: 自動 / 表示: ライト / 表示: ダーク                                                                                                                                           | Theme: Auto / Theme: Light / Theme: Dark                                                                                            |
+| `locale.switch`                                  | English で見る                                                                                                                                                                     | 日本語で見る                                                                                                                        |
+| `works.label`                                    | Works の分類                                                                                                                                                                       | Works categories                                                                                                                    |
+| `works.apps` / `.career` / `.awards` / `.events` | Apps / Career / Awards / Events                                                                                                                                                    | 同じ                                                                                                                                |
+| `count`                                          | {n} 件                                                                                                                                                                             | {n} items                                                                                                                           |
+| `sort.newest` / `sort.oldest`                    | 新しい順 / 古い順                                                                                                                                                                  | Newest / Oldest                                                                                                                     |
+| `detail.close`                                   | 閉じる                                                                                                                                                                             | Close                                                                                                                               |
+| `detail.back`                                    | Apps                                                                                                                                                                               | Apps                                                                                                                                |
+| `detail.demo` / `detail.github`                  | Demo / GitHub                                                                                                                                                                      | Demo / GitHub                                                                                                                       |
+| `detail.stack`                                   | Stack                                                                                                                                                                              | Stack                                                                                                                               |
+| `about.title`                                    | About                                                                                                                                                                              | About                                                                                                                               |
+| `about.affiliation1` / `about.affiliation2`      | 長崎大学大学院 総合生産科学研究科 / 瀬戸崎研究室                                                                                                                                   | Graduate School of Integrated Science and Technology, Nagasaki University / Setozaki Lab                                            |
+| `about.intro`                                    | （仮）長崎大学大学院の修士学生。デザインとエンジニアリングの両方から、触って気持ちのいい体験をつくっています。画面の設計から実装、動きの調整まで、ひとりで通して作るのが好きです。 | (Draft) A master's student at Nagasaki University, crafting experiences that feel good to touch — from both design and engineering. |
+| `about.skills`                                   | Skills                                                                                                                                                                             | Skills                                                                                                                              |
+| `about.history.title`                            | これまで                                                                                                                                                                           | Background                                                                                                                          |
+| `about.history`                                  | （仮）長崎県で生まれ、横浜で育つ。長崎大学 情報データ科学部を卒業し、大学院へ。インドとタイへの短期留学も経験。                                                                    | (Draft) Born in Nagasaki, raised in Yokohama. Graduated from Nagasaki University and went on to graduate school.                    |
+| `about.contact`                                  | Contact                                                                                                                                                                            | Contact                                                                                                                             |
+| `about.note.sns`                                 | 気軽なご連絡は、SNS へどうぞ。                                                                                                                                                     | For casual messages, reach me on social media.                                                                                      |
+| `about.note.email`                               | お仕事のご依頼など、正式なご連絡はメールでお願いします。                                                                                                                           | For work and other formal inquiries, please email me.                                                                               |
+| `about.copy`                                     | メールアドレスをコピー                                                                                                                                                             | Copy email address                                                                                                                  |
+| `about.copied`                                   | コピーしました                                                                                                                                                                     | Copied                                                                                                                              |
+| `press.title`                                    | Press                                                                                                                                                                              | Press                                                                                                                               |
 
 鍵を足すときは、`ja` と `en` の両方に足す。
 
@@ -442,11 +469,18 @@ test("switchLocalePath keeps the page", () => {
   expect(switchLocalePath("/en/", "ja")).toBe("/ja/");
 });
 test("alternates list published locales and x-default", () => {
-  expect(alternates("/about")).toEqual([{ hreflang: "ja", href: "/ja/about" }, { hreflang: "x-default", href: "/" }]);
+  expect(alternates("/about")).toEqual([
+    { hreflang: "ja", href: "/ja/about" },
+    { hreflang: "x-default", href: "/" },
+  ]);
 });
 test("vercel sends / to Japanese without a permanent redirect", () => {
-  const { redirects } = JSON.parse(readFileSync(new URL("../../vercel.json", import.meta.url), "utf8"));
-  expect(redirects).toContainEqual(expect.objectContaining({ source: "/", destination: "/ja/", permanent: false }));
+  const { redirects } = JSON.parse(
+    readFileSync(new URL("../../vercel.json", import.meta.url), "utf8"),
+  );
+  expect(redirects).toContainEqual(
+    expect.objectContaining({ source: "/", destination: "/ja/", permanent: false }),
+  );
 });
 test("interpolates", () => expect(useTranslations("ja")("count", { n: 10 })).toBe("10 件"));
 test("only Japanese is published for now", () => expect(publishedLocales).toEqual(["ja"]));
@@ -454,8 +488,14 @@ test("only Japanese is published for now", () => expect(publishedLocales).toEqua
 // localized.test.ts
 test("pickLocalized prefers the locale and falls back to ja", () => {
   const entries = [{ id: "ja/a" }, { id: "ja/b" }, { id: "en/a" }];
-  expect(pickLocalized(entries, "en").map((e) => [e.slug, e.lang])).toEqual([["a", "en"], ["b", "ja"]]);
-  expect(pickLocalized(entries, "ja").map((e) => [e.slug, e.lang])).toEqual([["a", "ja"], ["b", "ja"]]);
+  expect(pickLocalized(entries, "en").map((e) => [e.slug, e.lang])).toEqual([
+    ["a", "en"],
+    ["b", "ja"],
+  ]);
+  expect(pickLocalized(entries, "ja").map((e) => [e.slug, e.lang])).toEqual([
+    ["a", "ja"],
+    ["b", "ja"],
+  ]);
 });
 ```
 
@@ -516,7 +556,10 @@ export type Theme = "light" | "dark";
 export type ThemePreference = "auto" | "light" | "dark";
 export const THEME_STORAGE_KEY = "ut42tech:theme";
 export function readPreference(storage: Pick<Storage, "getItem"> | undefined): ThemePreference; // 無い・壊れた値・例外 → "auto"
-export function storePreference(storage: Pick<Storage, "setItem" | "removeItem"> | undefined, pref: ThemePreference): void; // "auto" は removeItem
+export function storePreference(
+  storage: Pick<Storage, "setItem" | "removeItem"> | undefined,
+  pref: ThemePreference,
+): void; // "auto" は removeItem
 export function resolveTheme(pref: ThemePreference, prefersDark: boolean): Theme;
 export function nextPreference(pref: ThemePreference): ThemePreference; // auto → light → dark → auto
 ```
@@ -527,7 +570,7 @@ type Section = "hello" | "about" | "works" | "press";
 interface Props {
   locale: Locale;
   section: Section;
-  title?: string;       // 省略時は t("site.name")。指定時は `${title} — ${t("site.name")}`
+  title?: string; // 省略時は t("site.name")。指定時は `${title} — ${t("site.name")}`
   description?: string; // 省略時は mottoFor(locale)
 }
 ```
@@ -566,14 +609,22 @@ test("auto follows the OS", () => {
   expect(resolveTheme("light", true)).toBe("light");
 });
 test("nextPreference cycles auto → light → dark → auto", () => {
-  expect((["auto", "light", "dark"] as const).map(nextPreference)).toEqual(["light", "dark", "auto"]);
+  expect((["auto", "light", "dark"] as const).map(nextPreference)).toEqual([
+    "light",
+    "dark",
+    "auto",
+  ]);
 });
 test("storing auto removes the key", () => {
   const calls: string[] = [];
-  storePreference({ setItem: () => calls.push("set"), removeItem: () => calls.push("remove") }, "auto");
+  storePreference(
+    { setItem: () => calls.push("set"), removeItem: () => calls.push("remove") },
+    "auto",
+  );
   expect(calls).toEqual(["remove"]);
 });
-test("storePreference swallows storage errors", () => expect(() => storePreference(throwing, "dark")).not.toThrow());
+test("storePreference swallows storage errors", () =>
+  expect(() => storePreference(throwing, "dark")).not.toThrow());
 ```
 
 `build-output.test.ts` を書き直す。
@@ -582,20 +633,30 @@ test("storePreference swallows storage errors", () => expect(() => storePreferen
 const hello = loadPage("/ja/");
 test("is Japanese with a safe-area viewport", () => {
   expect(hello.querySelector("html")!.getAttribute("lang")).toBe("ja");
-  expect(hello.querySelector('meta[name="viewport"]')!.getAttribute("content")).toContain("viewport-fit=cover");
+  expect(hello.querySelector('meta[name="viewport"]')!.getAttribute("content")).toContain(
+    "viewport-fit=cover",
+  );
 });
 test("sets the theme before first paint", () =>
-  expect(hello.querySelectorAll("head script").some((s) => s.textContent.includes("ut42tech:theme"))).toBe(true));
+  expect(
+    hello.querySelectorAll("head script").some((s) => s.textContent.includes("ut42tech:theme")),
+  ).toBe(true));
 test("hello greets without selecting a nav item", () => {
   expect(hello.querySelector('[aria-label="Welcome."]')).not.toBeNull();
   expect(hello.querySelector('nav [aria-current="page"]')).toBeNull();
-  expect(hello.querySelectorAll('nav[aria-label="メイン"] a').map((a) => a.getAttribute("href"))).toEqual(["/ja/about", "/ja/works/apps", "/ja/press"]);
+  expect(
+    hello.querySelectorAll('nav[aria-label="メイン"] a').map((a) => a.getAttribute("href")),
+  ).toEqual(["/ja/about", "/ja/works/apps", "/ja/press"]);
 });
-test("handle links home", () => expect(hello.querySelector('header a[href="/ja/"]')!.textContent).toContain("@ut42tech"));
-test("declares alternates", () => expect(hello.querySelector('link[rel="alternate"][hreflang="x-default"]')).not.toBeNull());
+test("handle links home", () =>
+  expect(hello.querySelector('header a[href="/ja/"]')!.textContent).toContain("@ut42tech"));
+test("declares alternates", () =>
+  expect(hello.querySelector('link[rel="alternate"][hreflang="x-default"]')).not.toBeNull());
 test("has a favicon", () => expect(hello.querySelector('link[rel="icon"]')).not.toBeNull());
-test("English is not published yet", () => expect(existsSync(new URL("../dist/en", import.meta.url))).toBe(false));
-test("no language switch while only one locale is published", () => expect(hello.querySelector('a[hreflang="en"]')).toBeNull());
+test("English is not published yet", () =>
+  expect(existsSync(new URL("../dist/en", import.meta.url))).toBe(false));
+test("no language switch while only one locale is published", () =>
+  expect(hello.querySelector('a[hreflang="en"]')).toBeNull());
 ```
 
 - [ ] **Step 2: 失敗を確かめる**
@@ -699,13 +760,13 @@ git commit -m "feat(web): add site shell, nav bar and theme preference"
     - id は `<lang>/<slug>`。
     - 日付は `YYYY-MM-DD` か `YYYY-MM` の文字列。
 
-| コレクション | frontmatter |
-| --- | --- |
-| `apps` | `title`、`date`、`thumbnail?: image()`、`initial?`、`demo?: url`、`github?: url`、`stack: SkillIcon[]`。本文が説明。 |
-| `career` | `title`、`start`、`end?`、`summary`、`thumbnail?`、`initial?` |
-| `events` | `title`、`date`、`thumbnail?`、`initial?`、`url?` |
-| `awards` | `title`、`date`、`initial?` |
-| `press` | `title`、`date`、`url`、`source: "note" \| "youtube" \| "zenn" \| "qiita" \| "speakerdeck" \| "other"`、`outlet: string`（媒体名として出す文字）、`thumbnail?` |
+| コレクション | frontmatter                                                                                                                                                    |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `apps`       | `title`、`date`、`thumbnail?: image()`、`initial?`、`demo?: url`、`github?: url`、`stack: SkillIcon[]`。本文が説明。                                           |
+| `career`     | `title`、`start`、`end?`、`summary`、`thumbnail?`、`initial?`                                                                                                  |
+| `events`     | `title`、`date`、`thumbnail?`、`initial?`、`url?`                                                                                                              |
+| `awards`     | `title`、`date`、`initial?`                                                                                                                                    |
+| `press`      | `title`、`date`、`url`、`source: "note" \| "youtube" \| "zenn" \| "qiita" \| "speakerdeck" \| "other"`、`outlet: string`（媒体名として出す文字）、`thumbnail?` |
 
 ```ts
 // lib/works.ts
@@ -723,14 +784,21 @@ export async function getWorks<C extends Category | "press">(collection: C, loca
 - [ ] **Step 1: 失敗するテストを書く**
 
 ```ts
-test("formatMonth", () => { expect(formatMonth("2026-03-15")).toBe("2026.03"); expect(formatMonth("2024-08")).toBe("2024.08"); });
+test("formatMonth", () => {
+  expect(formatMonth("2026-03-15")).toBe("2026.03");
+  expect(formatMonth("2024-08")).toBe("2024.08");
+});
 test("formatPeriod", () => {
   expect(formatPeriod("2025-04")).toBe("2025.04 –");
   expect(formatPeriod("2024-08", "2024-08")).toBe("2024.08");
   expect(formatPeriod("2024-05", "2024-08")).toBe("2024.05 – 2024.08");
 });
 test("sortByDate is newest-first and stable", () => {
-  const items = [{ d: "2024-01", n: "a" }, { d: "2026-03", n: "b" }, { d: "2024-01", n: "c" }];
+  const items = [
+    { d: "2024-01", n: "a" },
+    { d: "2026-03", n: "b" },
+    { d: "2024-01", n: "c" },
+  ];
   expect(sortByDate(items, (i) => i.d, "newest").map((i) => i.n)).toEqual(["b", "a", "c"]);
   expect(sortByDate(items, (i) => i.d, "oldest").map((i) => i.n)).toEqual(["a", "c", "b"]);
 });
@@ -756,12 +824,12 @@ Expected: FAIL
 
 日本語の版として、`ja/` の下に置く。
 
-| 移し先 | 元 | 書き方 |
-| --- | --- | --- |
-| `apps` | `content/projects/*.md`（10件） | `links` の `kind` が demo / github のものを、`demo` / `github` に入れる。`summary` と本文を合わせて本文にする。`stack` は空でよい。 |
-| `career` | `content/works/*.md` | 構造の設計書 5 章の Career の表に当たるものだけを入れる。 |
-| `events` / `awards` | `content/works`、`content/timeline` | 構造の設計書 5 章の表に挙がっている項目だけを入れる。 |
-| `press` | `content/press/*.md` | `outlet` を媒体名にする。`source: "other"`。 |
+| 移し先              | 元                                  | 書き方                                                                                                                              |
+| ------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `apps`              | `content/projects/*.md`（10件）     | `links` の `kind` が demo / github のものを、`demo` / `github` に入れる。`summary` と本文を合わせて本文にする。`stack` は空でよい。 |
+| `career`            | `content/works/*.md`                | 構造の設計書 5 章の Career の表に当たるものだけを入れる。                                                                           |
+| `events` / `awards` | `content/works`、`content/timeline` | 構造の設計書 5 章の表に挙がっている項目だけを入れる。                                                                               |
+| `press`             | `content/press/*.md`                | `outlet` を媒体名にする。`source: "other"`。                                                                                        |
 
 - 画像: `images/` から `src/assets/works/<collection>/` に写し、`thumbnail` に相対パスで書く。
 - 開始と終了の月: 素材に無いときは、`date` の月を開始にする。終了は空にする。
@@ -798,13 +866,40 @@ git commit -m "feat(web): add works and press content"
 
 ```ts
 // Thumb.astro
-interface Props { image?: ImageMetadata; alt: string; initial: string; brand?: BrandIconName; widths: number[]; sizes: string }
+interface Props {
+  image?: ImageMetadata;
+  alt: string;
+  initial: string;
+  brand?: BrandIconName;
+  widths: number[];
+  sizes: string;
+}
 // Card.astro（href が無いときは div）
-interface Props { href?: string; external?: boolean; title: string; meta: string; image?: ImageMetadata; initial: string; brand?: BrandIconName; lang?: Locale }
+interface Props {
+  href?: string;
+  external?: boolean;
+  title: string;
+  meta: string;
+  image?: ImageMetadata;
+  initial: string;
+  brand?: BrandIconName;
+  lang?: Locale;
+}
 // RowCard.astro
-interface Props { href?: string; title: string; period: string; summary: string; image?: ImageMetadata; initial: string; lang?: Locale }
+interface Props {
+  href?: string;
+  title: string;
+  period: string;
+  summary: string;
+  image?: ImageMetadata;
+  initial: string;
+  lang?: Locale;
+}
 // SortButton.astro
-interface Props { list: string; locale: Locale } // list は並べ替える一覧の id
+interface Props {
+  list: string;
+  locale: Locale;
+} // list は並べ替える一覧の id
 ```
 
 **`Thumb.astro`**
@@ -913,17 +1008,24 @@ git commit -m "feat(web): add card, row card and sort button"
 ```ts
 test.each(["apps", "career", "awards", "events"])("/ja/works/%s lists its items", (c) => {
   const page = loadPage(`/ja/works/${c}`);
-  expect(page.querySelector('nav[aria-label="メイン"] [aria-current="page"]')!.getAttribute("href")).toBe("/ja/works/apps");
+  expect(
+    page.querySelector('nav[aria-label="メイン"] [aria-current="page"]')!.getAttribute("href"),
+  ).toBe("/ja/works/apps");
   expect(page.querySelectorAll(`a[href="/ja/works/${c}"][aria-current="page"]`).length).toBe(2); // 切り替えとサイドバー
   expect(page.querySelector("#works-list")!.childNodes.length).toBeGreaterThan(0);
 });
 test("apps cards link to their detail pages", () => {
-  const hrefs = loadPage("/ja/works/apps").querySelectorAll("#works-list a").map((a) => a.getAttribute("href"));
+  const hrefs = loadPage("/ja/works/apps")
+    .querySelectorAll("#works-list a")
+    .map((a) => a.getAttribute("href"));
   expect(hrefs.every((h) => /^\/ja\/works\/apps\/[\w-]+$/.test(h!))).toBe(true);
 });
-test("/ja/works redirects to apps", () => expect(readDist("ja/works/index.html")).toContain("/ja/works/apps"));
+test("/ja/works redirects to apps", () =>
+  expect(readDist("ja/works/index.html")).toContain("/ja/works/apps"));
 test("default order is newest first", () => {
-  const dates = loadPage("/ja/works/apps").querySelectorAll("#works-list .meta").map((m) => m.textContent);
+  const dates = loadPage("/ja/works/apps")
+    .querySelectorAll("#works-list .meta")
+    .map((m) => m.textContent);
   expect(dates).toEqual([...dates].sort().reverse());
 });
 ```
@@ -938,10 +1040,10 @@ Expected: FAIL
 - `pages/[locale]/works/[category].astro`: `getStaticPaths` で、公開中の言語 × 4分類を返す。`<WorksView locale={…} category={…} />` を描くだけにする。
 - 中身の並べ方:
 
-| 分類 | 部品 | スマホ | パソコン |
-| --- | --- | --- | --- |
-| Apps / Awards / Events | `Card` | 2列、間 16 | 3列、間 24、幅 264 |
-| Career | `RowCard` | 縦1列、間 12 | 縦1列、間 12 |
+| 分類                   | 部品      | スマホ       | パソコン           |
+| ---------------------- | --------- | ------------ | ------------------ |
+| Apps / Awards / Events | `Card`    | 2列、間 16   | 3列、間 24、幅 264 |
+| Career                 | `RowCard` | 縦1列、間 12 | 縦1列、間 12       |
 
 - パソコンの中身の幅: `main` の左に 248px を空け、残りの中央に、最大 840px で置く。
 - Awards には `href` を渡さない。
@@ -999,7 +1101,9 @@ git commit -m "feat(web): add works category pages"
 - [ ] **Step 1: 失敗するテストを書く**
 
 ```ts
-const slugs = readdirSync(new URL("../src/content/apps/ja/", import.meta.url)).map((f) => f.replace(/\.md$/, ""));
+const slugs = readdirSync(new URL("../src/content/apps/ja/", import.meta.url)).map((f) =>
+  f.replace(/\.md$/, ""),
+);
 test.each(slugs)("/ja/works/apps/%s renders a readable detail without JS", (slug) => {
   const page = loadPage(`/ja/works/apps/${slug}`);
   const dialog = page.querySelector("dialog.app-detail")!;
@@ -1095,15 +1199,15 @@ git commit -m "feat(web): add app detail sheet"
 
 **ページの構成**（上から。文言はすべて辞書から取る）
 
-| 部分 | 中身 |
-| --- | --- |
-| 見出し | `PageHead title={t("about.title")}`（`h1`） |
-| 本人 | 写真、本名（スマホ `text-headline`、パソコン `text-title-m`）、所属（`about.affiliation1` と `about.affiliation2`。パソコンは ` · ` でつなぎ、スマホは改行。`text-muted`） |
-| 自己紹介 | `about.intro`（`text-body`） |
-| モットー | `mottoFor(locale)`（`text-headline`） |
-| Skills | 見出し（`text-mono text-muted`）と、48 のタイル（角丸 12、アイコン 22、`data-skill`、`role="img"`、`aria-label` にブランド名）。間 12 |
-| これまで | 見出しと `about.history` |
-| Contact | 下の表 |
+| 部分     | 中身                                                                                                                                                                     |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 見出し   | `PageHead title={t("about.title")}`（`h1`）                                                                                                                              |
+| 本人     | 写真、本名（スマホ `text-headline`、パソコン `text-title-m`）、所属（`about.affiliation1` と `about.affiliation2`。パソコンは `·` でつなぎ、スマホは改行。`text-muted`） |
+| 自己紹介 | `about.intro`（`text-body`）                                                                                                                                             |
+| モットー | `mottoFor(locale)`（`text-headline`）                                                                                                                                    |
+| Skills   | 見出し（`text-mono text-muted`）と、48 のタイル（角丸 12、アイコン 22、`data-skill`、`role="img"`、`aria-label` にブランド名）。間 12                                    |
+| これまで | 見出しと `about.history`                                                                                                                                                 |
+| Contact  | 下の表                                                                                                                                                                   |
 
 - 写真: `@ut42tech/assets/profile.jpg` を `astro:assets` の `Image` で描く。スマホ 96 / パソコン 144 の丸。2倍の解像度を用意する。
 - `id="contact"` は、Contact の見出しを含む `section` に付ける。
@@ -1131,12 +1235,16 @@ const about = loadPage("/ja/about");
 test("renders identity and contact without JavaScript", () => {
   expect(about.textContent).toContain(profile.name);
   expect(about.textContent).toContain(profile.motto);
-  expect(about.querySelector('nav[aria-label="メイン"] [aria-current="page"]')!.getAttribute("href")).toBe("/ja/about");
+  expect(
+    about.querySelector('nav[aria-label="メイン"] [aria-current="page"]')!.getAttribute("href"),
+  ).toBe("/ja/about");
   const contact = about.querySelector("#contact")!;
-  for (const link of profile.social) expect(contact.querySelector(`a[href="${link.href}"]`)).not.toBeNull();
+  for (const link of profile.social)
+    expect(contact.querySelector(`a[href="${link.href}"]`)).not.toBeNull();
   expect(contact.querySelector(`a[href="mailto:${profile.email}"]`)).not.toBeNull();
 });
-test("skills are labelled icons", () => expect(about.querySelectorAll("[data-skill][aria-label]").length).toBe(11));
+test("skills are labelled icons", () =>
+  expect(about.querySelectorAll("[data-skill][aria-label]").length).toBe(11));
 test("no research link yet", () => expect(about.textContent).not.toContain("研究について"));
 ```
 
@@ -1200,7 +1308,10 @@ test("press cards open outside", () => {
     expect(a.getAttribute("rel")).toContain("noopener");
   }
 });
-test("nav marks press", () => expect(press.querySelector('nav[aria-label="メイン"] [aria-current="page"]')!.getAttribute("href")).toBe("/ja/press"));
+test("nav marks press", () =>
+  expect(
+    press.querySelector('nav[aria-label="メイン"] [aria-current="page"]')!.getAttribute("href"),
+  ).toBe("/ja/press"));
 ```
 
 - [ ] **Step 2: 失敗を確かめる**
@@ -1238,7 +1349,16 @@ git commit -m "feat(web): add press page"
 - [ ] **Step 1: 失敗するテストを書く**
 
 ```ts
-const routes = ["/ja/", "/ja/about", "/ja/works/apps", "/ja/works/career", "/ja/works/awards", "/ja/works/events", "/ja/press", ...appRoutes("ja")];
+const routes = [
+  "/ja/",
+  "/ja/about",
+  "/ja/works/apps",
+  "/ja/works/career",
+  "/ja/works/awards",
+  "/ja/works/events",
+  "/ja/press",
+  ...appRoutes("ja"),
+];
 test.each(routes)("%s: every link and button has a name", (route) => {
   for (const el of loadPage(route).querySelectorAll("a, button")) {
     const name = el.getAttribute("aria-label") ?? el.textContent.trim();
@@ -1246,9 +1366,12 @@ test.each(routes)("%s: every link and button has a name", (route) => {
   }
 });
 test.each(routes)("%s: interactive elements opt into the pointer", (route) => {
-  for (const el of loadPage(route).querySelectorAll("a, button")) expect(el.hasAttribute("data-cursor"), el.outerHTML.slice(0, 120)).toBe(true);
+  for (const el of loadPage(route).querySelectorAll("a, button"))
+    expect(el.hasAttribute("data-cursor"), el.outerHTML.slice(0, 120)).toBe(true);
 });
-test.each(routes)("%s: one h1", (route) => expect(loadPage(route).querySelectorAll("h1").length).toBe(1));
+test.each(routes)("%s: one h1", (route) =>
+  expect(loadPage(route).querySelectorAll("h1").length).toBe(1),
+);
 ```
 
 `appRoutes(locale)` を `test/html.ts` に足す。`/<locale>/works/apps/<slug>` の一覧を返す。

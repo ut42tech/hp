@@ -1,0 +1,46 @@
+---
+import type { Locale } from "../i18n/config";
+import { useTranslations } from "../i18n/t";
+import UiIcon from "./UiIcon.vue";
+
+interface Props {
+  // id of the list whose items are reordered
+  list: string;
+  locale: Locale;
+}
+
+const { list, locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<button
+  type="button"
+  class="sort-button text-callout font-bold text-fg"
+  aria-controls={list}
+  data-sort-list={list}
+  data-order="newest"
+  data-label-newest={t("sort.newest")}
+  data-label-oldest={t("sort.oldest")}
+  data-cursor="block"
+>
+  <UiIcon name="arrows-sort" size={14} />
+  <span data-sort-label>{t("sort.newest")}</span>
+</button>
+
+<style>
+  .sort-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 36px;
+    padding: 0 16px 0 12px;
+    border: 1px solid var(--ut-color-border);
+    border-radius: var(--ut-radius-full);
+  }
+</style>
+
+<script>
+  import { initSortButtons } from "../scripts/sort";
+
+  initSortButtons(document);
+</script>

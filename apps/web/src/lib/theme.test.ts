@@ -1,5 +1,5 @@
 import { expect, test } from "vite-plus/test";
-import { readStoredTheme, resolveTheme, storeTheme } from "./theme";
+import { nextPreference, readPreference, resolveTheme, storePreference } from "./theme";
 
 const throwing = {
   getItem: () => {
@@ -8,33 +8,42 @@ const throwing = {
   setItem: () => {
     throw new Error("denied");
   },
+  removeItem: () => {
+    throw new Error("denied");
+  },
 };
 
-test("readStoredTheme returns null when storage throws", () => {
-  expect(readStoredTheme(throwing)).toBeNull();
+test("readPreference falls back to auto", () => {
+  expect(readPreference(undefined)).toBe("auto");
+  expect(readPreference({ getItem: () => "sepia" })).toBe("auto");
+  expect(readPreference(throwing)).toBe("auto");
+  expect(readPreference({ getItem: () => "dark" })).toBe("dark");
 });
 
-test("readStoredTheme returns null for unknown values", () => {
-  expect(readStoredTheme({ getItem: () => "sepia" })).toBeNull();
-});
-
-test("readStoredTheme returns null without storage", () => {
-  expect(readStoredTheme(undefined)).toBeNull();
-});
-
-test("readStoredTheme returns a valid stored theme", () => {
-  expect(readStoredTheme({ getItem: () => "dark" })).toBe("dark");
-});
-
-test("stored theme wins over system preference", () => {
+test("auto follows the OS", () => {
+  expect(resolveTheme("auto", true)).toBe("dark");
+  expect(resolveTheme("auto", false)).toBe("light");
   expect(resolveTheme("light", true)).toBe("light");
 });
 
-test("falls back to system preference", () => {
-  expect(resolveTheme(null, true)).toBe("dark");
-  expect(resolveTheme(null, false)).toBe("light");
+test("nextPreference cycles auto → light → dark → auto", () => {
+  expect((["auto", "light", "dark"] as const).map(nextPreference)).toEqual([
+    "light",
+    "dark",
+    "auto",
+  ]);
 });
 
-test("storeTheme swallows storage errors", () => {
-  expect(() => storeTheme(throwing, "dark")).not.toThrow();
+test("storing auto removes the key", () => {
+  const calls: string[] = [];
+  storePreference(
+    { setItem: () => calls.push("set"), removeItem: () => calls.push("remove") },
+    "auto",
+  );
+  expect(calls).toEqual(["remove"]);
+});
+
+test("storePreference swallows storage errors", () => {
+  expect(() => storePreference(throwing, "dark")).not.toThrow();
+  expect(() => storePreference(throwing, "auto")).not.toThrow();
 });

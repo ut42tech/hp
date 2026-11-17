@@ -1,0 +1,246 @@
+---
+import { render, type CollectionEntry } from "astro:content";
+import { localizePath, type Locale } from "../i18n/config";
+import { useTranslations } from "../i18n/t";
+import { brandIcons } from "../lib/icons";
+import type { Localized } from "../lib/localized";
+import { formatMonth, initialOf } from "../lib/works";
+import BrandIcon from "./BrandIcon.vue";
+import Thumb from "./Thumb.astro";
+import UiIcon from "./UiIcon.vue";
+
+interface Props {
+  entry: Localized<CollectionEntry<"apps">>;
+  locale: Locale;
+}
+
+const { entry, locale } = Astro.props;
+const t = useTranslations(locale);
+const { Content } = await render(entry);
+const listHref = localizePath("/works/apps", locale);
+const { title, date, thumbnail, initial, demo, github, stack } = entry.data;
+const links = [
+  { kind: "demo", href: demo, label: t("detail.demo") },
+  { kind: "github", href: github, label: t("detail.github") },
+].filter((link): link is { kind: string; href: string; label: string } => Boolean(link.href));
+---
+
+<dialog
+  open
+  class="app-detail"
+  data-close-href={listHref}
+  aria-labelledby="app-detail-title"
+  tabindex="-1"
+  lang={entry.lang === locale ? undefined : entry.lang}
+>
+  <div class="grabber-row" aria-hidden="true">
+    <span class="grabber"></span>
+  </div>
+  <div class="top-row">
+    <a href={listHref} class="close" aria-label={t("detail.close")} data-cursor="block">
+      <UiIcon name="x" size={16} />
+    </a>
+    <a href={listHref} class="back text-callout font-bold" data-cursor="block">
+      <UiIcon name="chevron-left" size={14} />
+      {t("detail.back")}
+    </a>
+  </div>
+
+  <Thumb
+    image={thumbnail}
+    alt=""
+    initial={initialOf(title, initial)}
+    widths={[350, 720, 1440]}
+    sizes="(min-width: 64rem) 720px, calc(100vw - 40px)"
+    class="aspect-[16/10] rounded-card"
+  />
+
+  <p class="mt-5 text-mono text-muted">
+    {formatMonth(date)} · {t("works.apps")}
+  </p>
+  <h1 id="app-detail-title" class="mt-2 text-title-l text-fg">
+    {title}
+  </h1>
+  <div class="prose mt-2 text-body text-fg">
+    <Content />
+  </div>
+
+  {links.length > 0 && (
+    <div class="mt-4 flex gap-2">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          target="_blank"
+          rel="noopener"
+          class:list={[
+            "link-button text-callout font-bold",
+            link.kind === "demo" ? "is-primary" : "is-secondary",
+          ]}
+          data-link={link.kind}
+          data-cursor="block"
+        >
+          {link.label}
+          <UiIcon name="arrow-up-right" size={14} />
+        </a>
+      ))}
+    </div>
+  )}
+
+  {stack.length > 0 && (
+    <section class="mt-5">
+      <h2 class="text-mono text-muted">{t("detail.stack")}</h2>
+      <ul class="mt-2 flex flex-wrap gap-3">
+        {stack.map((skill) => (
+          <li
+            class="tile"
+            role="img"
+            aria-label={brandIcons[skill].title}
+            title={brandIcons[skill].title}
+          >
+            <BrandIcon name={skill} size={22} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</dialog>
+
+<style>
+  /* Mobile: a second sheet stacked over the Works sheet and above the nav bar. */
+  .app-detail {
+    position: fixed;
+    inset: var(--sheet-top) 0 0;
+    z-index: 40;
+    width: 100%;
+    max-width: none;
+    height: auto;
+    max-height: none;
+    margin: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 max(var(--gutter-right), calc((100% - var(--ut-width-reading)) / 2))
+      calc(var(--bottom-inset) + 24px)
+      max(var(--gutter-left), calc((100% - var(--ut-width-reading)) / 2));
+    border: 0;
+    border-radius: var(--ut-radius-sheet) var(--ut-radius-sheet) 0 0;
+    background: var(--ut-color-surface);
+    color: inherit;
+    box-shadow: var(--ut-shadow-sheet);
+    view-transition-name: app-detail;
+  }
+
+  /* Opening moves focus to the sheet itself, not to the close button; no ring for that. */
+  .app-detail:focus-visible {
+    outline: none;
+  }
+
+  .app-detail::backdrop {
+    background: var(--ut-color-scrim);
+  }
+
+  .grabber-row {
+    display: flex;
+    justify-content: center;
+    padding-top: 8px;
+  }
+
+  .grabber {
+    width: 36px;
+    height: 5px;
+    border-radius: var(--ut-radius-full);
+    background: var(--ut-color-border);
+  }
+
+  .top-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 40px;
+    margin-bottom: 4px;
+  }
+
+  .close {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--ut-radius-full);
+    background: var(--ut-color-fill);
+  }
+
+  .back {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    height: 36px;
+    padding: 0 16px 0 12px;
+    border-radius: var(--ut-radius-full);
+    background: var(--ut-color-fill);
+  }
+
+  .prose :global(p + p) {
+    margin-top: 1em;
+  }
+
+  .link-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 16px;
+    border-radius: var(--ut-radius-full);
+  }
+
+  .link-button.is-primary {
+    background: var(--ut-color-fg);
+    color: var(--ut-color-bg);
+  }
+
+  .link-button.is-secondary {
+    border: 1px solid var(--ut-color-border);
+    color: var(--ut-color-fg);
+  }
+
+  .tile {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--ut-radius-row);
+    background: var(--ut-color-fill);
+  }
+
+  /* Desktop: the detail replaces the list in the page flow. */
+  @media (width >= 64rem) {
+    .app-detail {
+      position: static;
+      inset: auto;
+      overflow: visible;
+      padding: 0;
+      border-radius: 0;
+      background: none;
+      box-shadow: none;
+    }
+
+    .grabber-row,
+    .close {
+      display: none;
+    }
+
+    .top-row {
+      justify-content: flex-start;
+      height: auto;
+      margin-bottom: 24px;
+    }
+
+    .back {
+      display: inline-flex;
+    }
+  }
+</style>
+
+<script>
+  import { initDetailSheet } from "../scripts/detail-sheet";
+
+  initDetailSheet(document);
+</script>

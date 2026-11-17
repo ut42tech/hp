@@ -46,6 +46,7 @@
 ### Task 1: ページの整理
 
 **Interfaces:**
+
 - Produces: ページ `Archive — Canvas`（旧 `Direction`）、`Wireframe — Parts`、`Wireframe — Mobile`、`Wireframe — Desktop`。
 
 - [x] **Step 1: `Direction` を `Archive — Canvas` に改名し、新しいページを3つ作る。ページの並び順は Parts → Mobile → Desktop → Archive にする**
@@ -56,18 +57,19 @@
 ### Task 2: 部品（Wireframe — Parts）
 
 **Interfaces:**
+
 - Produces: 次のローカルコンポーネント。Task 3〜5 はこの名前でインスタンスを置く。
 
-| 部品 | プロパティ |
-| --- | --- |
-| `WF/TabBar` | `active` = none / about / works / press / contact |
-| `WF/Sheet` | `height` = half / full、テキスト `title`。中身を入れるスロット（auto layout の縦並び） |
-| `WF/Filter` | `active` = all / project / role / award / event |
-| `WF/Row` | `kind` = project / role / award / event、テキスト `date`・`title`・`summary`。project のときだけ左にサムネイルの枠 |
-| `WF/PressRow` | `kind` = article / video / talk / media、テキスト `date`・`title`・`source` |
-| `WF/Toolbar` | `active` = none / about / works / press |
-| `WF/Note` | 注記（青い文字の吹き出し）、テキスト `text` |
-| `WF/Arrow` | 画面と画面をつなぐ矢印（青） |
+| 部品          | プロパティ                                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `WF/TabBar`   | `active` = none / about / works / press / contact                                                                  |
+| `WF/Sheet`    | `height` = half / full、テキスト `title`。中身を入れるスロット（auto layout の縦並び）                             |
+| `WF/Filter`   | `active` = all / project / role / award / event                                                                    |
+| `WF/Row`      | `kind` = project / role / award / event、テキスト `date`・`title`・`summary`。project のときだけ左にサムネイルの枠 |
+| `WF/PressRow` | `kind` = article / video / talk / media、テキスト `date`・`title`・`source`                                        |
+| `WF/Toolbar`  | `active` = none / about / works / press                                                                            |
+| `WF/Note`     | 注記（青い文字の吹き出し）、テキスト `text`                                                                        |
+| `WF/Arrow`    | 画面と画面をつなぐ矢印（青）                                                                                       |
 
 - [x] **Step 1: `figma:figma-generate-library` を読み込み、上の部品を auto layout で作る。色・書体は Global Constraints のとおり**
 - [x] **Step 2: 検証（長い題名）**: `WF/Row` のインスタンスに `日本教育工学会（JSET）2024年春季全国大会 学生セッション優秀発表賞` を入れ、幅 358 で2行に折り返すこと、日付と目印が先頭行の位置に揃うことをスクリーンショットで確かめる。確かめたらインスタンスは消す
@@ -78,29 +80,32 @@
 ### Task 3: スマホのワイヤーフレーム
 
 **Interfaces:**
+
 - Consumes: Task 2 の部品。
 - Produces: `Wireframe — Mobile` ページ上の次のフレーム（すべて 390×844）。
 
 `M/Hello`、`M/About (half)`、`M/About (full)`、`M/Works (half)`、`M/Works (full)`、`M/Works detail (project)`、`M/Works detail (role)`、`M/Press (half)`、`M/Press (full)`、`M/Contact (half)`
 
 **並べ方**
+
 - 流れの順に横一列に並べる。
 - 各フレームの下に `WF/Note` で、次の画面へ移る操作を書く。
 - 移る先へ `WF/Arrow` を引く。
 
 **画面の中身**（設計書 5〜6 章に沿う）
 
-| フレーム | 中身 |
-| --- | --- |
-| M/Hello | 中央に `@ut42tech` と `hi.`。`WF/TabBar` active=none。注記: 「ハンドルに触れるとわずかに反応」「タブを押すとシートが半分の高さでせり上がる」 |
-| M/About (half / full) | 上に小さくなった `@ut42tech`（half のみ見える）。シートの中: 写真の枠（円）、`Takuya Uehara`、所属、自己紹介（仮）、モットー、活動・役職、技術のタグ |
-| M/Works (half / full) | シートの中: `WF/Filter`（左端 x=16）、`WF/Row` を新しい順に（full は8行以上）。project・role・award・event がすべて含まれるように並べる |
+| フレーム                 | 中身                                                                                                                                                                                                                                                              |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| M/Hello                  | 中央に `@ut42tech` と `hi.`。`WF/TabBar` active=none。注記: 「ハンドルに触れるとわずかに反応」「タブを押すとシートが半分の高さでせり上がる」                                                                                                                      |
+| M/About (half / full)    | 上に小さくなった `@ut42tech`（half のみ見える）。シートの中: 写真の枠（円）、`Takuya Uehara`、所属、自己紹介（仮）、モットー、活動・役職、技術のタグ                                                                                                              |
+| M/Works (half / full)    | シートの中: `WF/Filter`（左端 x=16）、`WF/Row` を新しい順に（full は8行以上）。project・role・award・event がすべて含まれるように並べる                                                                                                                           |
 | M/Works detail (project) | シートの上に重なる全画面の層。上半分に画像の枠、題名、日付、説明、使った技術、リンク。注記: 「一覧のサムネイルが広がる」「中身が一番上のときだけ下に払って閉じる」「画像を強く投げると画面外へ」「Safari の端スワイプ・戻るボタンでも閉じる（URL: /works/slug）」 |
-| M/Works detail (role) | 画像の枠なし。題名、期間、説明 |
-| M/Press (half / full) | `WF/PressRow` を4種類が含まれるように並べる |
-| M/Contact (half) | SNS 7つを大きめのボタンで2列、その下に `hello@ut42tech.com` |
+| M/Works detail (role)    | 画像の枠なし。題名、期間、説明                                                                                                                                                                                                                                    |
+| M/Press (half / full)    | `WF/PressRow` を4種類が含まれるように並べる                                                                                                                                                                                                                       |
+| M/Contact (half)         | SNS 7つを大きめのボタンで2列、その下に `hello@ut42tech.com`                                                                                                                                                                                                       |
 
 **注記を足すフレーム**
+
 - `M/Works (half)` の横: 「シートを開いたまま別のタブを押すと、その場で中身が入れ替わる」
 - `M/Works (full)` の横: 「取っ手と見出しだけが引き下ろしを受ける。一覧はシートの中だけでスクロール」
 
@@ -119,19 +124,20 @@
 ### Task 4: パソコンのワイヤーフレーム
 
 **Interfaces:**
+
 - Consumes: Task 2 の部品。
 - Produces: `Wireframe — Desktop` ページ上の次のフレーム（すべて 1440×900）。
 
 `D/Hello`、`D/About`、`D/Works (project)`、`D/Works (role)`、`D/Press`、`D/Contact (popover)`
 
-| フレーム | 中身 |
-| --- | --- |
-| D/Hello | `WF/Toolbar` active=none。その下の領域の中央に `@ut42tech` と `hi.` |
-| D/About | 読みやすい幅（720 前後）の1列を中央に。中身はスマホの About と同じ |
-| D/Works (project) | 左に一覧（幅 400 前後、上に `WF/Filter`）、右に詳細の分割ビュー。いちばん新しい作品が選ばれた状態。注記: 「Works を開いた直後は先頭を選択」「項目を選ぶと右がその場で切り替わる」 |
-| D/Works (role) | 同じ分割ビューで、役職を選んだ状態。右の詳細に画像の枠なし |
-| D/Press | 1列 |
-| D/Contact (popover) | D/Hello の上に、ツールバー右の Contact ボタンから出る吹き出し。中身は SNS 7つとメール |
+| フレーム            | 中身                                                                                                                                                                              |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D/Hello             | `WF/Toolbar` active=none。その下の領域の中央に `@ut42tech` と `hi.`                                                                                                               |
+| D/About             | 読みやすい幅（720 前後）の1列を中央に。中身はスマホの About と同じ                                                                                                                |
+| D/Works (project)   | 左に一覧（幅 400 前後、上に `WF/Filter`）、右に詳細の分割ビュー。いちばん新しい作品が選ばれた状態。注記: 「Works を開いた直後は先頭を選択」「項目を選ぶと右がその場で切り替わる」 |
+| D/Works (role)      | 同じ分割ビューで、役職を選んだ状態。右の詳細に画像の枠なし                                                                                                                        |
+| D/Press             | 1列                                                                                                                                                                               |
+| D/Contact (popover) | D/Hello の上に、ツールバー右の Contact ボタンから出る吹き出し。中身は SNS 7つとメール                                                                                             |
 
 - [x] **Step 1: 上の6フレームを作り、`WF/Note` と `WF/Arrow` で、ツールバーの切り替えとポップオーバーの開閉を注記する**
 - [x] **Step 2: 検証**: スクリプトで次を確かめる
