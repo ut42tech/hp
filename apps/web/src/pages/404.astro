@@ -1,0 +1,7 @@
+---
+// Vercel serves dist/404.html for any missing URL. It is in the default language until English is published.
+import { defaultLocale } from "../i18n/config";
+import NotFoundView from "../views/NotFoundView.astro";
+---
+
+<NotFoundView locale={defaultLocale} />

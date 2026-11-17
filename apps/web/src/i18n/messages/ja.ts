@@ -39,6 +39,9 @@ export const ja = {
   "about.copy": "メールアドレスをコピー",
   "about.copied": "コピーしました",
   "press.title": "Press",
+  "notFound.code": "404",
+  "notFound.title": "ページが見つかりません",
+  "notFound.home": "ホームへ戻る",
 } as const;
 
 export type MessageKey = keyof typeof ja;

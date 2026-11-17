@@ -23,6 +23,18 @@ test("apps cards link to their detail pages", () => {
   expect(hrefs.every((h) => /^\/ja\/works\/apps\/[\w-]+$/.test(h!))).toBe(true);
 });
 
+test.each(["apps", "career", "awards", "events"])(
+  "/ja/works/%s marks only outside links with ↗",
+  (c) => {
+    for (const a of loadPage(`/ja/works/${c}`).querySelectorAll("#works-list a")) {
+      const leaves = a.getAttribute("target") === "_blank";
+      expect(a.querySelector(".tabler-icon-arrow-up-right") !== null, a.getAttribute("href")!).toBe(
+        leaves,
+      );
+    }
+  },
+);
+
 test("/ja/works redirects to apps", () => {
   expect(readDist("ja/works/index.html")).toContain("/ja/works/apps");
 });

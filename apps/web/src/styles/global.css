@@ -20,6 +20,15 @@
     --row: 44px;
     --sheet-top: calc(var(--top-inset) + var(--row) + 8px);
     --nav-clearance: calc(var(--bottom-inset) + 8px + 48px + 24px);
+    --header-height-desktop: 76px;
+  }
+
+  /* Desktop: the page scrolls under the opaque header, so focus and in-page jumps stop below it
+     (WCAG 2.4.11, focus not obscured). */
+  @media (width >= 64rem) {
+    html {
+      scroll-padding-top: var(--header-height-desktop);
+    }
   }
 
   body {

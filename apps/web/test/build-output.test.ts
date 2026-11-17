@@ -16,6 +16,19 @@ test("sets the theme before first paint", () => {
   expect(scripts.some((s) => s.textContent.includes("ut42tech:theme"))).toBe(true);
 });
 
+test("the theme toggle ships every icon so CSS can show the stored one before hydration", () => {
+  const prefs = hello
+    .querySelectorAll("header .theme-icon")
+    .map((i) => i.getAttribute("data-pref"));
+  expect(prefs).toEqual(["auto", "light", "dark"]);
+  // Each state carries its own name, so the button is named correctly before hydration too.
+  expect(hello.querySelectorAll("header .theme-icon .sr-only").map((n) => n.textContent)).toEqual([
+    "表示: 自動",
+    "表示: ライト",
+    "表示: ダーク",
+  ]);
+});
+
 test("hello greets without selecting a nav item", () => {
   expect(hello.querySelector('[aria-label="Welcome."]')).not.toBeNull();
   expect(hello.querySelector('nav [aria-current="page"]')).toBeNull();

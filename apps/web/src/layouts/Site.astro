@@ -1,5 +1,7 @@
 ---
 import faviconUrl from "@ut42tech/assets/favicon.ico?url";
+// One share image for every page: the Hello screen at 1200×630, rendered from the site itself.
+import ogImageUrl from "@ut42tech/assets/og.png?url";
 import HelloStage from "../components/HelloStage.astro";
 import NavBar from "../components/NavBar.astro";
 import SiteHeader from "../components/SiteHeader.astro";
@@ -7,7 +9,7 @@ import { alternates, localizePath, type Locale } from "../i18n/config";
 import { mottoFor, useTranslations } from "../i18n/t";
 import "../styles/global.css";
 
-type Section = "hello" | "about" | "works" | "press";
+type Section = "hello" | "about" | "works" | "press" | "not-found";
 
 interface Props {
   locale: Locale;
@@ -26,6 +28,8 @@ const path =
   Astro.url.pathname.replace(new RegExp(`^/${locale}(?=/|$)`), "").replace(/(.)\/$/, "$1") || "/";
 // Search engines need absolute URLs for hreflang and canonical.
 const absolute = (href: string) => new URL(href, Astro.site).href;
+// The 404 page is served at any missing URL, so it has no address of its own to declare.
+const indexable = section !== "not-found";
 ---
 
 <!doctype html>
@@ -38,11 +42,22 @@ const absolute = (href: string) => new URL(href, Astro.site).href;
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:image" content={absolute(ogImageUrl)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href={faviconUrl} />
-    <link rel="canonical" href={absolute(localizePath(path, locale))} />
-    {alternates(path).map((link) => (
-      <link rel="alternate" hreflang={link.hreflang} href={absolute(link.href)} />
-    ))}
+    {indexable ? (
+      <>
+        <link rel="canonical" href={absolute(localizePath(path, locale))} />
+        {alternates(path).map((link) => (
+          <link rel="alternate" hreflang={link.hreflang} href={absolute(link.href)} />
+        ))}
+      </>
+    ) : (
+      <meta name="robots" content="noindex" />
+    )}
     <!-- Sets the theme before first paint. Keep the key and rules in sync with src/lib/theme.ts. -->
     <script is:inline>
       (() => {
@@ -53,9 +68,11 @@ const absolute = (href: string) => new URL(href, Astro.site).href;
           try {
             stored = localStorage.getItem(key);
           } catch {}
-          const theme =
-            stored === "light" || stored === "dark" ? stored : media.matches ? "dark" : "light";
-          document.documentElement.dataset.theme = theme;
+          const pref = stored === "light" || stored === "dark" ? stored : "auto";
+          const root = document.documentElement;
+          root.dataset.theme = pref === "auto" ? (media.matches ? "dark" : "light") : pref;
+          // Read by components/ThemeToggle.vue's CSS to show the right icon before it hydrates.
+          root.dataset.themePref = pref;
         };
         apply();
         media.addEventListener("change", apply);
@@ -71,7 +88,7 @@ const absolute = (href: string) => new URL(href, Astro.site).href;
       {t("skip")}
     </a>
     <SiteHeader locale={locale} />
-    {section !== "hello" && <HelloStage locale={locale} decorative />}
+    {section !== "hello" && section !== "not-found" && <HelloStage locale={locale} decorative />}
     <main id="content" data-section={section}>
       {section === "hello" && <HelloStage locale={locale} />}
       <slot />

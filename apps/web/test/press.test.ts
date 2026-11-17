@@ -9,6 +9,7 @@ test("press cards open outside", () => {
   for (const a of links) {
     expect(a.getAttribute("target")).toBe("_blank");
     expect(a.getAttribute("rel")).toContain("noopener");
+    expect(a.querySelector(".tabler-icon-arrow-up-right"), "↗").not.toBeNull();
   }
 });
 
