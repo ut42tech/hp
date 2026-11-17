@@ -17,6 +17,9 @@ export default defineNuxtConfig({
     public: { siteUrl: "https://ut42tech.com" },
   },
   nitro: {
+    // A plain static folder (vercel.json deploys .output/public). On Vercel, Nitro would otherwise pick its
+    // vercel-static output, which has no rule to answer missing URLs with 404.html.
+    preset: "static",
     prerender: {
       // Everything else is found by following links from these.
       routes: [

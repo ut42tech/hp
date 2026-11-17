@@ -1,7 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nuxtjs",
+  "framework": null,
   "buildCommand": "nuxt generate",
+  "outputDirectory": ".output/public",
   "redirects": [
     {
       "source": "/",

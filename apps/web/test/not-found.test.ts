@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { parse } from "node-html-parser";
 import { expect, test } from "vite-plus/test";
 import { readDist } from "./html";
@@ -19,4 +20,13 @@ test("is not indexed and claims no address of its own", () => {
   expect(page.querySelector('meta[name="robots"]')!.getAttribute("content")).toBe("noindex");
   expect(page.querySelector('link[rel="canonical"]')).toBeNull();
   expect(page.querySelector('link[rel="alternate"]')).toBeNull();
+});
+
+// Vercel answers missing URLs with 404.html only for a plain static folder; Nuxt's own Vercel output
+// carries no such rule and shows Vercel's generic page instead.
+test("Vercel deploys the static folder, so 404.html answers missing URLs", () => {
+  const config = JSON.parse(readFileSync(new URL("../vercel.json", import.meta.url), "utf8"));
+  expect(config).toMatchObject({ framework: null, outputDirectory: ".output/public" });
+  const nuxtConfig = readFileSync(new URL("../nuxt.config.ts", import.meta.url), "utf8");
+  expect(nuxtConfig).toMatch(/preset: "static"/);
 });
