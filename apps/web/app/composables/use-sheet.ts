@@ -58,7 +58,7 @@ export function useSheet(frame: () => HTMLElement | undefined): {
 
   function startDrag(event: PointerEvent) {
     const element = frame();
-    if (!narrow.value || !element) return;
+    if (!narrow.value || !element || !sheet.canGrab()) return;
     const height = () => element.offsetHeight;
     dragProgress(event, sheetProgress, height, ({ offsetPx, velocityPx }) => {
       const velocity = -velocityPx / height();

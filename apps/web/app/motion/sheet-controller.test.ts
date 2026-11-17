@@ -112,3 +112,16 @@ test("a drag release closes with the finger's speed", () => {
   sheet.navigate("/ja/", "hello"); // the address follows; no second close
   expect(animations).toHaveLength(1);
 });
+
+// Motion never settles an animation that a grab stops, so a sheet that is mid-switch or mid-close must not
+// be grabbed: its phase would never move on, leaving a dead tab bar or a sheet over Hello.
+test("only a sheet that is open can be grabbed", () => {
+  const sheet = sheetOn("/ja/about", "about");
+  expect(sheet.canGrab()).toBe(true);
+  sheet.navigate("/ja/works/apps", "works");
+  expect(sheet.canGrab()).toBe(false);
+  progress.set(0.02);
+  expect(sheet.canGrab()).toBe(true);
+  sheet.navigate("/ja/", "hello");
+  expect(sheet.canGrab()).toBe(false);
+});

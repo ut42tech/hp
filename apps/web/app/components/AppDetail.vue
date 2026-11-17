@@ -10,6 +10,7 @@ import { brandIcons } from "~/lib/icons";
 import type { Localized } from "~/lib/localized";
 import { formatMonth, initialOf } from "~/lib/works";
 import { applySheetMode } from "~/motion/dialog-mode";
+import { isPlainClick } from "~/motion/history";
 import BrandIcon from "./BrandIcon.vue";
 import Thumb from "./Thumb.vue";
 import UiIcon from "./UiIcon.vue";
@@ -54,6 +55,15 @@ function onHandle(event: PointerEvent) {
   if (dialog.value) emit("drag", event, dialog.value);
 }
 
+// The "back" capsule closes like every other way out (back or replace, so history does not grow);
+// without JavaScript, or with a modified click, it stays a plain link to the list. Capture runs before
+// NuxtLink's own click handler, which would otherwise navigate first.
+function onBack(event: MouseEvent) {
+  if (!isPlainClick(event)) return;
+  event.preventDefault();
+  emit("close");
+}
+
 function onCancel(event: Event) {
   event.preventDefault();
   emit("close");
@@ -82,7 +92,12 @@ function onCancel(event: Event) {
       @click="emit('close')"
     />
     <div class="top-row">
-      <NuxtLink :to="listHref()" class="back text-callout font-bold" data-cursor="block">
+      <NuxtLink
+        :to="listHref()"
+        class="back text-callout font-bold"
+        data-cursor="block"
+        @click.capture="onBack"
+      >
         <UiIcon name="chevron-left" :size="14" />
         {{ t("detail.back") }}
       </NuxtLink>
@@ -237,6 +252,14 @@ function onCancel(event: Event) {
   height: 48px;
   border-radius: var(--ut-radius-row);
   background: var(--ut-color-fill);
+}
+
+/* Reduced motion (design §8.10): the detail does not travel; the same 150ms progress fades it in and out. */
+@media (prefers-reduced-motion: reduce) and (width < 64rem) {
+  .app-detail {
+    translate: none;
+    opacity: var(--detail-progress, 1);
+  }
 }
 
 /* Desktop: the detail replaces the list in the page flow. */

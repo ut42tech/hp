@@ -8,3 +8,11 @@ export function closeAction(back: string | null | undefined, target: string): "b
 
 // Set while Safari's own back swipe is animating the page change, so ours does not play a second time.
 export const uaTransition = { skip: false };
+
+type ClickLike = Pick<MouseEvent, "button" | "metaKey" | "ctrlKey" | "shiftKey" | "altKey">;
+
+// A link that closes something takes over plain left clicks only; a modified click (new tab, new window)
+// keeps the link's own behaviour.
+export function isPlainClick(event: ClickLike): boolean {
+  return event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
+}

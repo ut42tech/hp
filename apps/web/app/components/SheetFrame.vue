@@ -2,6 +2,7 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { RECEDE } from "@ut42tech/tokens/motion";
 import { detailProgress, sheetProgress } from "~/composables/use-sheet";
+import { isOwnHandle } from "~/motion/handles";
 
 const emit = defineEmits<{ drag: [event: PointerEvent] }>();
 const el = ref<HTMLElement>();
@@ -27,9 +28,10 @@ onMounted(() => {
 });
 onBeforeUnmount(() => stops.forEach((stop) => stop()));
 
-// The grabber and the page heading are handles; the rest of the sheet scrolls.
+// The grabber and the page heading are handles; the rest of the sheet scrolls. Handles of the app detail
+// (a dialog inside this sheet) belong to the detail, not to this sheet.
 function onPointerDown(event: PointerEvent) {
-  if ((event.target as Element).closest("[data-sheet-handle]")) emit("drag", event);
+  if (el.value && isOwnHandle(event.target as Element, el.value)) emit("drag", event);
 }
 </script>
 
@@ -74,6 +76,15 @@ function onPointerDown(event: PointerEvent) {
   height: 5px;
   border-radius: var(--ut-radius-full);
   background: var(--ut-color-border);
+}
+
+/* Reduced motion (design §8.10): the sheet does not travel; the same 150ms progress fades it in and out. */
+@media (prefers-reduced-motion: reduce) and (width < 64rem) {
+  .sheet {
+    translate: none;
+    scale: none;
+    opacity: var(--sheet-progress, 1);
+  }
 }
 
 /* Desktop: no sheet, the content sits on the page below the toolbar. */

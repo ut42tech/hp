@@ -59,5 +59,9 @@ export function createDetailController(deps: DetailDeps, start: { slug: string |
     deps.leave();
   }
 
-  return { navigate, closeByUser, phase: () => phase };
+  // Motion never settles an animation that a grab stops, so a closing detail may not be grabbed: it would stay
+  // "closing" for good, a modal that no longer closes.
+  const canGrab = () => phase === "open";
+
+  return { navigate, closeByUser, canGrab, phase: () => phase };
 }

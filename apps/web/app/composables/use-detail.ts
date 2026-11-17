@@ -41,7 +41,7 @@ export function useDetail(
   watch(slug, (value) => detail.navigate(value ?? null));
 
   function startDrag(event: PointerEvent, sheet: HTMLElement) {
-    if (!narrow.value) return;
+    if (!narrow.value || !detail.canGrab()) return;
     const height = () => sheet.offsetHeight;
     dragProgress(event, detailProgress, height, ({ offsetPx, velocityPx }) => {
       const velocity = -velocityPx / height();

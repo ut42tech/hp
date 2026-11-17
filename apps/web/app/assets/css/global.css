@@ -70,3 +70,18 @@
   opacity: 0;
   translate: 0 8px;
 }
+
+/* Reduced motion (design §8.10): the new content only fades in, over 150ms, without rising. */
+@media (prefers-reduced-motion: reduce) {
+  .swap-leave-active {
+    transition: none;
+  }
+
+  .swap-enter-active {
+    transition: opacity 150ms linear;
+  }
+
+  .swap-enter-from {
+    translate: none;
+  }
+}
