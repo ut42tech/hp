@@ -134,7 +134,11 @@ const links = [
     outline: none;
   }
 
+  /* The backdrop is not a scroll container by default, so without these, scrolling over it moves the
+     page behind the sheet. */
   .app-detail::backdrop {
+    overflow: hidden;
+    overscroll-behavior: contain;
     background: var(--ut-color-scrim);
   }
 

@@ -48,14 +48,15 @@ function cycle() {
   <button
     type="button"
     class="grid size-11 place-items-center text-fg"
-    :aria-label="props.labels[pref]"
     data-cursor="block"
     @click="cycle"
   >
     <!-- All three are rendered and CSS picks one from [data-theme-pref], which the inline script in
-         layouts/Site.astro sets before first paint, so the icon is right before this component hydrates. -->
+         layouts/Site.astro sets before first paint, so the icon and the name are right before this
+         component hydrates. The hidden ones are display: none, so assistive tech reads only one name. -->
     <span v-for="(name, key) in icon" :key="key" class="theme-icon" :data-pref="key">
       <UiIcon :name="name" :size="20" />
+      <span class="sr-only">{{ props.labels[key] }}</span>
     </span>
   </button>
 </template>
