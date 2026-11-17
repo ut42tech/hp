@@ -14,10 +14,12 @@ import { categories, type Category } from "~/lib/works";
 
 definePageMeta({
   validate: (route) => categories.includes(route.params.category as Category),
+  // One page for every category, so switching categories swaps only the list (not the whole sheet).
+  key: (route) => `works:${String(route.params.locale)}`,
 });
 
 const route = useRoute();
-const category = route.params.category as Category;
+const category = computed(() => route.params.category as Category);
 const locale = useLocale();
 const t = useT();
 const counts = await useWorkCounts(locale);
@@ -28,7 +30,7 @@ const detail = computed(() =>
 // With an app detail open, the detail's title is the page heading.
 const hasDetail = computed(() => Boolean(route.params.slug));
 if (hasDetail.value && !detail.value) throw createError({ statusCode: 404, fatal: true });
-usePageMeta({ title: () => detail.value?.title ?? t.value(`works.${category}`) });
+usePageMeta({ title: () => detail.value?.title ?? t.value(`works.${category.value}`) });
 
 function closeDetail() {
   return navigateTo(localizePath("/works/apps", locale.value));
@@ -37,11 +39,13 @@ function closeDetail() {
 
 <template>
   <div class="flex flex-col gap-3 lg:gap-0">
-    <PageHead :title="t('nav.works')" :as="hasDetail ? 'h2' : 'h1'" show="mobile" />
+    <PageHead :title="t('nav.works')" :as="hasDetail ? 'h2' : 'h1'" show="mobile" handle />
     <WorksNav :current="category" :counts="counts" />
     <div class="works-region" :class="{ 'has-detail': hasDetail }">
       <div class="works-column">
-        <WorksList :category="category" />
+        <Transition name="swap" mode="out-in">
+          <WorksList :key="category" :category="category" />
+        </Transition>
       </div>
     </div>
     <div v-if="detail" class="detail-region">

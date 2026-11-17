@@ -27,6 +27,7 @@ const brandOf = (source: string): BrandIconName | undefined =>
       :title="t('press.title')"
       :count="items.length"
       sort-list="press-list"
+      handle
     />
     <ul id="press-list" class="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6">
       <li v-for="entry in sorted" :key="entry.slug">

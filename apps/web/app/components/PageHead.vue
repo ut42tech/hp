@@ -13,8 +13,10 @@ const props = withDefaults(
     count?: number;
     // Id of the list the sort button reorders; the button appears when this is set.
     sortList?: string;
+    // The sheet's top heading: on phones, dragging it moves the sheet.
+    handle?: boolean;
   }>(),
-  { as: "h1", show: "both", count: undefined, sortList: undefined },
+  { as: "h1", show: "both", count: undefined, sortList: undefined, handle: false },
 );
 const order = defineModel<SortOrder>("order", { default: "newest" });
 const t = useT();
@@ -22,7 +24,7 @@ const hasMeta = computed(() => props.count !== undefined || props.sortList !== u
 </script>
 
 <template>
-  <div class="page-head">
+  <div class="page-head" :data-sheet-handle="handle || undefined">
     <component
       :is="as"
       class="text-title-l text-fg"

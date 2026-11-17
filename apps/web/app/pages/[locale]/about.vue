@@ -18,7 +18,7 @@ usePageMeta({ title: () => t.value("about.title") });
 
 <template>
   <div class="about">
-    <PageHead :title="t('about.title')" />
+    <PageHead :title="t('about.title')" handle />
     <div class="identity">
       <!-- The photo comes from packages/assets (nuxt.config.ts image.dirs). -->
       <NuxtImg src="/profile.jpg" alt="" sizes="96px lg:144px" class="photo" />
