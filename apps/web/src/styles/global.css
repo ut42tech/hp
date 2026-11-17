@@ -1,8 +1,53 @@
 @import "tailwindcss";
 @import "@ut42tech/tokens/theme.css";
+@import "@fontsource/line-seed-jp/400.css";
+@import "@fontsource/line-seed-jp/700.css";
+@import "@fontsource/line-seed-jp/800.css";
+@import "@fontsource/geist-mono/400.css";
+
+/* Page-to-page continuity uses the browser's own cross-document transitions (no client router). */
+@view-transition {
+  navigation: auto;
+}
 
 @layer base {
+  :root {
+    /* Safe areas (visual spec §7): never closer than 12px to the top or bottom edge. */
+    --top-inset: max(env(safe-area-inset-top), 12px);
+    --bottom-inset: max(env(safe-area-inset-bottom), 12px);
+    --gutter-left: calc(20px + env(safe-area-inset-left));
+    --gutter-right: calc(20px + env(safe-area-inset-right));
+    --row: 44px;
+    --sheet-top: calc(var(--top-inset) + var(--row) + 8px);
+    --nav-clearance: calc(var(--bottom-inset) + 8px + 48px + 24px);
+  }
+
   body {
-    @apply bg-bg text-fg font-sans;
+    @apply bg-bg font-sans text-fg;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ut-color-fg);
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .sr-only-until-focus:not(:focus) {
+    @apply sr-only;
+  }
+}
+
+/* Reduced motion: no movement between pages, only a short fade (visual spec §9.4).
+   Kept outside @layer so it wins over the default transitions. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*) {
+    animation-duration: 0s;
+  }
+
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 150ms;
   }
 }

@@ -1,0 +1,81 @@
+---
+import faviconUrl from "@ut42tech/assets/favicon.ico?url";
+import HelloStage from "../components/HelloStage.astro";
+import NavBar from "../components/NavBar.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import { alternates, localizePath, type Locale } from "../i18n/config";
+import { mottoFor, useTranslations } from "../i18n/t";
+import "../styles/global.css";
+
+type Section = "hello" | "about" | "works" | "press";
+
+interface Props {
+  locale: Locale;
+  section: Section;
+  title?: string;
+  description?: string;
+}
+
+const { locale, section, title, description } = Astro.props;
+const t = useTranslations(locale);
+const siteName = t("site.name");
+const pageTitle = title ? `${title} — ${siteName}` : siteName;
+const pageDescription = description ?? mottoFor(locale);
+// Path without the locale prefix or a trailing slash, e.g. "/ja/about/" → "/about".
+const path =
+  Astro.url.pathname.replace(new RegExp(`^/${locale}(?=/|$)`), "").replace(/(.)\/$/, "$1") || "/";
+// Search engines need absolute URLs for hreflang and canonical.
+const absolute = (href: string) => new URL(href, Astro.site).href;
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href={faviconUrl} />
+    <link rel="canonical" href={absolute(localizePath(path, locale))} />
+    {alternates(path).map((link) => (
+      <link rel="alternate" hreflang={link.hreflang} href={absolute(link.href)} />
+    ))}
+    <!-- Sets the theme before first paint. Keep the key and rules in sync with src/lib/theme.ts. -->
+    <script is:inline>
+      (() => {
+        const key = "ut42tech:theme";
+        const media = matchMedia("(prefers-color-scheme: dark)");
+        const apply = () => {
+          let stored = null;
+          try {
+            stored = localStorage.getItem(key);
+          } catch {}
+          const theme =
+            stored === "light" || stored === "dark" ? stored : media.matches ? "dark" : "light";
+          document.documentElement.dataset.theme = theme;
+        };
+        apply();
+        media.addEventListener("change", apply);
+      })();
+    </script>
+  </head>
+  <body>
+    <a
+      href="#content"
+      class="sr-only-until-focus fixed top-2 left-2 z-50 bg-surface p-2"
+      data-cursor="block"
+    >
+      {t("skip")}
+    </a>
+    <SiteHeader locale={locale} />
+    {section !== "hello" && <HelloStage locale={locale} decorative />}
+    <main id="content" data-section={section}>
+      {section === "hello" && <HelloStage locale={locale} />}
+      <slot />
+    </main>
+    <NavBar locale={locale} current={section} />
+  </body>
+</html>

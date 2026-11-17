@@ -11,16 +11,22 @@
   },
   "dependencies": {
     "@astrojs/vue": "^7.1.6",
+    "@fontsource/geist-mono": "5.3.0",
+    "@fontsource/line-seed-jp": "5.3.2",
+    "@tabler/icons-vue": "3.52.0",
     "@tailwindcss/vite": "^4.3.5",
     "@ut42tech/assets": "workspace:*",
     "@ut42tech/profile": "workspace:*",
     "@ut42tech/tokens": "workspace:*",
     "astro": "^7.4.12",
+    "simple-icons": "16.38.0",
+    "simple-icons-11": "npm:simple-icons@11.0.0",
     "tailwindcss": "^4.3.5",
     "vue": "^3.5.45"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "node-html-parser": "^9.0.7",
     "typescript": "^6.0.3",
     "vue-tsc": "^3.3.14"
   }

@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { publishedLocales, type Locale } from "../../../../i18n/config";
+import { getWorks } from "../../../../lib/content";
+import type { Localized } from "../../../../lib/localized";
+import AppDetailView from "../../../../views/AppDetailView.astro";
+
+export async function getStaticPaths() {
+  const paths = await Promise.all(
+    publishedLocales.map(async (locale) =>
+      (await getWorks("apps", locale)).map((entry) => ({
+        params: { locale, slug: entry.slug },
+        props: { entry },
+      })),
+    ),
+  );
+  return paths.flat();
+}
+
+const { locale } = Astro.params as { locale: Locale };
+const { entry } = Astro.props as { entry: Localized<CollectionEntry<"apps">> };
+---
+
+<AppDetailView entry={entry} locale={locale} />
