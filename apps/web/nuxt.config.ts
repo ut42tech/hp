@@ -16,9 +16,17 @@ export default defineNuxtConfig({
   },
   nitro: {
     prerender: {
-      routes: ["/", "/ja/", "/404.html"],
+      routes: ["/", "/ja/", "/404"],
       crawlLinks: true,
       failOnError: true,
+    },
+    hooks: {
+      // Nuxt's own 404.html is an empty client-only shell; write the rendered not-found page there instead,
+      // so it reads without JavaScript and carries its noindex.
+      "prerender:generate"(route) {
+        if (route.route === "/404.html") route.skip = true;
+        if (route.route === "/404") route.fileName = "/404.html";
+      },
     },
   },
   image: {

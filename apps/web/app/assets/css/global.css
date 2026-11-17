@@ -5,11 +5,6 @@
 @import "@fontsource/line-seed-jp/800.css";
 @import "@fontsource/geist-mono/400.css";
 
-/* Page-to-page continuity uses the browser's own cross-document transitions (no client router). */
-@view-transition {
-  navigation: auto;
-}
-
 @layer base {
   :root {
     /* Safe areas (visual spec §7): never closer than 12px to the top or bottom edge. */
@@ -45,18 +40,5 @@
 @layer utilities {
   .sr-only-until-focus:not(:focus) {
     @apply sr-only;
-  }
-}
-
-/* Reduced motion: no movement between pages, only a short fade (visual spec §9.4).
-   Kept outside @layer so it wins over the default transitions. */
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*) {
-    animation-duration: 0s;
-  }
-
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation-duration: 150ms;
   }
 }
