@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { NuxtPage } from "#components";
-import { createError, definePageMeta, navigateTo, useRoute } from "#imports";
+import { createError, definePageMeta, useRoute } from "#imports";
 import AppDetail from "~/components/AppDetail.vue";
 import PageHead from "~/components/PageHead.vue";
 import WorksList from "~/components/WorksList.vue";
 import WorksNav from "~/components/WorksNav.vue";
+import { useDetail } from "~/composables/use-detail";
 import { useLocale, useT } from "~/composables/use-locale";
 import { usePageMeta } from "~/composables/use-page-meta";
 import { useWorkCounts, useWorks } from "~/composables/use-works";
@@ -24,17 +25,17 @@ const locale = useLocale();
 const t = useT();
 const counts = await useWorkCounts(locale);
 const apps = await useWorks("apps", locale);
-const detail = computed(() =>
-  route.params.slug ? apps.value.find((entry) => entry.slug === route.params.slug) : undefined,
-);
-// With an app detail open, the detail's title is the page heading.
-const hasDetail = computed(() => Boolean(route.params.slug));
-if (hasDetail.value && !detail.value) throw createError({ statusCode: 404, fatal: true });
-usePageMeta({ title: () => detail.value?.title ?? t.value(`works.${category.value}`) });
-
-function closeDetail() {
-  return navigateTo(localizePath("/works/apps", locale.value));
+const slug = computed(() => route.params.slug as string | undefined);
+if (slug.value && !apps.value.some((entry) => entry.slug === slug.value)) {
+  throw createError({ statusCode: 404, fatal: true });
 }
+const listPath = computed(() => localizePath("/works/apps", locale.value));
+// The detail on screen can lag the address while it slides away.
+const { shownSlug, startDrag, close } = useDetail(slug, listPath);
+const detail = computed(() => apps.value.find((entry) => entry.slug === shownSlug.value));
+// With an app detail open, the detail's title is the page heading.
+const hasDetail = computed(() => Boolean(detail.value));
+usePageMeta({ title: () => detail.value?.title ?? t.value(`works.${category.value}`) });
 </script>
 
 <template>
@@ -50,7 +51,7 @@ function closeDetail() {
     </div>
     <div v-if="detail" class="detail-region">
       <div class="detail-column">
-        <AppDetail :entry="detail" @close="closeDetail" />
+        <AppDetail :entry="detail" @close="close" @drag="startDrag" />
       </div>
     </div>
     <NuxtPage />

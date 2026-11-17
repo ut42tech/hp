@@ -1,22 +1,31 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import { sheetProgress } from "~/composables/use-sheet";
+import { RECEDE } from "@ut42tech/tokens/motion";
+import { detailProgress, sheetProgress } from "~/composables/use-sheet";
 
-// Pushed back behind a sheet stacked on top of it (mobile app detail). Nothing behind needs `inert`:
-// the detail opens as a modal dialog, which makes the rest of the page inert on its own.
-defineProps<{ receded?: boolean }>();
 const emit = defineEmits<{ drag: [event: PointerEvent] }>();
 const el = ref<HTMLElement>();
 defineExpose({ el });
 
-// The CSS turns this into the sheet's position on phones and ignores it on wide screens.
-let stop: (() => void) | undefined;
+// The CSS turns these into the sheet's position on phones and ignores them on wide screens.
+const setPosition = (value: number) =>
+  el.value?.style.setProperty("--sheet-progress", String(value));
+// Pushed back behind the app detail as it opens: narrower on each side, top edge lifted. Nothing behind
+// needs `inert`: the detail opens as a modal dialog, which makes the rest of the page inert on its own.
+function setRecede(value: number) {
+  const amount = Math.min(Math.max(value, 0), 1);
+  const scale = 1 - ((2 * RECEDE.insetPx) / window.innerWidth) * amount;
+  el.value?.style.setProperty("--recede-scale", String(scale));
+  el.value?.style.setProperty("--recede-lift", `${RECEDE.liftPx * amount}px`);
+}
+
+const stops: (() => void)[] = [];
 onMounted(() => {
-  const set = (value: number) => el.value?.style.setProperty("--sheet-progress", String(value));
-  set(sheetProgress.get());
-  stop = sheetProgress.on("change", set);
+  setPosition(sheetProgress.get());
+  setRecede(detailProgress.get());
+  stops.push(sheetProgress.on("change", setPosition), detailProgress.on("change", setRecede));
 });
-onBeforeUnmount(() => stop?.());
+onBeforeUnmount(() => stops.forEach((stop) => stop()));
 
 // The grabber and the page heading are handles; the rest of the sheet scrolls.
 function onPointerDown(event: PointerEvent) {
@@ -25,7 +34,7 @@ function onPointerDown(event: PointerEvent) {
 </script>
 
 <template>
-  <section ref="el" class="sheet" :class="{ 'is-receded': receded }" @pointerdown="onPointerDown">
+  <section ref="el" class="sheet" @pointerdown="onPointerDown">
     <div class="grabber-row" aria-hidden="true" data-sheet-handle>
       <span class="grabber" />
     </div>
@@ -49,13 +58,9 @@ function onPointerDown(event: PointerEvent) {
   border-radius: var(--ut-radius-sheet) var(--ut-radius-sheet) 0 0;
   background: var(--ut-color-surface);
   box-shadow: var(--ut-shadow-sheet);
-  translate: 0 calc((1 - var(--sheet-progress, 1)) * 100%);
-}
-
-.sheet.is-receded {
-  inset-inline: 12px;
-  top: calc(var(--sheet-top) - 10px);
-  overflow: hidden;
+  transform-origin: top center;
+  translate: 0 calc((1 - var(--sheet-progress, 1)) * 100% - var(--recede-lift, 0px));
+  scale: var(--recede-scale, 1);
 }
 
 .grabber-row {
@@ -81,6 +86,7 @@ function onPointerDown(event: PointerEvent) {
     background: none;
     box-shadow: none;
     translate: none;
+    scale: none;
   }
 
   .grabber-row {

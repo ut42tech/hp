@@ -15,8 +15,6 @@ const hasSheet = computed(() => ["about", "works", "press"].includes(section.val
 
 const frame = ref<InstanceType<typeof SheetFrame>>();
 const { shownRoute, startDrag } = useSheet(() => frame.value?.el);
-// An app detail is open on top of the Works sheet.
-const receded = computed(() => Boolean(shownRoute.value?.params.slug));
 
 // On phones the sheet itself moves between tabs; elsewhere the page swaps in place.
 const narrow = useNarrow();
@@ -28,7 +26,7 @@ const pageTransition = computed(() =>
 
 <template>
   <SiteShell :section="section">
-    <SheetFrame v-if="shownRoute" ref="frame" :receded="receded" @drag="startDrag">
+    <SheetFrame v-if="shownRoute" ref="frame" @drag="startDrag">
       <NuxtPage :route="shownRoute" :transition="pageTransition" />
     </SheetFrame>
     <!-- Hello and 404 have no sheet; their page only declares the head. -->

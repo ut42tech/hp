@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { ContentRenderer, NuxtLink } from "#components";
 import { useLocale, useT } from "~/composables/use-locale";
 import { useNarrow } from "~/composables/use-narrow";
+import { detailProgress } from "~/composables/use-sheet";
 import type { WorkEntry } from "~/composables/use-works";
 import { localizePath } from "~/i18n/config";
 import { brandIcons } from "~/lib/icons";
@@ -14,7 +15,7 @@ import Thumb from "./Thumb.vue";
 import UiIcon from "./UiIcon.vue";
 
 const props = defineProps<{ entry: Localized<WorkEntry<"apps">> }>();
-const emit = defineEmits<{ close: [] }>();
+const emit = defineEmits<{ close: []; drag: [event: PointerEvent, sheet: HTMLDialogElement] }>();
 const locale = useLocale();
 const t = useT();
 const narrow = useNarrow();
@@ -26,8 +27,16 @@ const links = () =>
     { kind: "github", href: props.entry.github, label: t.value("detail.github") },
   ].filter((link): link is { kind: string; href: string; label: string } => Boolean(link.href));
 
+// The CSS turns this into the sheet's position and the scrim on phones, and ignores it on wide screens.
+const setProgress = (value: number) =>
+  dialog.value?.style.setProperty("--detail-progress", String(value));
+let stopProgress: (() => void) | undefined;
+onBeforeUnmount(() => stopProgress?.());
+
 // The mode follows the width, so rotating a tablet or resizing a window across 1024px stays correct.
 onMounted(() => {
+  setProgress(detailProgress.get());
+  stopProgress = detailProgress.on("change", setProgress);
   watch(
     narrow,
     (isNarrow) => {
@@ -39,6 +48,11 @@ onMounted(() => {
     { immediate: true },
   );
 });
+
+// The grabber and the image drag the sheet; the rest scrolls.
+function onHandle(event: PointerEvent) {
+  if (dialog.value) emit("drag", event, dialog.value);
+}
 
 function onCancel(event: Event) {
   event.preventDefault();
@@ -56,7 +70,7 @@ function onCancel(event: Event) {
     :lang="entry.lang === locale ? undefined : entry.lang"
     @cancel="onCancel"
   >
-    <div class="grabber-row" aria-hidden="true">
+    <div class="grabber-row" aria-hidden="true" data-sheet-handle @pointerdown="onHandle">
       <span class="grabber" />
     </div>
     <button
@@ -75,11 +89,13 @@ function onCancel(event: Event) {
     </div>
 
     <Thumb
+      data-sheet-handle
       :src="entry.thumbnail"
       alt=""
       :initial="initialOf(entry.title, entry.initial)"
       sizes="100vw lg:720px"
       class="aspect-[16/10] rounded-card"
+      @pointerdown="onHandle"
     />
 
     <p class="mt-5 text-mono text-muted">{{ formatMonth(entry.date) }} · {{ t("works.apps") }}</p>
@@ -124,10 +140,11 @@ function onCancel(event: Event) {
 </template>
 
 <style scoped>
-/* Mobile: a second sheet stacked over the Works sheet and above the nav bar. */
+/* Mobile: a second sheet stacked over the Works sheet and above the nav bar. It reaches 80px below the
+   screen so a spring that settles a hair past fully open never shows a gap under it. */
 .app-detail {
   position: fixed;
-  inset: var(--sheet-top) 0 0;
+  inset: var(--sheet-top) 0 -80px;
   z-index: 40;
   width: 100%;
   max-width: none;
@@ -137,14 +154,14 @@ function onCancel(event: Event) {
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 0 max(var(--gutter-right), calc((100% - var(--ut-width-reading)) / 2))
-    calc(var(--bottom-inset) + 24px)
+    calc(var(--bottom-inset) + 24px + 80px)
     max(var(--gutter-left), calc((100% - var(--ut-width-reading)) / 2));
   border: 0;
   border-radius: var(--ut-radius-sheet) var(--ut-radius-sheet) 0 0;
   background: var(--ut-color-surface);
   color: inherit;
   box-shadow: var(--ut-shadow-sheet);
-  view-transition-name: app-detail;
+  translate: 0 calc((1 - var(--detail-progress, 1)) * 100%);
 }
 
 /* Opening moves focus to the sheet itself, not to the close button; no ring for that. */
@@ -158,6 +175,8 @@ function onCancel(event: Event) {
   overflow: hidden;
   overscroll-behavior: contain;
   background: var(--ut-color-scrim);
+  /* The scrim deepens as the sheet rises (::backdrop reads the dialog's custom properties). */
+  opacity: clamp(0, var(--detail-progress, 1), 1);
 }
 
 .grabber-row {
@@ -230,6 +249,7 @@ function onCancel(event: Event) {
     border-radius: 0;
     background: none;
     box-shadow: none;
+    translate: none;
   }
 
   .grabber-row {
