@@ -22,3 +22,8 @@ export function pickLocalized<T extends { id: string }>(
     return entry ? [{ ...entry, slug, lang }] : [];
   });
 }
+
+// Nuxt Content names entries by their path ("apps/ja/coto2-ba"); drop the collection to get "<lang>/<slug>".
+export function entryId(stem: string): string {
+  return stem.split("/").slice(1).join("/");
+}
