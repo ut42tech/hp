@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { parse } from "node-html-parser";
 import { expect, test } from "vite-plus/test";
 import { readDist } from "./html";
@@ -29,4 +29,10 @@ test("Vercel deploys the static folder, so 404.html answers missing URLs", () =>
   expect(config).toMatchObject({ framework: null, outputDirectory: ".output/public" });
   const nuxtConfig = readFileSync(new URL("../nuxt.config.ts", import.meta.url), "utf8");
   expect(nuxtConfig).toMatch(/preset: "static"/);
+});
+
+// Static hosts serve 200.html for every missing URL (a client-only fallback); with it present, a wrong
+// address would answer 200 with an empty shell instead of the 404 page.
+test("there is no catch-all 200.html", () => {
+  expect(existsSync(new URL("../.output/public/200.html", import.meta.url))).toBe(false);
 });

@@ -34,10 +34,11 @@ export default defineNuxtConfig({
       failOnError: true,
     },
     hooks: {
-      // Nuxt's own 404.html is an empty client-only shell; write the rendered not-found page there instead,
-      // so it reads without JavaScript and carries its noindex.
+      // Nuxt's own 404.html and 200.html are empty client-only shells. Every page is prerendered, so neither
+      // is needed: 200.html would make the host answer any missing URL with 200, and 404.html is replaced by
+      // the rendered not-found page, which reads without JavaScript and carries its noindex.
       "prerender:generate"(route) {
-        if (route.route === "/404.html") route.skip = true;
+        if (route.route === "/404.html" || route.route === "/200.html") route.skip = true;
         if (route.route === "/404") route.fileName = "/404.html";
       },
     },
