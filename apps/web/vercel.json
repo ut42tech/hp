@@ -1,8 +1,22 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nuxtjs",
+  "buildCommand": "nuxt generate",
   "redirects": [
-    { "source": "/", "destination": "/ja/", "permanent": false },
-    { "source": "/:locale(ja|en)/works", "destination": "/:locale/works/apps", "permanent": false },
-    { "source": "/:locale(ja|en)/works/", "destination": "/:locale/works/apps", "permanent": false }
+    {
+      "source": "/",
+      "destination": "/ja/",
+      "permanent": false
+    },
+    {
+      "source": "/:locale(ja|en)/works",
+      "destination": "/:locale/works/apps",
+      "permanent": false
+    },
+    {
+      "source": "/:locale(ja|en)/works/",
+      "destination": "/:locale/works/apps",
+      "permanent": false
+    }
   ]
 }
