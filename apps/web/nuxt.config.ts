@@ -1,6 +1,7 @@
 import { fileURLToPath } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 import { defineNuxtConfig } from "nuxt/config";
+import { localizePath, publishedLocales } from "./app/i18n/config";
 
 export default defineNuxtConfig({
   compatibilityDate: "2026-11-01",
@@ -17,7 +18,15 @@ export default defineNuxtConfig({
   },
   nitro: {
     prerender: {
-      routes: ["/", "/ja/", "/404"],
+      // Everything else is found by following links from these.
+      routes: [
+        "/",
+        "/404",
+        ...publishedLocales.flatMap((locale) => [
+          localizePath("/", locale),
+          localizePath("/works", locale),
+        ]),
+      ],
       crawlLinks: true,
       failOnError: true,
     },
