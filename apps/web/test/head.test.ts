@@ -42,3 +42,12 @@ test("reduced motion swaps page transitions for a short fade, outside any layer"
   expect(enclosing).toEqual(["@media (prefers-reduced-motion: reduce)"]);
   expect(css.slice(at, css.indexOf("}", at))).toContain("150ms");
 });
+
+test.each(routes)("%s: shares the large image at an absolute URL", (route) => {
+  const page = loadPage(route);
+  const image = page.querySelector('meta[property="og:image"]')!.getAttribute("content")!;
+  expect(image).toMatch(/^https:\/\/ut42tech\.com\/.+\.png$/);
+  expect(page.querySelector('meta[name="twitter:card"]')!.getAttribute("content")).toBe(
+    "summary_large_image",
+  );
+});
