@@ -43,3 +43,9 @@ test("while the theme switches, the whole page is one snapshot without a cross-f
     /:root\.theme-switching::view-transition-old\(root\),\s*:root\.theme-switching::view-transition-new\(root\) \{[^}]*animation: none;[^}]*mix-blend-mode: normal/,
   );
 });
+
+// The owner's call (2026-11-18): a slow start that gathers pace, over a full second.
+test("the circle grows over 1000ms with an ease-in", () => {
+  expect(THEME_SWITCH.durationMs).toBe(1000);
+  expect(THEME_SWITCH.ease).toBe("ease-in");
+});

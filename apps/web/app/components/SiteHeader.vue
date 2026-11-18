@@ -8,10 +8,7 @@ import ThemeToggle from "./ThemeToggle.vue";
 
 const locale = useLocale();
 const t = useT();
-const labels = computed(() => ({
-  light: t.value("theme.light"),
-  dark: t.value("theme.dark"),
-}));
+const themeLabel = computed(() => t.value("theme.dark-mode"));
 </script>
 
 <template>
@@ -25,7 +22,7 @@ const labels = computed(() => ({
     </NuxtLink>
     <div class="flex items-center">
       <LocaleSwitch />
-      <ThemeToggle :labels="labels" />
+      <ThemeToggle :label="themeLabel" />
     </div>
   </header>
 </template>

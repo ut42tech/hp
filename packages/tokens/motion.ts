@@ -53,6 +53,7 @@ export const INTRO = {
 
 // The --ut-ease-* curves as numbers, for animations started from script.
 export const EASE = {
+  "ease-in": [0.32, 0, 0.67, 0],
   "ease-out": [0.2, 0.8, 0.2, 1],
   "ease-rise": [0.2, 1, 0.3, 1],
   "ease-curtain": [0.76, 0, 0.24, 1],
@@ -70,5 +71,11 @@ export const GREETING = {
 } as const;
 
 // Switching between light and dark: the new theme grows from the toggle as a circle with a soft edge
-// (`feather` is the share of its radius that fades out).
-export const THEME_SWITCH = { durationMs: 800, feather: 0.25, ease: "ease-out" } as const;
+// (`feather` is the share of its radius that fades out). It starts slowly and gathers pace (the owner's call).
+// `iconMs` is how long the toggle's sun takes to turn into the moon and back.
+export const THEME_SWITCH = {
+  durationMs: 1000,
+  feather: 0.25,
+  ease: "ease-in",
+  iconMs: 500,
+} as const;

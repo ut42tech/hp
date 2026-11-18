@@ -1,5 +1,5 @@
 import { expect, test } from "vite-plus/test";
-import { otherTheme, readStoredTheme, resolveTheme, storeTheme } from "./theme";
+import { applyTheme, otherTheme, readStoredTheme, resolveTheme, storeTheme } from "./theme";
 
 const throwing = {
   getItem: () => {
@@ -47,4 +47,19 @@ test("storing the OS's own theme removes the key; the other one is kept", () => 
 test("storeTheme swallows storage errors", () => {
   expect(() => storeTheme(throwing, "dark", "light")).not.toThrow();
   expect(() => storeTheme(throwing, "dark", "dark")).not.toThrow();
+});
+
+// The tokens read [data-theme]; the animated toggle (@theme-toggles/vue) reads a `.dark` class on the root.
+test("applyTheme sets data-theme and the dark class together", () => {
+  const classes = new Set<string>();
+  const root = {
+    dataset: {} as DOMStringMap,
+    classList: {
+      toggle: (name: string, on: boolean) => (on ? classes.add(name) : classes.delete(name)),
+    },
+  };
+  applyTheme(root, "dark");
+  expect([root.dataset.theme, classes.has("dark")]).toEqual(["dark", true]);
+  applyTheme(root, "light");
+  expect([root.dataset.theme, classes.has("dark")]).toEqual(["light", false]);
 });

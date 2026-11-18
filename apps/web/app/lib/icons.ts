@@ -6,8 +6,6 @@ import {
   IconDeviceDesktop,
   IconLanguage,
   IconMail,
-  IconMoon,
-  IconSun,
   IconX,
 } from "@tabler/icons-vue";
 import type { SocialIcon } from "@ut42tech/profile";
@@ -41,8 +39,6 @@ export type UiIconName =
   | "x"
   | "arrow-up-right"
   | "arrows-sort"
-  | "sun"
-  | "moon"
   | "device-desktop"
   | "copy"
   | "mail"
@@ -70,8 +66,6 @@ export const uiIcons: Record<UiIconName, Component> = {
   x: IconX,
   "arrow-up-right": IconArrowUpRight,
   "arrows-sort": IconArrowsSort,
-  sun: IconSun,
-  moon: IconMoon,
   "device-desktop": IconDeviceDesktop,
   copy: IconCopy,
   mail: IconMail,

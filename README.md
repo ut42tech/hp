@@ -130,6 +130,7 @@ Nuxt 4 で全 URL を静的に書き出し（`nuxt generate`、出力は `apps/w
   - 同じタブでもう一度見たいときは、`sessionStorage` の `ut42tech:intro` を消す。
 - **あいさつ**: 「Welcome.」の文字がポインターに寄り、押すと弾む（`app/motion/greeting.ts`）。
 - **ポインター**: パソコンのマウスで、押せる要素（`data-cursor="block"`）に吸い付き、要素も少し寄ってくる。[ipad-cursor](https://github.com/CatsJuice/ipad-cursor)（MIT）を、ほぼ既定の見た目のまま `app/plugins/pointer.client.ts` で始める。タッチ端末と動きを減らす設定では始めない。
+- **表示の切り替え**: ライトとダークの2つ。新しい表示がボタンから円で広がり（`app/motion/theme-switch.ts`）、アイコンは [@theme-toggles/vue](https://toggles.dev)（MIT）の Classic で太陽から月へ形が変わる。
 
 **重さ**（2026-11-18、書き出し後の gzip。中身が増えると変わる）
 
