@@ -8,7 +8,8 @@ defineProps<{
   alt: string;
   initial: string;
   brand?: BrandIconName;
-  // Rendered widths per screen, in Nuxt Image's form, e.g. "50vw lg:264px".
+  // Rendered widths per screen in Nuxt Image's form, in px (e.g. "360px lg:264px"). A bare "50vw" has no
+  // screen width to resolve against and becomes a 1px candidate.
   sizes: string;
 }>();
 </script>

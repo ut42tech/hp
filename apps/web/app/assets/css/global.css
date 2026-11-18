@@ -60,14 +60,21 @@
   opacity: 0;
 }
 
+/* The root only fades and its children rise: a transform on the page root would become the containing
+   block for fixed children (the Works sidebar), which would then jump into place when the swap ends. */
 .swap-enter-active {
-  transition:
-    opacity 200ms var(--ut-ease-out),
-    translate 200ms var(--ut-ease-out);
+  transition: opacity 200ms var(--ut-ease-out);
+}
+
+.swap-enter-active > * {
+  transition: translate 200ms var(--ut-ease-out);
 }
 
 .swap-enter-from {
   opacity: 0;
+}
+
+.swap-enter-from > * {
   translate: 0 8px;
 }
 
@@ -81,7 +88,19 @@
     transition: opacity 150ms linear;
   }
 
-  .swap-enter-from {
+  .swap-enter-from > * {
     translate: none;
   }
+}
+
+/* Desktop app detail (design §8.6): the thumbnail travels from the card to the detail image (360ms, as in the
+   visual spec §9.4), and the rest of the page cross-fades. Durations from @ut42tech/tokens/motion. */
+::view-transition-group(app-thumb) {
+  animation-duration: 360ms;
+  animation-timing-function: var(--ut-ease-out);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 200ms;
 }

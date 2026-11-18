@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { MotionConfig } from "motion-v";
 import { computed } from "vue";
 import { useHead } from "#imports";
 import { useLocale, useT } from "~/composables/use-locale";
@@ -41,18 +42,21 @@ useHead({
 </script>
 
 <template>
-  <a
-    href="#content"
-    class="sr-only-until-focus fixed top-2 left-2 z-50 bg-surface p-2"
-    data-cursor="block"
-  >
-    {{ t("skip") }}
-  </a>
-  <SiteHeader />
-  <HelloStage v-if="behindSheets" decorative />
-  <main id="content" :data-section="section">
-    <HelloStage v-if="isHello" />
-    <slot />
-  </main>
-  <NavBar :current="section" />
+  <!-- With "reduce motion", Motion skips movement (the sliding marks) and keeps fades. -->
+  <MotionConfig reduced-motion="user">
+    <a
+      href="#content"
+      class="sr-only-until-focus fixed top-2 left-2 z-50 bg-surface p-2"
+      data-cursor="block"
+    >
+      {{ t("skip") }}
+    </a>
+    <SiteHeader />
+    <HelloStage v-if="behindSheets" decorative />
+    <main id="content" :data-section="section">
+      <HelloStage v-if="isHello" />
+      <slot />
+    </main>
+    <NavBar :current="section" />
+  </MotionConfig>
 </template>

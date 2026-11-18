@@ -80,6 +80,8 @@ Nuxt 4 で全 URL を静的に書き出し（`nuxt generate`、出力は `apps/w
 - 数値は `packages/tokens/motion.ts`（ばね、閉じる判断、入れ替えの時間など）。
 - 動きの仕組み（指で引く、慣性の予測、シートと詳細の状態の移り変わり、閉じたときの履歴）は `app/motion/` の素の TS。Vue、Nuxt、Motion for Vue を import しない（`test/layers.test.ts` が見張る）。画面とのつなぎは `app/composables/use-sheet.ts` と `use-detail.ts`。
 - シートと詳細の位置は CSS 変数（`--sheet-progress`、`--detail-progress`）で渡し、CSS が 1024px 未満でだけ動かす。
+- 選んでいる印（ナビゲーションバー、Works の分類）は `SelectionMark.vue`。Motion の `layoutId` で、押した項目へ滑らせる。
+- パソコンで Apps の詳細を開閉するときは、カードのサムネイルが詳細の画像へ移る（`app/plugins/detail-morph.client.ts`。ブラウザの View Transitions）。
 
 ### ハードコードしない
 

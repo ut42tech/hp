@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useLocale, useT } from "~/composables/use-locale";
+import { morphSlug } from "~/composables/use-morph";
 import { useWorks } from "~/composables/use-works";
 import { localizePath, type Locale } from "~/i18n/config";
 import {
@@ -90,6 +91,7 @@ const items = computed<Item[]>(() =>
           :image="item.image"
           :initial="item.initial"
           :lang="item.lang"
+          :morph="category === 'apps' && morphSlug === item.key"
         />
       </li>
     </ul>

@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import { NuxtLink } from "#components";
 import type { Locale } from "~/i18n/config";
+import { MORPH_NAME } from "~/composables/use-morph";
 import type { BrandIconName } from "~/lib/icons";
 import Thumb from "./Thumb.vue";
 import UiIcon from "./UiIcon.vue";
@@ -16,6 +17,8 @@ const props = defineProps<{
   brand?: BrandIconName;
   // Set when the entry fell back to another language than the page's.
   lang?: Locale;
+  // Wide screens: this card's thumbnail is turning into the app detail's image (design §8.6).
+  morph?: boolean;
 }>();
 
 const tag = computed(() => (!props.to ? "div" : props.external ? "a" : NuxtLink));
@@ -30,11 +33,12 @@ const linkProps = computed(() => {
 <template>
   <component :is="tag" class="card" :lang="lang" v-bind="linkProps">
     <Thumb
+      :style="morph ? { viewTransitionName: MORPH_NAME } : undefined"
       :src="image"
       alt=""
       :initial="initial"
       :brand="brand"
-      sizes="50vw lg:264px"
+      sizes="360px lg:264px"
       class="aspect-[16/10]"
     />
     <div class="flex flex-col gap-1 p-3">

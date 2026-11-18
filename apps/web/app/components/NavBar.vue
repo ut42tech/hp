@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { LayoutGroup } from "motion-v";
 import { computed } from "vue";
 import { NuxtLink } from "#components";
 import { useLocale, useT } from "~/composables/use-locale";
 import { localizePath } from "~/i18n/config";
 import type { Section } from "~/lib/section";
+import SelectionMark from "./SelectionMark.vue";
 
 defineProps<{ current: Section }>();
 const locale = useLocale();
@@ -24,21 +26,22 @@ const items = computed(
 
 <template>
   <nav class="nav-bar" :aria-label="t('nav.label')">
-    <ul class="flex gap-1">
-      <li v-for="item in items" :key="item.section">
-        <NuxtLink
-          :to="item.to"
-          class="nav-item text-callout"
-          :class="
-            item.section === current ? 'bg-bar-active font-bold text-on-bar' : 'text-on-bar-muted'
-          "
-          :aria-current="item.section === current ? 'page' : undefined"
-          data-cursor="block"
-        >
-          {{ item.label }}
-        </NuxtLink>
-      </li>
-    </ul>
+    <LayoutGroup id="nav">
+      <ul class="flex gap-1">
+        <li v-for="item in items" :key="item.section">
+          <NuxtLink
+            :to="item.to"
+            class="nav-item text-callout"
+            :class="item.section === current ? 'font-bold text-on-bar' : 'text-on-bar-muted'"
+            :aria-current="item.section === current ? 'page' : undefined"
+            data-cursor="block"
+          >
+            <SelectionMark v-if="item.section === current" id="nav-mark" class="bg-bar-active" />
+            {{ item.label }}
+          </NuxtLink>
+        </li>
+      </ul>
+    </LayoutGroup>
   </nav>
 </template>
 
@@ -56,6 +59,8 @@ const items = computed(
 }
 
 .nav-item {
+  position: relative;
+  isolation: isolate;
   display: grid;
   place-items: center;
   width: 84px;
