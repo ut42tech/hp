@@ -252,6 +252,9 @@ importers:
       '@vueuse/core':
         specifier: 15.0.0
         version: 15.0.0(vue@3.5.45(typescript@6.0.3))
+      ipad-cursor:
+        specifier: 0.5.2
+        version: 0.5.2
       motion:
         specifier: 14.11.1
         version: 14.11.1
@@ -3442,6 +3445,9 @@ packages:
   ioredis@5.11.1:
     resolution: {integrity: sha512-ehuGcf94bQXhfagULNXrJdfnWO38v070jxSx/qE87Kjzmu2fU7ro5EFAb+OPituLqgfyuQaym5DlrNydW2sJ9A==}
     engines: {node: '>=12.22.0'}
+
+  ipad-cursor@0.5.2:
+    resolution: {integrity: sha512-RC8ib+wtOzvi0gsuINYnn2lfALmLBsnrabyShyTSaaPupzILLoDfVqowiWIajeiBdml8JC09C/V025pBH+FH2Q==}
 
   ipx@4.1.0:
     resolution: {integrity: sha512-3Uk9EaCxvuo0orcwrQVbRO2TwM8oNbpP6hDBtBKwdCWK4SV8Z2sLD+2/iK2DKrNGYuOMyhJNQOORojb5rkkaGg==}
@@ -8608,6 +8614,8 @@ snapshots:
       standard-as-callback: 2.1.0
     transitivePeerDependencies:
       - supports-color
+
+  ipad-cursor@0.5.2: {}
 
   ipx@4.1.0(@types/node@24.19.2)(unstorage@1.17.6(db0@0.3.4)(ioredis@5.11.1(supports-color@10.2.2))):
     dependencies:

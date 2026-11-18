@@ -1,25 +1,28 @@
 import { readFileSync } from "node:fs";
 import { expect, test } from "vite-plus/test";
-import { blockFrame } from "./pointer";
+import { pointerConfig } from "./pointer";
 
-test("a block grows the pointer around the element with 6px to spare", () => {
-  expect(blockFrame({ left: 100, top: 50, width: 84, height: 40 }, "999px")).toEqual({
-    x: 94,
-    y: 44,
-    width: 96,
-    height: 52,
-    radius: "999px",
+test("ipad-cursor takes its sizes and timing from the tokens", () => {
+  expect(pointerConfig.normalStyle).toMatchObject({
+    width: 20,
+    height: 20,
+    radius: "50%",
+    durationBase: 200,
   });
+  expect(pointerConfig.blockPadding).toBe(6);
+  expect(pointerConfig.mouseDownStyle).toMatchObject({ scale: 0.9 });
+  // Weaker than the library's 10, so a large card leans a few pixels, not 30.
+  expect(pointerConfig.adsorptionStrength).toBe(6);
 });
 
-test("a squared element keeps its corners, grown by the same 6px", () => {
-  expect(blockFrame({ left: 0, top: 0, width: 216, height: 44 }, "12px").radius).toBe("18px");
+test("ipad-cursor uses the theme's pointer colours, so it follows light and dark", () => {
+  expect(pointerConfig.normalStyle?.background).toBe("var(--ut-color-pointer)");
+  expect(pointerConfig.blockStyle?.background).toBe("var(--ut-color-pointer-block)");
 });
 
-test("uneven corners follow the first one", () => {
-  expect(blockFrame({ left: 0, top: 0, width: 264, height: 260 }, "16px 16px 0px 0px").radius).toBe(
-    "22px",
-  );
+test("ipad-cursor is a dot everywhere but on pressable elements, and follows new pages by itself", () => {
+  expect(pointerConfig.enableAutoTextCursor).toBe(false);
+  expect(pointerConfig.enableAutoUpdateCursor).toBe(true);
 });
 
 test("touch screens and reduced motion never load the pointer", () => {
@@ -28,4 +31,21 @@ test("touch screens and reduced motion never load the pointer", () => {
   expect(plugin).toMatch(/\(prefers-reduced-motion: reduce\)/);
   // Loaded on demand, so touch devices never download it.
   expect(plugin).toMatch(/import\("~\/motion\/pointer"\)/);
+});
+
+const css = readFileSync(new URL("../assets/css/global.css", import.meta.url), "utf8");
+
+// A modal detail sits in the top layer, above any z-index: the dot would be hidden under it while the system
+// pointer is hidden too. While one is open, the system pointer comes back.
+test("a modal dialog gives the system pointer back", () => {
+  expect(css).toMatch(
+    /html\.has-pointer:has\(dialog:modal\) \.ipad-cursor[^{]*\{[^}]*display: none/,
+  );
+  expect(css).toMatch(/html\.has-pointer:has\(dialog:modal\) \*[^{]*\{[^}]*cursor: revert/);
+});
+
+// A pen, a touch on a laptop screen, or the pointer outside the window: no dot, the system pointer as usual.
+test("the dot steps aside for a pen, a touch or the pointer leaving the window", () => {
+  expect(css).toMatch(/html\.pointer-off \.ipad-cursor[^{]*\{[^}]*opacity: 0/);
+  expect(css).toMatch(/html\.pointer-off \*[^{]*\{[^}]*cursor: revert/);
 });

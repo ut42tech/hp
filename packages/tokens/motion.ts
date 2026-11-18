@@ -69,5 +69,12 @@ export const GREETING = {
   bounce: { minSpeed: 260, maxSpeed: 320 },
 } as const;
 
-// The desktop pointer (design §8.8): a 20px dot that settles onto pressable elements with 6px to spare.
-export const POINTER = { sizePx: 20, blockPaddingPx: 6, moveMs: 200, pressScale: 0.9 } as const;
+// The desktop pointer (design §8.8, drawn by ipad-cursor): a 20px dot that settles onto pressable elements
+// with 6px to spare. `adsorption` is how far the element leans toward the pointer (ipad-cursor's 0–30).
+export const POINTER = {
+  sizePx: 20,
+  blockPaddingPx: 6,
+  moveMs: 200,
+  pressScale: 0.9,
+  adsorption: 6,
+} as const;

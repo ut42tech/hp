@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { expect, test } from "vite-plus/test";
 import { loadPage } from "./html";
 
@@ -53,4 +53,18 @@ test("English is not published yet", () => {
 
 test("no language switch while only one locale is published", () => {
   expect(hello.querySelector('a[hreflang="en"]')).toBeNull();
+});
+
+// The pointer is for a mouse only. Nuxt hints every lazy chunk with an idle-time prefetch; touch screens must
+// not download the pointer's.
+test("pages do not prefetch the desktop pointer", () => {
+  const dir = new URL("../.output/public/_nuxt/", import.meta.url);
+  const chunk = readdirSync(dir).find(
+    (name) =>
+      name.endsWith(".js") && readFileSync(new URL(name, dir), "utf8").includes("ipad-cursor"),
+  );
+  expect(chunk).toBeDefined();
+  for (const route of ["/ja/", "/ja/about", "/ja/works/apps"]) {
+    expect(loadPage(route).toString()).not.toContain(chunk);
+  }
 });

@@ -56,6 +56,15 @@ export default defineNuxtConfig({
   content: {
     experimental: { sqliteConnector: "native" },
   },
+  hooks: {
+    // Nuxt hints every lazy chunk with an idle-time prefetch. The desktop pointer is loaded only for a mouse
+    // (app/plugins/pointer.client.ts), so touch screens must not download it either.
+    "build:manifest"(manifest) {
+      for (const chunk of Object.values(manifest)) {
+        chunk.dynamicImports = chunk.dynamicImports?.filter((id) => !id.includes("motion/pointer"));
+      }
+    },
+  },
   devtools: { enabled: false },
   telemetry: false,
 });

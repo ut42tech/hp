@@ -1,114 +1,68 @@
-import { EASE, POINTER } from "@ut42tech/tokens/motion";
-import { animate } from "motion";
+import { POINTER } from "@ut42tech/tokens/motion";
+import { disposeCursor, initCursor, type IpadCursorConfig } from "ipad-cursor";
 
-type Box = Pick<DOMRect, "left" | "top" | "width" | "height">;
-export interface Frame {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  radius: string;
-}
+// ipad-cursor's settings, from the tokens. The colours are theme tokens, so the pointer follows light and dark.
+export const pointerConfig: IpadCursorConfig = {
+  blockPadding: POINTER.blockPaddingPx,
+  adsorptionStrength: POINTER.adsorption,
+  // A dot everywhere but on pressable elements ([data-cursor="block"]).
+  enableAutoTextCursor: false,
+  // Pages, sheets and the sort order change the DOM; ipad-cursor picks up the new elements by itself.
+  enableAutoUpdateCursor: true,
+  enableLighting: true,
+  enableMouseDownEffect: true,
+  normalStyle: {
+    width: POINTER.sizePx,
+    height: POINTER.sizePx,
+    radius: "50%",
+    durationBase: POINTER.moveMs,
+    background: "var(--ut-color-pointer)",
+    border: "0px solid transparent",
+    zIndex: 100,
+  },
+  blockStyle: {
+    // The element's own corners grown by the padding; pills stay pills.
+    radius: "auto",
+    durationBase: POINTER.moveMs,
+    background: "var(--ut-color-pointer-block)",
+    border: "0px solid transparent",
+  },
+  mouseDownStyle: { scale: POINTER.pressScale, background: "var(--ut-color-pointer-block)" },
+};
 
-// The pointer's shape over a pressable element: the element grown by blockPaddingPx on every side, its corners
-// grown by the same amount (a pill stays a pill). Uneven corners follow the first one.
-export function blockFrame(box: Box, radius: string): Frame {
-  const pad = POINTER.blockPaddingPx;
-  const width = box.width + pad * 2;
-  const height = box.height + pad * 2;
-  const first = Number.parseFloat(radius) || 0;
-  const pill = first * 2 >= Math.min(box.width, box.height);
-  return {
-    x: box.left - pad,
-    y: box.top - pad,
-    width,
-    height,
-    radius: pill ? radius.split(" ")[0]! : `${first + pad}px`,
-  };
-}
-
-const dot = (x: number, y: number): Frame => ({
-  x: x - POINTER.sizePx / 2,
-  y: y - POINTER.sizePx / 2,
-  width: POINTER.sizePx,
-  height: POINTER.sizePx,
-  radius: "50%",
-});
-
-// A pointer that settles onto pressable elements ([data-cursor="block"]) like on a tablet, and is a small dot
-// everywhere else. Follows changing pages by itself: the element under the pointer is looked up and measured
-// again on every move. Returns a cleanup that restores the system pointer.
+// Starts ipad-cursor on the first mouse move (until then it would sit in the top-left corner and hide the
+// system pointer for nothing). A pen, a touch on a laptop screen, or the pointer leaving the window sets
+// html.pointer-off: the dot steps aside and the system pointer is back (global.css). Returns a cleanup.
 export function startPointer(doc: Document): () => void {
   const root = doc.documentElement;
-  const layer = doc.createElement("div");
-  layer.className = "pointer";
-  layer.setAttribute("aria-hidden", "true");
-  doc.body.append(layer);
-  root.classList.add("has-pointer");
-
-  let block: HTMLElement | null = null;
-  let current: Frame | null = null;
-  const move = {
-    duration: POINTER.moveMs / 1000,
-    ease: [...EASE["ease-out"]] as [number, number, number, number],
-  };
-
-  const place = (frame: Frame, animated: boolean) => {
-    const same =
-      current &&
-      current.x === frame.x &&
-      current.y === frame.y &&
-      current.width === frame.width &&
-      current.height === frame.height &&
-      current.radius === frame.radius;
-    current = frame;
-    if (same) return;
-    const values = {
-      x: frame.x,
-      y: frame.y,
-      width: frame.width,
-      height: frame.height,
-      borderRadius: frame.radius,
-    };
-    // Always through Motion, so the position lives in one place (its x/y transform).
-    animate(layer, values, animated ? move : { duration: 0 });
-  };
+  let started = false;
+  root.classList.add("pointer-off");
 
   const onMove = (event: PointerEvent) => {
-    if (event.pointerType !== "mouse") return;
-    layer.classList.add("is-visible");
-    const target =
-      (event.target as Element | null)?.closest<HTMLElement>('[data-cursor="block"]') ?? null;
-    if (target) {
-      const box = target.getBoundingClientRect();
-      const frame = blockFrame(box, getComputedStyle(target).borderTopLeftRadius);
-      // The light follows the pointer across the element.
-      layer.style.setProperty("--pointer-light-x", `${event.clientX - frame.x}px`);
-      layer.style.setProperty("--pointer-light-y", `${event.clientY - frame.y}px`);
-      layer.classList.add("is-block");
-      place(frame, true);
-    } else {
-      layer.classList.remove("is-block");
-      // Leaving an element animates back to the dot; after that the dot follows the pointer directly.
-      place(dot(event.clientX, event.clientY), block !== null);
+    if (event.pointerType !== "mouse") {
+      root.classList.add("pointer-off");
+      return;
     }
-    block = target;
+    if (!started) {
+      started = true;
+      initCursor(pointerConfig);
+      root.classList.add("has-pointer");
+      // ipad-cursor learns the position from its own next move; show the dot from then on.
+      return;
+    }
+    root.classList.remove("pointer-off");
   };
-  const onDown = () => animate(layer, { scale: POINTER.pressScale }, move);
-  const onUp = () => animate(layer, { scale: 1 }, move);
-  const onLeave = () => layer.classList.remove("is-visible");
+  const onLeave = () => root.classList.add("pointer-off");
 
   doc.addEventListener("pointermove", onMove, { passive: true });
-  doc.addEventListener("pointerdown", onDown, { passive: true });
-  doc.addEventListener("pointerup", onUp, { passive: true });
+  doc.addEventListener("pointerdown", onMove, { passive: true });
   root.addEventListener("pointerleave", onLeave);
 
   return () => {
     doc.removeEventListener("pointermove", onMove);
-    doc.removeEventListener("pointerdown", onDown);
-    doc.removeEventListener("pointerup", onUp);
+    doc.removeEventListener("pointerdown", onMove);
     root.removeEventListener("pointerleave", onLeave);
-    layer.remove();
-    root.classList.remove("has-pointer");
+    if (started) disposeCursor();
+    root.classList.remove("has-pointer", "pointer-off");
   };
 }
