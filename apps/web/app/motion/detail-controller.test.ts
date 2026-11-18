@@ -98,3 +98,11 @@ test("Safari's own back swipe removes the detail at once", async () => {
   expect(shown).toBeNull();
   expect(animations).toEqual([]);
 });
+
+test("only a detail that is open can be grabbed", () => {
+  shown = "tangi";
+  const detail = createDetailController(deps(), { slug: "tangi" });
+  expect(detail.canGrab()).toBe(true);
+  detail.closeByUser();
+  expect(detail.canGrab()).toBe(false);
+});

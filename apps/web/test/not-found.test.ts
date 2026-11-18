@@ -36,3 +36,8 @@ test("Vercel deploys the static folder, so 404.html answers missing URLs", () =>
 test("there is no catch-all 200.html", () => {
   expect(existsSync(new URL("../.output/public/200.html", import.meta.url))).toBe(false);
 });
+
+// The 404 stands on the Hello ground itself; the greeting behind sheets would print over it.
+test("the greeting is not drawn behind the 404", () => {
+  expect(page.querySelector(".hello-stage")).toBeNull();
+});

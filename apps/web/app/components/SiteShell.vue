@@ -11,6 +11,8 @@ const props = defineProps<{ section: Section }>();
 const locale = useLocale();
 const t = useT();
 const isHello = computed(() => props.section === "hello");
+// The greeting stays behind the sheets; the 404 stands on the Hello ground itself, so it gets none.
+const behindSheets = computed(() => !isHello.value && props.section !== "not-found");
 
 // Sets the theme before first paint. Keep the key and rules in sync with app/lib/theme.ts.
 const themeScript = `(() => {
@@ -47,7 +49,7 @@ useHead({
     {{ t("skip") }}
   </a>
   <SiteHeader />
-  <HelloStage v-if="!isHello" decorative />
+  <HelloStage v-if="behindSheets" decorative />
   <main id="content" :data-section="section">
     <HelloStage v-if="isHello" />
     <slot />

@@ -101,5 +101,9 @@ export function createSheetController<Route>(
     }
   }
 
-  return { navigate, close, phase: () => phase };
+  // Motion never settles an animation that a grab stops, so only an open sheet may be grabbed: mid-switch or
+  // mid-close the phase would never move on (a dead tab bar, or a sheet left over Hello).
+  const canGrab = () => phase === "open";
+
+  return { navigate, close, canGrab, phase: () => phase };
 }
