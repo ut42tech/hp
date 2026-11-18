@@ -24,7 +24,3 @@ export function alternates(path: string): { hreflang: string; href: string }[] {
     { hreflang: "x-default", href: "/" },
   ];
 }
-
-export function localeStaticPaths(): { params: { locale: Locale } }[] {
-  return publishedLocales.map((locale) => ({ params: { locale } }));
-}

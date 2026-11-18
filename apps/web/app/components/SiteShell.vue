@@ -4,6 +4,7 @@ import { computed } from "vue";
 import { useHead } from "#imports";
 import { useLocale, useT } from "~/composables/use-locale";
 import type { Section } from "~/lib/section";
+import { themeGate } from "~/lib/theme";
 import { useNarrow } from "~/composables/use-narrow";
 import { introGate } from "~/motion/intro-gate";
 import HelloStage from "./HelloStage.vue";
@@ -19,25 +20,18 @@ const narrow = useNarrow();
 // The greeting stays behind the sheets; the 404 stands on the Hello ground itself, so it gets none.
 const behindSheets = computed(() => !isHello.value && props.section !== "not-found");
 
-// Sets the theme before first paint. Keep the key and rules in sync with app/lib/theme.ts.
+// Two gates run inline in <head> before first paint, each from its own source text, so the logic is the one
+// the tests cover. Storage access itself can throw (blocked site data); the gates then get none.
+// The theme (html[data-theme], also what ThemeToggle.vue's icon follows before it hydrates):
 const themeScript = `(() => {
-  const key = "ut42tech:theme";
-  const media = matchMedia("(prefers-color-scheme: dark)");
-  const apply = () => {
-    let stored = null;
-    try {
-      stored = localStorage.getItem(key);
-    } catch {}
-    // Also read by components/ThemeToggle.vue's CSS to show the right icon before it hydrates.
-    document.documentElement.dataset.theme =
-      stored === "light" || stored === "dark" ? stored : media.matches ? "dark" : "light";
-  };
-  apply();
-  media.addEventListener("change", apply);
+  let storage;
+  try {
+    storage = localStorage;
+  } catch {}
+  (${themeGate.toString()})(document.documentElement, storage, matchMedia("(prefers-color-scheme: dark)"));
 })();`;
 
-// Decides before first paint whether this load shows the entrance (html[data-intro]); the gate runs from its
-// own source text, so the logic is the one the tests cover.
+// Whether this load shows the entrance (html[data-intro]):
 const introScript = `(() => {
   let storage;
   try {

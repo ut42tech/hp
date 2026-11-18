@@ -51,7 +51,7 @@
 }
 
 /* Swapping content in place (wide screens, Works categories, reduced motion): the old content fades out,
-   the new one rises 8px into place. Durations from @ut42tech/tokens/motion (SWAP_OUT_MS, SWAP_IN_MS). */
+   the new one rises 8px into place (out 120ms, in 200ms; design §8.6). */
 .swap-leave-active {
   transition: opacity 120ms linear;
 }
