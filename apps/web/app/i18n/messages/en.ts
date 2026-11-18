@@ -9,7 +9,6 @@ export const en = {
   "nav.works": "Works",
   "nav.press": "Press",
   skip: "Skip to content",
-  "theme.auto": "Theme: Auto",
   "theme.light": "Theme: Light",
   "theme.dark": "Theme: Dark",
   "locale.switch": "日本語で見る",

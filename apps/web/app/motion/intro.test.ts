@@ -6,17 +6,17 @@ const play = introSteps({ mode: "play", bands: 5, letters: 8 });
 const of = (steps: IntroStep[], target: IntroStep["target"]) =>
   steps.filter((s) => s.target === target);
 
-test("the name rises at 80ms for 600ms and leaves 24px up at 780ms", () => {
-  const name = of(play, "name");
-  expect(name).toContainEqual(
+test("the name rises at 80ms for 600ms, and its window leaves 24px up at 780ms", () => {
+  expect(of(play, "name")).toEqual([
     expect.objectContaining({
       at: 80,
       duration: 600,
       ease: "ease-out",
       keyframes: { y: ["100%", 0] },
     }),
-  );
-  expect(name).toContainEqual(
+  ]);
+  const exit = of(play, "nameWindow");
+  expect(exit).toContainEqual(
     expect.objectContaining({
       at: 780,
       duration: 500,
@@ -24,9 +24,22 @@ test("the name rises at 80ms for 600ms and leaves 24px up at 780ms", () => {
       keyframes: { y: [0, -24] },
     }),
   );
-  expect(name).toContainEqual(
+  expect(exit).toContainEqual(
     expect.objectContaining({ at: 780, duration: 350, keyframes: { opacity: [1, 0] } }),
   );
+});
+
+// One sequence merges every step on the same element and value into one track. The rise ("100%") and the
+// exit (px) on the name itself mixed units there, and the name overshot its window by about 16px.
+test("no element animates the same value twice", () => {
+  const seen = new Set<string>();
+  for (const step of play) {
+    for (const key of Object.keys(step.keyframes)) {
+      const id = `${step.target}#${step.index}.${key}`;
+      expect(seen.has(id), id).toBe(false);
+      seen.add(id);
+    }
+  }
 });
 
 test("five bands lift left to right, 60ms apart, 820ms each", () => {
@@ -77,7 +90,7 @@ test("reduced motion only fades the curtain over 400ms", () => {
 
 // removeAt is when the curtain goes (visual spec §9.1); the greeting keeps rising after it.
 test("the curtain's own steps end by removeAt", () => {
-  const curtain = play.filter((s) => s.target === "name" || s.target === "band");
+  const curtain = play.filter((s) => ["name", "nameWindow", "band"].includes(s.target));
   expect(Math.max(...curtain.map((s) => s.at + s.duration))).toBeLessThanOrEqual(INTRO.removeAt);
 });
 

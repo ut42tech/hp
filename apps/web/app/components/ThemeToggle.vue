@@ -1,19 +1,11 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from "vue";
-import {
-  nextPreference,
-  readPreference,
-  resolveTheme,
-  storePreference,
-  type ThemePreference,
-} from "../lib/theme";
+import { otherTheme, storeTheme, type Theme } from "../lib/theme";
+import { switchTheme } from "../motion/theme-switch";
 import UiIcon from "./UiIcon.vue";
 
-const props = defineProps<{ labels: Record<ThemePreference, string> }>();
+const props = defineProps<{ labels: Record<Theme, string> }>();
 
-const pref = ref<ThemePreference>("auto");
-const icon = { auto: "device-desktop", light: "sun", dark: "moon" } as const;
-let media: MediaQueryList | undefined;
+const icon = { light: "sun", dark: "moon" } as const;
 
 const safeStorage = (): Storage | undefined => {
   try {
@@ -23,38 +15,27 @@ const safeStorage = (): Storage | undefined => {
   }
 };
 
-function apply() {
+// Flips between light and dark from whatever the page shows now (the inline script in SiteShell.vue set it
+// before first paint, from the stored choice or the OS). The new theme grows from the button's centre.
+function toggle(event: MouseEvent) {
   const root = document.documentElement;
-  root.dataset.theme = resolveTheme(pref.value, media?.matches ?? false);
-  root.dataset.themePref = pref.value;
-}
-
-onMounted(() => {
-  media = window.matchMedia("(prefers-color-scheme: dark)");
-  pref.value = readPreference(safeStorage());
-  media.addEventListener("change", apply);
-});
-
-onBeforeUnmount(() => media?.removeEventListener("change", apply));
-
-function cycle() {
-  pref.value = nextPreference(pref.value);
-  storePreference(safeStorage(), pref.value);
-  apply();
+  const next = otherTheme(root.dataset.theme === "dark" ? "dark" : "light");
+  const os = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  storeTheme(safeStorage(), next, os);
+  const box = (event.currentTarget as HTMLElement).getBoundingClientRect();
+  switchTheme(document, () => (root.dataset.theme = next), {
+    x: box.left + box.width / 2,
+    y: box.top + box.height / 2,
+  });
 }
 </script>
 
 <template>
-  <button
-    type="button"
-    class="grid size-11 place-items-center text-fg"
-    data-cursor="block"
-    @click="cycle"
-  >
-    <!-- All three are rendered and CSS picks one from [data-theme-pref], which the inline script in
-         layouts/Site.astro sets before first paint, so the icon and the name are right before this
-         component hydrates. The hidden ones are display: none, so assistive tech reads only one name. -->
-    <span v-for="(name, key) in icon" :key="key" class="theme-icon" :data-pref="key">
+  <button type="button" class="theme-toggle text-fg" data-cursor="block" @click="toggle">
+    <!-- Both are rendered and CSS picks one from [data-theme], which the inline script in SiteShell.vue sets
+         before first paint, so the icon and the name are right before this component hydrates. The hidden
+         one is display: none, so assistive tech reads only one name. -->
+    <span v-for="(name, key) in icon" :key="key" class="theme-icon" :data-theme-icon="key">
       <UiIcon :name="name" :size="20" />
       <span class="sr-only">{{ props.labels[key] }}</span>
     </span>
@@ -62,13 +43,21 @@ function cycle() {
 </template>
 
 <style scoped>
+/* A circle, so the pointer settles on it as on any other button. */
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--ut-radius-full);
+}
+
 .theme-icon {
   display: none;
 }
 
-:root:not([data-theme-pref="light"], [data-theme-pref="dark"]) .theme-icon[data-pref="auto"],
-:root[data-theme-pref="light"] .theme-icon[data-pref="light"],
-:root[data-theme-pref="dark"] .theme-icon[data-pref="dark"] {
+:root:not([data-theme="dark"]) .theme-icon[data-theme-icon="light"],
+:root[data-theme="dark"] .theme-icon[data-theme-icon="dark"] {
   display: contents;
 }
 </style>

@@ -35,6 +35,13 @@ test("the curtain never catches presses", () => {
   expect(css).toMatch(/html\[data-intro\] \.intro-curtain \{[^}]*pointer-events: none/);
 });
 
+// While the fonts load (up to INTRO.fontWaitMs), the name must not sit in its window and then drop to rise.
+test("the name waits below its window until the entrance runs", () => {
+  expect(css).toMatch(
+    /html\[data-intro="play"\] \.intro-name \{[^}]*transform: translateY\(100%\)/,
+  );
+});
+
 // If the app never starts, the greeting must not stay hidden: it shows itself with the curtain's failsafe.
 test("the hidden greeting reveals itself with the failsafe", () => {
   expect(css).toMatch(/\.letter \{[^}]*animation: intro-reveal 0s 5000ms forwards/);

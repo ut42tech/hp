@@ -151,6 +151,18 @@
   z-index: 1;
 }
 
+/* Switching between light and dark (app/motion/theme-switch.ts): the whole page is one snapshot, and the new
+   theme grows over the old one as a soft circle from the toggle instead of cross-fading. */
+:root.theme-switching * {
+  view-transition-name: none !important;
+}
+
+:root.theme-switching::view-transition-old(root),
+:root.theme-switching::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 /* The entrance (design §8.7). The curtain only exists while html[data-intro] is set: the inline gate in <head>
    sets it before first paint, and app/plugins/intro removes it when the entrance ends. If the app never
    starts, the curtain still goes after INTRO.failsafeMs (5000ms). */
@@ -181,6 +193,11 @@ html[data-intro] .intro-curtain {
   to {
     visibility: hidden;
   }
+}
+
+/* Until the entrance runs (the fonts may still be loading), the name waits below its window. */
+html[data-intro="play"] .intro-name {
+  transform: translateY(100%);
 }
 
 /* Until the entrance runs, the greeting waits below and out of sight. */

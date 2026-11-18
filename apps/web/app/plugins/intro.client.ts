@@ -40,14 +40,15 @@ export default defineNuxtPlugin((nuxtApp) => {
       ]);
 
       const name = root.querySelector<HTMLElement>("[data-intro-name]");
-      if (!curtain || !name) return;
+      const nameWindow = root.querySelector<HTMLElement>("[data-intro-name-window]");
+      if (!curtain || !name || !nameWindow) return;
       // "Welcome." only rises on Hello (the greeting in <main>, not the one behind a sheet).
       const stage = root.querySelector<HTMLElement>("main .hello-stage:not(.is-decorative)");
       letters = stage ? [...stage.querySelectorAll<HTMLElement>(".letter")] : [];
       sub = stage?.querySelector<HTMLElement>(".hello-sub") ?? undefined;
       const bands = [...curtain.querySelectorAll<HTMLElement>("[data-intro-band]")];
 
-      const intro = playIntro({ curtain, bands, name, letters, sub }, mode);
+      const intro = playIntro({ curtain, bands, name, nameWindow, letters, sub }, mode);
       switcher.attach(intro);
       await intro.curtainGone;
       endCurtain(curtain);

@@ -7,6 +7,7 @@ import UiIcon from "./UiIcon.vue";
 defineProps<{ list: string }>();
 const order = defineModel<SortOrder>("order", { required: true });
 const t = useT();
+const orders: SortOrder[] = ["newest", "oldest"];
 </script>
 
 <template>
@@ -22,7 +23,12 @@ const t = useT();
     </span>
     <!-- The order label turns over like a card: the old one tips away, the new one swings in a little
          past flat and settles back (ease-overshoot). -->
+    <!-- Every label sits in the same cell, so the button keeps the width of the longest one; only the
+         current label shows. -->
     <span class="label-face">
+      <span v-for="each in orders" :key="each" class="label" data-sizer aria-hidden="true">{{
+        t(`sort.${each}`)
+      }}</span>
       <Transition name="flip" mode="out-in">
         <span :key="order" class="label">{{ t(`sort.${order}`) }}</span>
       </Transition>
@@ -54,6 +60,14 @@ const t = useT();
 .label-face {
   display: inline-grid;
   perspective: 240px;
+}
+
+.label-face > * {
+  grid-area: 1 / 1;
+}
+
+.label[data-sizer] {
+  visibility: hidden;
 }
 
 .label {
