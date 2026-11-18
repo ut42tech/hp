@@ -39,7 +39,8 @@ test("blocked storage shows nothing rather than risk replaying", () => {
 });
 
 test("the gate is self-contained, so it can be inlined", () => {
-  // Runs from its own source text, with no access to this module's scope.
+  // Runs from its own source text, with no access to this module's scope (as the inline <head> script does).
+  // oxlint-disable-next-line typescript/no-implied-eval -- evaluating the source is the point of this test
   const inlined = new Function(`return (${introGate.toString()})`)() as typeof introGate;
   expect(inlined(fakeStorage(), false)).toBe("play");
 });
