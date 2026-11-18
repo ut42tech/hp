@@ -6,6 +6,6 @@
   "exports": {
     "./favicon.ico": "./favicon.ico",
     "./og.png": "./og.png",
-    "./profile.jpg": "./profile.jpg"
+    "./profile.jpg": "./photos/profile.jpg"
   }
 }

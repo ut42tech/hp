@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { profile } from "@ut42tech/profile";
 import { expect, test } from "vite-plus/test";
 import { loadPage } from "./html";
@@ -24,3 +25,14 @@ test("skills are labelled icons", () => {
 test("no research link yet", () => expect(about.textContent).not.toContain("研究について"));
 
 test("one h1", () => expect(about.querySelectorAll("h1").length).toBe(1));
+
+test("the profile photo is served resized from packages/assets", () => {
+  const img = about.querySelector("img.photo")!;
+  const urls = img
+    .getAttribute("srcset")!
+    .split(",")
+    .map((candidate) => candidate.trim().split(" ")[0]!);
+  expect(urls.length).toBeGreaterThan(1);
+  for (const url of urls)
+    expect(existsSync(new URL(`../.output/public${url}`, import.meta.url)), url).toBe(true);
+});

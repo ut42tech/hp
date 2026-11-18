@@ -1,9 +1,0 @@
----
-import { localeStaticPaths, type Locale } from "../../i18n/config";
-import HelloView from "../../views/HelloView.astro";
-
-export const getStaticPaths = localeStaticPaths;
-const { locale } = Astro.params as { locale: Locale };
----
-
-<HelloView locale={locale} />

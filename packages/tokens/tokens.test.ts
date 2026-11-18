@@ -97,3 +97,9 @@ describe("theme.css", () => {
     }
   });
 });
+
+test("the sheet spring is critically damped, so it lands without wobbling", async () => {
+  const { SHEET_SPRING } = await import("./motion");
+  expect(SHEET_SPRING.damping).toBeCloseTo(2 * Math.sqrt(SHEET_SPRING.stiffness), 0);
+  expect(SHEET_SPRING.stiffness).toBe(380);
+});

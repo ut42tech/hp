@@ -86,24 +86,24 @@ Vite+ はまだリモートキャッシュを持っていない（ロードマ�
 
 ## 5. 決定事項
 
-| 領域                   | 決定                                   | 決めた人       |
-| ---------------------- | -------------------------------------- | -------------- |
-| 構成                   | monorepo（`apps/*`, `packages/*`）     | 本人           |
-| 共有範囲               | 案B                                    | 本人           |
-| デプロイ               | Vercel（アプリごとに1プロジェクト）    | 本人           |
-| ツールチェーン         | Vite+（`vp`）                          | 本人           |
-| パッケージマネージャー | pnpm（workspaces）                     | 提案、本人了承 |
-| `apps/web`             | Astro 7 + `@astrojs/vue`               | 選定基準から   |
-| スタイル               | Tailwind CSS v4（`@tailwindcss/vite`） | 提案、本人了承 |
-| 言語 / 実行環境        | TypeScript（strict, ESM）/ Node 24     | 提案、本人了承 |
-| 将来のバックエンド     | Hono（`apps/api`）                     | 本人           |
+| 領域                   | 決定                                                                                                           | 決めた人       |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------- | -------------- |
+| 構成                   | monorepo（`apps/*`, `packages/*`）                                                                             | 本人           |
+| 共有範囲               | 案B                                                                                                            | 本人           |
+| デプロイ               | Vercel（アプリごとに1プロジェクト）                                                                            | 本人           |
+| ツールチェーン         | Vite+（`vp`）                                                                                                  | 本人           |
+| パッケージマネージャー | pnpm（workspaces）                                                                                             | 提案、本人了承 |
+| `apps/web`             | Astro 7 + `@astrojs/vue`（2026-11-18 に Nuxt 4 へ移行。[動きの設計書](2026-11-18-portfolio-motion-design.md)） | 選定基準から   |
+| スタイル               | Tailwind CSS v4（`@tailwindcss/vite`）                                                                         | 提案、本人了承 |
+| 言語 / 実行環境        | TypeScript（strict, ESM）/ Node 24                                                                             | 提案、本人了承 |
+| 将来のバックエンド     | Hono（`apps/api`）                                                                                             | 本人           |
 
 ## 6. 構成の詳細
 
 ```
 hp/
 ├─ apps/
-│  └─ web/                 ut42tech.com（Astro 7 + Vue）
+│  └─ web/                 ut42tech.com（Nuxt 4 + Vue。当初は Astro 7）
 ├─ packages/
 │  ├─ tokens/              デザイントークン
 │  ├─ assets/              フォント・ロゴ・アイコン

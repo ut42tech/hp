@@ -1,0 +1,165 @@
+<script setup lang="ts">
+import { profile } from "@ut42tech/profile";
+import { NuxtImg } from "#components";
+import BrandIcon from "~/components/BrandIcon.vue";
+import CopyEmail from "~/components/CopyEmail.vue";
+import PageHead from "~/components/PageHead.vue";
+import UiIcon from "~/components/UiIcon.vue";
+import { useLocale, useT } from "~/composables/use-locale";
+import { usePageMeta } from "~/composables/use-page-meta";
+import { skills } from "~/data/skills";
+import { mottoFor } from "~/i18n/t";
+import { brandIcons } from "~/lib/icons";
+
+const locale = useLocale();
+const t = useT();
+usePageMeta({ title: () => t.value("about.title") });
+</script>
+
+<template>
+  <div class="about">
+    <PageHead :title="t('about.title')" handle />
+    <div class="identity">
+      <!-- The photo comes from packages/assets (nuxt.config.ts image.dirs). -->
+      <NuxtImg src="/profile.jpg" alt="" sizes="96px lg:144px" class="photo" />
+      <div class="min-w-0">
+        <p class="text-headline text-fg lg:text-title-m">{{ profile.name }}</p>
+        <p class="text-caption text-muted lg:text-callout">
+          {{ t("about.affiliation1") }}
+          <span class="max-lg:hidden"> · </span>
+          <br class="lg:hidden" />
+          {{ t("about.affiliation2") }}
+        </p>
+      </div>
+    </div>
+    <p class="mt-5 text-body text-fg">{{ t("about.intro") }}</p>
+    <p class="mt-4 text-headline text-fg">{{ mottoFor(locale) }}</p>
+
+    <section class="mt-9">
+      <h2 class="text-mono text-muted">{{ t("about.skills") }}</h2>
+      <ul class="mt-3 flex flex-wrap gap-3">
+        <li
+          v-for="skill in skills"
+          :key="skill"
+          class="tile"
+          data-skill
+          role="img"
+          :aria-label="brandIcons[skill].title"
+          :title="brandIcons[skill].title"
+        >
+          <BrandIcon :name="skill" :size="22" />
+        </li>
+      </ul>
+    </section>
+
+    <section class="mt-9">
+      <h2 class="text-mono text-muted">{{ t("about.history.title") }}</h2>
+      <p class="mt-3 text-body text-fg">{{ t("about.history") }}</p>
+    </section>
+
+    <section id="contact" class="mt-9">
+      <h2 class="text-mono text-muted">{{ t("about.contact") }}</h2>
+      <p class="mt-3 text-callout text-fg">{{ t("about.note.sns") }}</p>
+      <ul class="social mt-3">
+        <li v-for="link in profile.social" :key="link.href">
+          <a
+            :href="link.href"
+            rel="me noopener"
+            target="_blank"
+            class="social-link text-callout font-bold text-fg"
+            data-cursor="block"
+          >
+            <BrandIcon :name="link.icon" :size="18" />
+            {{ link.label }}
+          </a>
+        </li>
+      </ul>
+      <p class="mt-7 text-callout text-fg">{{ t("about.note.email") }}</p>
+      <div class="email mt-3">
+        <a
+          :href="`mailto:${profile.email}`"
+          class="flex items-center gap-3 text-headline text-fg"
+          data-cursor="block"
+        >
+          <UiIcon name="mail" :size="16" />
+          {{ profile.email }}
+        </a>
+        <CopyEmail :email="profile.email" />
+      </div>
+    </section>
+  </div>
+</template>
+
+<style scoped>
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.photo {
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+  border-radius: var(--ut-radius-full);
+  object-fit: cover;
+}
+
+.tile {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--ut-radius-row);
+  background: var(--ut-color-fill);
+}
+
+.social {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding-left: 16px;
+  border-radius: var(--ut-radius-full);
+  background: var(--ut-color-fill);
+}
+
+.email {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--ut-color-border);
+  border-radius: var(--ut-radius-row);
+}
+
+@media (width >= 64rem) {
+  .about {
+    width: min(var(--ut-width-reading), 100%);
+    margin-inline: auto;
+  }
+
+  .identity {
+    gap: 28px;
+    margin-top: 28px;
+  }
+
+  .photo {
+    width: 144px;
+    height: 144px;
+  }
+
+  .social {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+</style>
