@@ -203,34 +203,14 @@ html[data-intro="play"] .hello-stage:not(.is-decorative) .hello-sub {
   }
 }
 
-/* The desktop pointer (design §8.8, ipad-cursor started by app/motion/pointer.ts). ipad-cursor hides the system
-   pointer everywhere; the keyboard focus ring is unaffected. */
-/* A pen, a touch, or the pointer outside the window: no dot, the system pointer as usual. */
-html.pointer-off .ipad-cursor {
-  opacity: 0;
-}
-
-html.pointer-off,
-html.pointer-off * {
-  cursor: revert;
-}
-
-/* A modal detail sits in the top layer, above any z-index, so the dot would be drawn under it while the
-   system pointer is hidden. While one is open, the system pointer comes back. */
-html.has-pointer:has(dialog:modal) .ipad-cursor {
+/* The desktop pointer (design §8.8, app/plugins/pointer.client.ts). A modal detail sits in the top layer, above
+   any z-index, so ipad-cursor's dot would be drawn under it while the system pointer is hidden. While one is
+   open, the system pointer comes back. */
+:root:has(dialog:modal) .ipad-cursor {
   display: none;
 }
 
-html.has-pointer:has(dialog:modal),
-html.has-pointer:has(dialog:modal) * {
+:root:has(.ipad-cursor):has(dialog:modal),
+:root:has(.ipad-cursor):has(dialog:modal) * {
   cursor: revert;
-}
-
-/* The light that follows the pointer across a pressable element, in the theme's colour. */
-html.has-pointer .ipad-cursor.lighting--on .lighting {
-  background-image: radial-gradient(
-    circle at center,
-    var(--ut-color-pointer-light) 0%,
-    transparent 30%
-  );
 }
