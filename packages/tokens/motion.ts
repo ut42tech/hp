@@ -58,3 +58,13 @@ export const EASE = {
   "ease-curtain": [0.76, 0, 0.24, 1],
   "ease-in-out": [0.7, 0, 0.3, 1],
 } as const;
+
+// The Hello greeting (visual spec §9.2): letters lean toward a nearby pointer and bounce when pressed.
+export const GREETING = {
+  reachPx: 420,
+  maxX: 14,
+  maxY: 10,
+  spring: { type: "spring", stiffness: 160, damping: 20 },
+  idleMs: 2500,
+  bounce: { minSpeed: 260, maxSpeed: 320 },
+} as const;
