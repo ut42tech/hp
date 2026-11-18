@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LayoutGroup } from "motion-v";
+import { LayoutGroup, motion } from "motion-v";
 import { computed } from "vue";
 import { NuxtLink } from "#components";
 import { useLocale, useT } from "~/composables/use-locale";
@@ -25,7 +25,8 @@ const items = computed(
 </script>
 
 <template>
-  <nav class="nav-bar" :aria-label="t('nav.label')">
+  <!-- Fixed to the screen: a layout root, so page scroll is not mistaken for the mark moving. -->
+  <motion.nav layout-root class="nav-bar" :aria-label="t('nav.label')">
     <LayoutGroup id="nav">
       <ul class="flex gap-1">
         <li v-for="item in items" :key="item.section">
@@ -42,7 +43,7 @@ const items = computed(
         </li>
       </ul>
     </LayoutGroup>
-  </nav>
+  </motion.nav>
 </template>
 
 <style scoped>

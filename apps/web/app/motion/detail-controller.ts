@@ -52,10 +52,12 @@ export function createDetailController(deps: DetailDeps, start: { slug: string |
     else if (!slug && phase === "open") close();
   }
 
-  // Swipe, Escape or the hidden close button: start closing now, then let the address follow.
+  // Swipe, Escape or the hidden close button: start closing now, then let the address follow. Without the
+  // animation (wide screens), only leave: the detail must still be on the page when the address changes,
+  // so the thumbnail morph can capture it; the address change then removes it (navigate).
   function closeByUser(velocity?: number) {
     if (phase !== "open") return;
-    close(velocity);
+    if (!deps.skipAnimation()) close(velocity);
     deps.leave();
   }
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LayoutGroup } from "motion-v";
+import { LayoutGroup, motion } from "motion-v";
 import { computed } from "vue";
 import { NuxtLink } from "#components";
 import { useLocale, useT } from "~/composables/use-locale";
@@ -48,7 +48,13 @@ const items = computed(() =>
   </nav>
 
   <!-- Desktop: a card fixed at the vertical centre of the left edge. -->
-  <nav v-if="part !== 'segmented'" class="sidebar" :aria-label="t('works.label')">
+  <!-- Fixed to the screen: a layout root, so page scroll is not mistaken for the mark moving. -->
+  <motion.nav
+    v-if="part !== 'segmented'"
+    layout-root
+    class="sidebar"
+    :aria-label="t('works.label')"
+  >
     <LayoutGroup id="works-sidebar">
       <NuxtLink
         v-for="item in items"
@@ -66,7 +72,7 @@ const items = computed(() =>
         }}</span>
       </NuxtLink>
     </LayoutGroup>
-  </nav>
+  </motion.nav>
 </template>
 
 <style scoped>

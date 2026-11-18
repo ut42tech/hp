@@ -78,6 +78,15 @@
   translate: 0 8px;
 }
 
+/* Wide screens: a page fades out when you go back to Hello (app.vue). */
+.sheet-fade-leave-active {
+  transition: opacity 120ms linear;
+}
+
+.sheet-fade-leave-to {
+  opacity: 0;
+}
+
 /* Reduced motion (design §8.10): the new content only fades in, over 150ms, without rising. */
 @media (prefers-reduced-motion: reduce) {
   .swap-leave-active {
@@ -96,6 +105,10 @@
 /* Desktop app detail (design §8.6): the thumbnail travels from the card to the detail image (360ms, as in the
    visual spec §9.4), and the rest of the page cross-fades. Durations from @ut42tech/tokens/motion. */
 ::view-transition-group(app-thumb) {
+  /* The card's thumbnail is captured with square corners (the card clips it) and the detail image with
+     round ones; clipping the travelling frame keeps the corners round instead of vanishing mid-way. */
+  overflow: clip;
+  border-radius: var(--ut-radius-card);
   animation-duration: 360ms;
   animation-timing-function: var(--ut-ease-out);
 }

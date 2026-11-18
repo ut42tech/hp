@@ -4,6 +4,7 @@ import { computed } from "vue";
 import { useHead } from "#imports";
 import { useLocale, useT } from "~/composables/use-locale";
 import type { Section } from "~/lib/section";
+import { useNarrow } from "~/composables/use-narrow";
 import HelloStage from "./HelloStage.vue";
 import NavBar from "./NavBar.vue";
 import SiteHeader from "./SiteHeader.vue";
@@ -12,6 +13,7 @@ const props = defineProps<{ section: Section }>();
 const locale = useLocale();
 const t = useT();
 const isHello = computed(() => props.section === "hello");
+const narrow = useNarrow();
 // The greeting stays behind the sheets; the 404 stands on the Hello ground itself, so it gets none.
 const behindSheets = computed(() => !isHello.value && props.section !== "not-found");
 
@@ -54,7 +56,10 @@ useHead({
     <SiteHeader />
     <HelloStage v-if="behindSheets" decorative />
     <main id="content" :data-section="section">
-      <HelloStage v-if="isHello" />
+      <!-- Wide screens: the greeting swaps like a page when you leave or come back to Hello. -->
+      <Transition :name="narrow ? undefined : 'swap'">
+        <HelloStage v-if="isHello" />
+      </Transition>
       <slot />
     </main>
     <NavBar :current="section" />

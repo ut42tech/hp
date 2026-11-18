@@ -1,5 +1,5 @@
 import { expect, test } from "vite-plus/test";
-import { sectionOf } from "./section";
+import { isCategorySwitch, sectionOf } from "./section";
 
 test("the language root is Hello", () => {
   expect(sectionOf("/ja/")).toBe("hello");
@@ -14,3 +14,14 @@ test("pages inside a tab belong to that tab", () => {
 });
 
 test("anything else is not found", () => expect(sectionOf("/ja/nope")).toBe("not-found"));
+
+test("moving between Works categories is a category switch", () => {
+  expect(isCategorySwitch("/ja/works/apps", "/ja/works/career")).toBe(true);
+  expect(isCategorySwitch("/ja/works/career/", "/ja/works/events")).toBe(true);
+});
+
+test("opening an app, leaving Works or staying put is not a category switch", () => {
+  expect(isCategorySwitch("/ja/works/apps", "/ja/works/apps/tangi")).toBe(false);
+  expect(isCategorySwitch("/ja/works/apps", "/ja/about")).toBe(false);
+  expect(isCategorySwitch("/ja/works/apps", "/ja/works/apps")).toBe(false);
+});

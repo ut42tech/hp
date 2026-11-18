@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { REORDER_SPRING } from "@ut42tech/tokens/motion";
+import { motion } from "motion-v";
 import { computed, ref } from "vue";
 import Card from "~/components/Card.vue";
 import PageHead from "~/components/PageHead.vue";
@@ -30,7 +32,13 @@ const brandOf = (source: string): BrandIconName | undefined =>
       handle
     />
     <ul id="press-list" class="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6">
-      <li v-for="entry in sorted" :key="entry.slug">
+      <!-- Re-sorting slides each card to its new place (Motion layout). -->
+      <motion.li
+        v-for="entry in sorted"
+        :key="entry.slug"
+        layout
+        :transition="{ layout: REORDER_SPRING }"
+      >
         <Card
           :to="entry.url"
           external
@@ -41,7 +49,7 @@ const brandOf = (source: string): BrandIconName | undefined =>
           :brand="brandOf(entry.source)"
           :lang="entry.lang === locale ? undefined : entry.lang"
         />
-      </li>
+      </motion.li>
     </ul>
   </div>
 </template>
