@@ -181,3 +181,39 @@ html[data-intro="play"] .hello-stage:not(.is-decorative) .letter {
 html[data-intro="play"] .hello-stage:not(.is-decorative) .hello-sub {
   opacity: 0;
 }
+
+/* The desktop pointer (design §8.8, app/motion/pointer.ts). While it runs, the system pointer is hidden; the
+   keyboard focus ring is unaffected. */
+html.has-pointer,
+html.has-pointer * {
+  cursor: none;
+}
+
+.pointer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--ut-color-pointer);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--ut-duration-fast) linear;
+}
+
+.pointer.is-visible {
+  opacity: 1;
+}
+
+/* Over a pressable element: a light tint with a soft light that follows the pointer across it. */
+.pointer.is-block {
+  background:
+    radial-gradient(
+      circle at var(--pointer-light-x, 50%) var(--pointer-light-y, 50%),
+      var(--ut-color-pointer-light),
+      transparent 60%
+    ),
+    var(--ut-color-pointer-block);
+}

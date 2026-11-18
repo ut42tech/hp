@@ -68,3 +68,6 @@ export const GREETING = {
   idleMs: 2500,
   bounce: { minSpeed: 260, maxSpeed: 320 },
 } as const;
+
+// The desktop pointer (design §8.8): a 20px dot that settles onto pressable elements with 6px to spare.
+export const POINTER = { sizePx: 20, blockPaddingPx: 6, moveMs: 200, pressScale: 0.9 } as const;
