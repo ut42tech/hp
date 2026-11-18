@@ -23,7 +23,7 @@ const title = computed(() => t.value("hello.title"));
         letter
       }}</span>
     </component>
-    <p class="mt-4 text-callout text-muted lg:mt-5">{{ t("hello.sub") }}</p>
+    <p class="hello-sub mt-4 text-callout text-muted lg:mt-5">{{ t("hello.sub") }}</p>
   </div>
 </template>
 

@@ -36,3 +36,16 @@ export const SELECTION_SPRING = { type: "spring", stiffness: 500, damping: 45 } 
 
 // Items moving to their new place when a list is re-sorted (same feel as a sheet: no overshoot).
 export const REORDER_SPRING = { type: "spring", stiffness: 380, damping: 39 } as const;
+
+// The entrance (visual spec §9.1): times are ms from the start, all ending by removeAt.
+export const INTRO = {
+  nameIn: { at: 80, duration: 600 },
+  nameOut: { at: 780, duration: 500, opacityDuration: 350, liftPx: 24 },
+  bands: { count: 5, at: 780, staggerMs: 60, duration: 820 },
+  letters: { at: 1060, staggerMs: 45, duration: 900, fromEm: 0.35 },
+  sub: { at: 1660, duration: 600 },
+  removeAt: 1930,
+  fontWaitMs: 1500,
+  reducedFadeMs: 400,
+  failsafeMs: 3000,
+} as const;
