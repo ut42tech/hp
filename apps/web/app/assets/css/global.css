@@ -150,3 +150,87 @@
 ::view-transition-group(nav-bar) {
   z-index: 1;
 }
+
+/* The entrance (design §8.7). The curtain only exists while html[data-intro] is set: the inline gate in <head>
+   sets it before first paint, and app/plugins/intro removes it when the entrance ends. If the app never
+   starts, the curtain still goes after INTRO.failsafeMs (5000ms). */
+.intro-curtain {
+  display: none;
+}
+
+html[data-intro] .intro-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  /* It is also a popover (raised into the top layer at start); undo the browser's popover box. */
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  /* Presses pass through to the page; the skip listens on the window. */
+  pointer-events: none;
+  animation: intro-failsafe 0s 5000ms forwards;
+}
+
+@keyframes intro-failsafe {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* Until the entrance runs, the greeting waits below and out of sight. */
+html[data-intro="play"] .hello-stage:not(.is-decorative) .letter {
+  opacity: 0;
+  transform: translateY(0.35em);
+  animation: intro-reveal 0s 5000ms forwards;
+}
+
+html[data-intro="play"] .hello-stage:not(.is-decorative) .hello-sub {
+  opacity: 0;
+  animation: intro-reveal 0s 5000ms forwards;
+}
+
+/* The greeting's own failsafe: if the app never starts, it shows itself with the curtain's. */
+@keyframes intro-reveal {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The desktop pointer (design §8.8, ipad-cursor started by app/motion/pointer.ts). ipad-cursor hides the system
+   pointer everywhere; the keyboard focus ring is unaffected. */
+/* A pen, a touch, or the pointer outside the window: no dot, the system pointer as usual. */
+html.pointer-off .ipad-cursor {
+  opacity: 0;
+}
+
+html.pointer-off,
+html.pointer-off * {
+  cursor: revert;
+}
+
+/* A modal detail sits in the top layer, above any z-index, so the dot would be drawn under it while the
+   system pointer is hidden. While one is open, the system pointer comes back. */
+html.has-pointer:has(dialog:modal) .ipad-cursor {
+  display: none;
+}
+
+html.has-pointer:has(dialog:modal),
+html.has-pointer:has(dialog:modal) * {
+  cursor: revert;
+}
+
+/* The light that follows the pointer across a pressable element, in the theme's colour. */
+html.has-pointer .ipad-cursor.lighting--on .lighting {
+  background-image: radial-gradient(
+    circle at center,
+    var(--ut-color-pointer-light) 0%,
+    transparent 30%
+  );
+}

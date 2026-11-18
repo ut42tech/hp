@@ -17,6 +17,9 @@
   --color-on-bar: var(--ut-color-on-bar);
   --color-on-bar-muted: var(--ut-color-on-bar-muted);
   --color-scrim: var(--ut-color-scrim);
+  --color-pointer: var(--ut-color-pointer);
+  --color-pointer-block: var(--ut-color-pointer-block);
+  --color-pointer-light: var(--ut-color-pointer-light);
   --color-curtain: var(--ut-color-curtain);
   --color-on-curtain: var(--ut-color-on-curtain);
   --color-accent: var(--ut-color-accent);

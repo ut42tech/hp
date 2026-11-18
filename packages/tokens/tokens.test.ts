@@ -110,3 +110,14 @@ test("the selection mark slides without overshooting", async () => {
     2 * Math.sqrt(SELECTION_SPRING.stiffness),
   );
 });
+
+test("the pointer colours exist in both themes", () => {
+  const css = readFileSync(new URL("./tokens.css", import.meta.url), "utf8");
+  for (const name of [
+    "--ut-color-pointer:",
+    "--ut-color-pointer-block:",
+    "--ut-color-pointer-light:",
+  ]) {
+    expect(css.split(name).length - 1, name).toBe(3);
+  }
+});

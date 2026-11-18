@@ -14,6 +14,9 @@
   --ut-color-on-bar: #f4f4f3;
   --ut-color-on-bar-muted: #a3a3a3;
   --ut-color-scrim: rgb(0 0 0 / 25%);
+  --ut-color-pointer: rgb(127 127 127 / 28%);
+  --ut-color-pointer-block: rgb(127 127 127 / 14%);
+  --ut-color-pointer-light: rgb(255 255 255 / 50%);
   --ut-color-curtain: #141414;
   --ut-color-on-curtain: #f4f4f3;
   --ut-color-accent: var(--ut-color-fg);
@@ -76,6 +79,9 @@
     --ut-color-on-bar: #111112;
     --ut-color-on-bar-muted: #6b6b6b;
     --ut-color-scrim: rgb(0 0 0 / 50%);
+    --ut-color-pointer: rgb(127 127 127 / 28%);
+    --ut-color-pointer-block: rgb(127 127 127 / 14%);
+    --ut-color-pointer-light: rgb(255 255 255 / 12%);
     --ut-color-curtain: #f2f2f2;
     --ut-color-on-curtain: #111112;
     --ut-color-accent: var(--ut-color-fg);
@@ -96,6 +102,9 @@
   --ut-color-on-bar: #111112;
   --ut-color-on-bar-muted: #6b6b6b;
   --ut-color-scrim: rgb(0 0 0 / 50%);
+  --ut-color-pointer: rgb(127 127 127 / 28%);
+  --ut-color-pointer-block: rgb(127 127 127 / 14%);
+  --ut-color-pointer-light: rgb(255 255 255 / 12%);
   --ut-color-curtain: #f2f2f2;
   --ut-color-on-curtain: #111112;
   --ut-color-accent: var(--ut-color-fg);

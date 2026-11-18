@@ -5,7 +5,9 @@ import { useHead } from "#imports";
 import { useLocale, useT } from "~/composables/use-locale";
 import type { Section } from "~/lib/section";
 import { useNarrow } from "~/composables/use-narrow";
+import { introGate } from "~/motion/intro-gate";
 import HelloStage from "./HelloStage.vue";
+import IntroCurtain from "./IntroCurtain.vue";
 import NavBar from "./NavBar.vue";
 import SiteHeader from "./SiteHeader.vue";
 
@@ -36,10 +38,24 @@ const themeScript = `(() => {
   media.addEventListener("change", apply);
 })();`;
 
+// Decides before first paint whether this load shows the entrance (html[data-intro]); the gate runs from its
+// own source text, so the logic is the one the tests cover.
+const introScript = `(() => {
+  let storage;
+  try {
+    storage = sessionStorage;
+  } catch {}
+  const mode = (${introGate.toString()})(storage, matchMedia("(prefers-reduced-motion: reduce)").matches);
+  if (mode !== "none") document.documentElement.dataset.intro = mode;
+})();`;
+
 useHead({
   htmlAttrs: { lang: locale },
   meta: [{ name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" }],
-  script: [{ innerHTML: themeScript, tagPosition: "head" }],
+  script: [
+    { innerHTML: themeScript, tagPosition: "head" },
+    { innerHTML: introScript, tagPosition: "head" },
+  ],
 });
 </script>
 
@@ -63,5 +79,6 @@ useHead({
       <slot />
     </main>
     <NavBar :current="section" />
+    <IntroCurtain />
   </MotionConfig>
 </template>

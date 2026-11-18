@@ -36,3 +36,45 @@ export const SELECTION_SPRING = { type: "spring", stiffness: 500, damping: 45 } 
 
 // Items moving to their new place when a list is re-sorted (same feel as a sheet: no overshoot).
 export const REORDER_SPRING = { type: "spring", stiffness: 380, damping: 39 } as const;
+
+// The entrance (visual spec §9.1): times are ms from the start, all ending by removeAt.
+export const INTRO = {
+  nameIn: { at: 80, duration: 600 },
+  nameOut: { at: 780, duration: 500, opacityDuration: 350, liftPx: 24 },
+  bands: { count: 5, at: 780, staggerMs: 60, duration: 820 },
+  letters: { at: 1060, staggerMs: 45, duration: 900, fromEm: 0.35 },
+  sub: { at: 1660, duration: 600 },
+  removeAt: 1930,
+  fontWaitMs: 1500,
+  reducedFadeMs: 400,
+  // Longer than the slowest real start (fontWaitMs + removeAt + start-up), so it never cuts an intro short.
+  failsafeMs: 5000,
+} as const;
+
+// The --ut-ease-* curves as numbers, for animations started from script.
+export const EASE = {
+  "ease-out": [0.2, 0.8, 0.2, 1],
+  "ease-rise": [0.2, 1, 0.3, 1],
+  "ease-curtain": [0.76, 0, 0.24, 1],
+  "ease-in-out": [0.7, 0, 0.3, 1],
+} as const;
+
+// The Hello greeting (visual spec §9.2): letters lean toward a nearby pointer and bounce when pressed.
+export const GREETING = {
+  reachPx: 420,
+  maxX: 14,
+  maxY: 10,
+  spring: { type: "spring", stiffness: 160, damping: 20 },
+  idleMs: 2500,
+  bounce: { minSpeed: 260, maxSpeed: 320 },
+} as const;
+
+// The desktop pointer (design §8.8, drawn by ipad-cursor): a 20px dot that settles onto pressable elements
+// with 6px to spare. `adsorption` is how far the element leans toward the pointer (ipad-cursor's 0–30).
+export const POINTER = {
+  sizePx: 20,
+  blockPaddingPx: 6,
+  moveMs: 200,
+  pressScale: 0.9,
+  adsorption: 6,
+} as const;
