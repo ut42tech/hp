@@ -7,7 +7,6 @@ export const ja = {
   "nav.works": "Works",
   "nav.press": "Press",
   skip: "本文へ移動",
-  "theme.auto": "表示: 自動",
   "theme.light": "表示: ライト",
   "theme.dark": "表示: ダーク",
   "locale.switch": "English で見る",

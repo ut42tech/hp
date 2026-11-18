@@ -5,7 +5,7 @@
 ## いまの状態
 
 - デザイン（Figma）、設計書、実装まで終わっている。`apps/web` は Astro から Nuxt 4 + Motion for Vue に移した（[動きと Nuxt への移行の設計書](superpowers/specs/2026-11-18-portfolio-motion-design.md)の段階1）。
-- `vp run check` はエラーなし、`vp test` は 248/248 件が通る。
+- `vp run check` はエラーなし、`vp test` は 257/257 件が通る。
 - 動きの段階2（登場演出、あいさつ、パソコンのポインター）まで入っている。使い方と重さは README の「登場演出、あいさつ、ポインター」にある。
 - Vercel の `hp-v2` は `main` を本番として書き出す。ただし、まだ `ut42tech.com` を付けていない。今のドメインは `ut42tech-hp-v2.vercel.app` だけで、Vercel の認証で保護されている。
 
@@ -15,7 +15,7 @@
 - **設計書**: [構造](superpowers/specs/2026-11-16-portfolio-wireframe-design.md)、[見た目](superpowers/specs/2026-11-17-portfolio-visual-design.md)、[動きと Nuxt への移行](superpowers/specs/2026-11-18-portfolio-motion-design.md)（食い違いは最後のものが優先）。
 - **動き（段階1）**: スマホのシートは指に付いてきて、払った勢いで閉じるかを決め、離した速さを引き継ぐ。タブを切り替えるとシートが一度しまわれてから上がる。Apps の詳細はシート1枚で上がり、裏の一覧が奥へ下がる。どの動きも途中で次の操作を受け付ける。Safari の端スワイプでは動きを二重にしない。
 - **ページ**: Hello、Works（Apps・Career・Events・Awards）、Apps の詳細、About（連絡先を含む）、Press。
-- **見た目**: トークン（`packages/tokens`）、黒いナビバー、表示の切り替え（自動・ライト・ダーク）、Works の並べ替え、メールアドレスのコピー。
+- **見た目**: トークン（`packages/tokens`）、黒いナビバー、表示の切り替え（ライト・ダーク。ボタンから円で広がる）、Works の並べ替え、メールアドレスのコピー。
 - **スマホとパソコン**: 同じ HTML を 1024px で出し分ける。スマホの詳細はナビバーの上に重なるシートになる。回転や幅の変更で 1024px をまたいでも追従する。
 - **多言語**: `/ja/` と `/en/` の URL、辞書、言語の切り替え。英語は訳がそろうまで書き出さない。
 - **検索エンジン向け**: canonical と hreflang（絶対 URL）。

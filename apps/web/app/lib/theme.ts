@@ -1,40 +1,38 @@
 export type Theme = "light" | "dark";
-export type ThemePreference = "auto" | "light" | "dark";
 
-// Keep the key and the resolution rules in sync with the inline script in layouts/Site.astro.
+// Keep the key and the resolution rules in sync with the inline script in components/SiteShell.vue.
 export const THEME_STORAGE_KEY = "ut42tech:theme";
 
 const isTheme = (value: unknown): value is Theme => value === "light" || value === "dark";
 
 // Storage access can throw (private mode, blocked site data), so every call is guarded.
-export function readPreference(storage: Pick<Storage, "getItem"> | undefined): ThemePreference {
+export function readStoredTheme(storage: Pick<Storage, "getItem"> | undefined): Theme | null {
   try {
     const value = storage?.getItem(THEME_STORAGE_KEY);
-    return isTheme(value) ? value : "auto";
+    return isTheme(value) ? value : null;
   } catch {
-    return "auto";
+    return null;
   }
 }
 
-export function storePreference(
+// Picking the theme the OS already shows means following the OS again, so nothing is kept for it.
+export function storeTheme(
   storage: Pick<Storage, "setItem" | "removeItem"> | undefined,
-  pref: ThemePreference,
+  theme: Theme,
+  osTheme: Theme,
 ): void {
   try {
-    if (pref === "auto") storage?.removeItem(THEME_STORAGE_KEY);
-    else storage?.setItem(THEME_STORAGE_KEY, pref);
+    if (theme === osTheme) storage?.removeItem(THEME_STORAGE_KEY);
+    else storage?.setItem(THEME_STORAGE_KEY, theme);
   } catch {
     // Persisting is a convenience; the toggle keeps working for this page view.
   }
 }
 
-export function resolveTheme(pref: ThemePreference, prefersDark: boolean): Theme {
-  if (pref !== "auto") return pref;
-  return prefersDark ? "dark" : "light";
+export function resolveTheme(stored: Theme | null, prefersDark: boolean): Theme {
+  return stored ?? (prefersDark ? "dark" : "light");
 }
 
-const order: readonly ThemePreference[] = ["auto", "light", "dark"];
-
-export function nextPreference(pref: ThemePreference): ThemePreference {
-  return order[(order.indexOf(pref) + 1) % order.length]!;
+export function otherTheme(theme: Theme): Theme {
+  return theme === "dark" ? "light" : "dark";
 }

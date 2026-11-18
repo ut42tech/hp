@@ -1,5 +1,5 @@
 import { expect, test } from "vite-plus/test";
-import { nextPreference, readPreference, resolveTheme, storePreference } from "./theme";
+import { otherTheme, readStoredTheme, resolveTheme, storeTheme } from "./theme";
 
 const throwing = {
   getItem: () => {
@@ -13,37 +13,38 @@ const throwing = {
   },
 };
 
-test("readPreference falls back to auto", () => {
-  expect(readPreference(undefined)).toBe("auto");
-  expect(readPreference({ getItem: () => "sepia" })).toBe("auto");
-  expect(readPreference(throwing)).toBe("auto");
-  expect(readPreference({ getItem: () => "dark" })).toBe("dark");
+test("readStoredTheme returns a stored light or dark, otherwise nothing", () => {
+  expect(readStoredTheme(undefined)).toBeNull();
+  expect(readStoredTheme({ getItem: () => "sepia" })).toBeNull();
+  expect(readStoredTheme({ getItem: () => "auto" })).toBeNull();
+  expect(readStoredTheme(throwing)).toBeNull();
+  expect(readStoredTheme({ getItem: () => "dark" })).toBe("dark");
 });
 
-test("auto follows the OS", () => {
-  expect(resolveTheme("auto", true)).toBe("dark");
-  expect(resolveTheme("auto", false)).toBe("light");
+test("without a stored theme the page follows the OS", () => {
+  expect(resolveTheme(null, true)).toBe("dark");
+  expect(resolveTheme(null, false)).toBe("light");
   expect(resolveTheme("light", true)).toBe("light");
 });
 
-test("nextPreference cycles auto → light → dark → auto", () => {
-  expect((["auto", "light", "dark"] as const).map(nextPreference)).toEqual([
-    "light",
-    "dark",
-    "auto",
-  ]);
+test("the toggle has two states", () => {
+  expect(otherTheme("light")).toBe("dark");
+  expect(otherTheme("dark")).toBe("light");
 });
 
-test("storing auto removes the key", () => {
+// Choosing what the OS already shows is the same as following it, so the page keeps following the OS.
+test("storing the OS's own theme removes the key; the other one is kept", () => {
   const calls: string[] = [];
-  storePreference(
-    { setItem: () => calls.push("set"), removeItem: () => calls.push("remove") },
-    "auto",
-  );
-  expect(calls).toEqual(["remove"]);
+  const storage = {
+    setItem: (_: string, value: string) => calls.push(`set ${value}`),
+    removeItem: () => calls.push("remove"),
+  };
+  storeTheme(storage, "dark", "dark");
+  storeTheme(storage, "light", "dark");
+  expect(calls).toEqual(["remove", "set light"]);
 });
 
-test("storePreference swallows storage errors", () => {
-  expect(() => storePreference(throwing, "dark")).not.toThrow();
-  expect(() => storePreference(throwing, "auto")).not.toThrow();
+test("storeTheme swallows storage errors", () => {
+  expect(() => storeTheme(throwing, "dark", "light")).not.toThrow();
+  expect(() => storeTheme(throwing, "dark", "dark")).not.toThrow();
 });

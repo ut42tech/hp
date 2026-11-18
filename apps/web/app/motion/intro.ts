@@ -4,7 +4,7 @@ import { animate, type AnimationPlaybackControls } from "motion";
 type Ease = keyof typeof EASE | "linear";
 
 export interface IntroStep {
-  target: "curtain" | "name" | "band" | "letter" | "sub";
+  target: "curtain" | "name" | "nameWindow" | "band" | "letter" | "sub";
   index: number;
   at: number;
   duration: number;
@@ -12,7 +12,8 @@ export interface IntroStep {
   ease: Ease;
 }
 
-// The entrance as a timetable (visual spec §9.1): the name rises and leaves, the bands lift left to right,
+// The entrance as a timetable (visual spec §9.1): the name rises into its window and the window leaves (two
+// elements, so the rise in % and the exit in px never share a track), the bands lift left to right,
 // then on Hello "Welcome." rises letter by letter and the sub line fades in. Reduced motion only fades the
 // curtain. Times are ms from the start.
 export function introSteps(options: {
@@ -43,7 +44,7 @@ export function introSteps(options: {
       ease: "ease-out",
     },
     {
-      target: "name",
+      target: "nameWindow",
       index: 0,
       at: nameOut.at,
       duration: nameOut.duration,
@@ -51,7 +52,7 @@ export function introSteps(options: {
       ease: "ease-in-out",
     },
     {
-      target: "name",
+      target: "nameWindow",
       index: 0,
       at: nameOut.at,
       duration: nameOut.opacityDuration,
@@ -96,13 +97,13 @@ export interface IntroElements {
   curtain: HTMLElement;
   bands: HTMLElement[];
   name: HTMLElement;
+  nameWindow: HTMLElement;
   letters: HTMLElement[];
   sub?: HTMLElement;
 }
 
-// Runs the timetable as two Motion sequences (the curtain's, then the greeting's), so steps that animate the
-// same value one after another (the name's rise and exit) chain on one timeline instead of stopping each
-// other. `curtainGone` settles when the curtain's sequence ends, `finished` when both have; `skip` jumps both
+// Runs the timetable as two Motion sequences (the curtain's, then the greeting's), so the curtain's steps and
+// the greeting's share one clock each. `curtainGone` settles when the curtain's sequence ends, `finished` when both have; `skip` jumps both
 // to their end.
 export function playIntro(
   elements: IntroElements,
@@ -118,11 +119,13 @@ export function playIntro(
       ? elements.curtain
       : step.target === "name"
         ? elements.name
-        : step.target === "band"
-          ? elements.bands[step.index]
-          : step.target === "letter"
-            ? elements.letters[step.index]
-            : elements.sub;
+        : step.target === "nameWindow"
+          ? elements.nameWindow
+          : step.target === "band"
+            ? elements.bands[step.index]
+            : step.target === "letter"
+              ? elements.letters[step.index]
+              : elements.sub;
   const sequence = (part: IntroStep[]): AnimationPlaybackControls | null => {
     const segments = part.flatMap((step) => {
       const element = targetOf(step);
@@ -138,7 +141,10 @@ export function playIntro(
     return segments.length > 0 ? animate(segments as never) : null;
   };
   const isCurtain = (step: IntroStep) =>
-    step.target === "curtain" || step.target === "name" || step.target === "band";
+    step.target === "curtain" ||
+    step.target === "name" ||
+    step.target === "nameWindow" ||
+    step.target === "band";
   const curtain = sequence(steps.filter(isCurtain));
   const greeting = sequence(steps.filter((step) => !isCurtain(step)));
   const done = (controls: AnimationPlaybackControls | null) =>

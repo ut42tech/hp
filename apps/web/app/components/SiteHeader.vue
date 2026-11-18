@@ -9,7 +9,6 @@ import ThemeToggle from "./ThemeToggle.vue";
 const locale = useLocale();
 const t = useT();
 const labels = computed(() => ({
-  auto: t.value("theme.auto"),
   light: t.value("theme.light"),
   dark: t.value("theme.dark"),
 }));
@@ -17,7 +16,11 @@ const labels = computed(() => ({
 
 <template>
   <header class="site-header">
-    <NuxtLink :to="localizePath('/', locale)" class="text-headline text-fg" data-cursor="block">
+    <NuxtLink
+      :to="localizePath('/', locale)"
+      class="home text-headline text-fg"
+      data-cursor="block"
+    >
       @ut42tech
     </NuxtLink>
     <div class="flex items-center">
@@ -41,6 +44,17 @@ const labels = computed(() => ({
   padding-inline: var(--gutter-left) calc(var(--gutter-right) - 12px);
   /* Its own layer during view transitions, kept above the travelling thumbnail (global.css). */
   view-transition-name: site-header;
+}
+
+/* A pill with room around the name, so the pointer settles on it as on any other button; the negative margin
+   keeps the text where it was. */
+.home {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  margin-inline-start: -12px;
+  padding: 0 12px;
+  border-radius: var(--ut-radius-full);
 }
 
 /* Desktop: pages scroll under the header, so it is a frosted layer of the page colour that keeps its

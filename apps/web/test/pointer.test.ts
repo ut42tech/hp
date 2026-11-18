@@ -21,3 +21,17 @@ test("a modal dialog gives the system pointer back", () => {
     /:root:has\(\.ipad-cursor\):has\(dialog:modal\),\s*:root:has\(\.ipad-cursor\):has\(dialog:modal\) \* \{[^}]*cursor: revert/,
   );
 });
+
+// ipad-cursor's frame takes the element's own corners (radius "auto"). The header's name and the theme toggle
+// have no surface of their own, so they are pills with room around them; otherwise the frame is a hard grey
+// box hugging the text.
+test.each([
+  ["components/SiteHeader.vue", ".home"],
+  ["components/ThemeToggle.vue", ".theme-toggle"],
+])("%s is a pill the pointer can settle on", (file, selector) => {
+  const source = read(file);
+  expect(source).toContain(`class="${selector.slice(1)}`);
+  const rule = source.slice(source.indexOf(`${selector} {`));
+  expect(rule).toMatch(/^[^}]*border-radius: var\(--ut-radius-full\)/);
+  expect(rule).toMatch(/^[^}]*(padding|width)/);
+});

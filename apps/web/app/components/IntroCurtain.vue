@@ -13,7 +13,7 @@ const bands = Array.from({ length: INTRO.bands.count }, (_, i) => i);
   <div class="intro-curtain" popover="manual" aria-hidden="true">
     <span v-for="band in bands" :key="band" class="intro-band bg-curtain" data-intro-band />
     <span class="intro-name-window">
-      <span class="intro-name-clip">
+      <span class="intro-name-clip" data-intro-name-window>
         <span class="intro-name text-loader text-on-curtain" data-intro-name>{{
           profile.name
         }}</span>

@@ -68,3 +68,7 @@ export const GREETING = {
   idleMs: 2500,
   bounce: { minSpeed: 260, maxSpeed: 320 },
 } as const;
+
+// Switching between light and dark: the new theme grows from the toggle as a circle with a soft edge
+// (`feather` is the share of its radius that fades out).
+export const THEME_SWITCH = { durationMs: 600, feather: 0.25, ease: "ease-out" } as const;

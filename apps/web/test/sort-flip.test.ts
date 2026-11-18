@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { expect, test } from "vite-plus/test";
+import { loadPage } from "./html";
 
 const source = readFileSync(new URL("../app/components/SortButton.vue", import.meta.url), "utf8");
 
@@ -21,4 +22,13 @@ test("the arrows half-turn with the order", () => {
 test("reduced motion swaps the label without turning", () => {
   const reduced = source.slice(source.indexOf("@media (prefers-reduced-motion: reduce)"));
   expect(reduced).toMatch(/transition: none/);
+});
+
+// The labels differ in length; the button keeps the width of the longest, so it does not jump when pressed.
+test("both labels size the button and only the current one shows", () => {
+  const button = loadPage("/ja/works/apps").querySelector(".sort-button")!;
+  const sizers = button.querySelectorAll("[data-sizer]");
+  expect(sizers.map((el) => el.textContent.trim())).toEqual(["新しい順", "古い順"]);
+  for (const el of sizers) expect(el.getAttribute("aria-hidden")).toBe("true");
+  expect(source).toMatch(/\[data-sizer\] \{[^}]*visibility: hidden/);
 });

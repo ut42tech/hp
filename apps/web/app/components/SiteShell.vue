@@ -28,11 +28,9 @@ const themeScript = `(() => {
     try {
       stored = localStorage.getItem(key);
     } catch {}
-    const pref = stored === "light" || stored === "dark" ? stored : "auto";
-    const root = document.documentElement;
-    root.dataset.theme = pref === "auto" ? (media.matches ? "dark" : "light") : pref;
-    // Read by components/ThemeToggle.vue's CSS to show the right icon before it hydrates.
-    root.dataset.themePref = pref;
+    // Also read by components/ThemeToggle.vue's CSS to show the right icon before it hydrates.
+    document.documentElement.dataset.theme =
+      stored === "light" || stored === "dark" ? stored : media.matches ? "dark" : "light";
   };
   apply();
   media.addEventListener("change", apply);
