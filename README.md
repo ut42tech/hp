@@ -129,10 +129,10 @@ Nuxt 4 で全 URL を静的に書き出し（`nuxt generate`、出力は `apps/w
   - 本体の読み込みに失敗しても、幕は 5 秒で CSS だけで消える。
   - 同じタブでもう一度見たいときは、`sessionStorage` の `ut42tech:intro` を消す。
 - **あいさつ**: 「Welcome.」の文字がポインターに寄り、押すと弾む（`app/motion/greeting.ts`）。
-- **ポインター**: パソコンのマウスで、押せる要素（`data-cursor="block"`）に吸い付き、要素も少し寄ってくる。[ipad-cursor](https://github.com/CatsJuice/ipad-cursor)（MIT）を使い、設定は `app/motion/pointer.ts` にある。タッチ端末と動きを減らす設定では読み込まない（先読みもしない）。
+- **ポインター**: パソコンのマウスで、押せる要素（`data-cursor="block"`）に吸い付き、要素も少し寄ってくる。[ipad-cursor](https://github.com/CatsJuice/ipad-cursor)（MIT）を、ほぼ既定の見た目のまま `app/plugins/pointer.client.ts` で始める。タッチ端末と動きを減らす設定では始めない。
 
 **重さ**（2026-11-18、書き出し後の gzip。中身が増えると変わる）
 
-- `/ja/` を最初に開くとき: JavaScript が 125KB、CSS が 208KB。CSS の大半は LINE Seed JP の書体の定義。
-- 書き出した JavaScript の合計: 318KB。
-- ポインター（ipad-cursor を含む）: 3.6KB。マウスのある端末でだけ読み込む。
+- `/ja/` を最初に開くとき: JavaScript が 128KB、CSS が 208KB。CSS の大半は LINE Seed JP の書体の定義。
+- 書き出した JavaScript の合計: 317KB。
+- ポインター（ipad-cursor）: 約 3KB。どの端末でも最初に読み込む（タッチ端末では動かさない）。
