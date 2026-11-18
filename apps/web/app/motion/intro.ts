@@ -93,6 +93,9 @@ export function introSteps(options: {
   return steps;
 }
 
+// The curtain's own parts; the rest is the greeting.
+const CURTAIN_TARGETS = new Set<IntroStep["target"]>(["curtain", "name", "nameWindow", "band"]);
+
 export interface IntroElements {
   curtain: HTMLElement;
   bands: HTMLElement[];
@@ -102,9 +105,9 @@ export interface IntroElements {
   sub?: HTMLElement;
 }
 
-// Runs the timetable as two Motion sequences (the curtain's, then the greeting's), so the curtain's steps and
-// the greeting's share one clock each. `curtainGone` settles when the curtain's sequence ends, `finished` when both have; `skip` jumps both
-// to their end.
+// Runs the timetable as two Motion sequences, the curtain's and the greeting's, each on one clock.
+// `curtainGone` settles when the curtain's sequence ends, `finished` when both have; `skip` jumps both to
+// their end.
 export function playIntro(
   elements: IntroElements,
   mode: "play" | "fade",
@@ -114,21 +117,17 @@ export function playIntro(
     bands: elements.bands.length,
     letters: elements.letters.length,
   });
-  const targetOf = (step: IntroStep): HTMLElement | undefined =>
-    step.target === "curtain"
-      ? elements.curtain
-      : step.target === "name"
-        ? elements.name
-        : step.target === "nameWindow"
-          ? elements.nameWindow
-          : step.target === "band"
-            ? elements.bands[step.index]
-            : step.target === "letter"
-              ? elements.letters[step.index]
-              : elements.sub;
+  const targets: Record<IntroStep["target"], (HTMLElement | undefined)[]> = {
+    curtain: [elements.curtain],
+    name: [elements.name],
+    nameWindow: [elements.nameWindow],
+    band: elements.bands,
+    letter: elements.letters,
+    sub: [elements.sub],
+  };
   const sequence = (part: IntroStep[]): AnimationPlaybackControls | null => {
     const segments = part.flatMap((step) => {
-      const element = targetOf(step);
+      const element = targets[step.target][step.index];
       if (!element) return [];
       const options = {
         at: step.at / 1000,
@@ -140,11 +139,7 @@ export function playIntro(
     // oxlint-disable-next-line typescript/no-unsafe-argument -- Motion's sequence tuple type is not exported
     return segments.length > 0 ? animate(segments as never) : null;
   };
-  const isCurtain = (step: IntroStep) =>
-    step.target === "curtain" ||
-    step.target === "name" ||
-    step.target === "nameWindow" ||
-    step.target === "band";
+  const isCurtain = (step: IntroStep) => CURTAIN_TARGETS.has(step.target);
   const curtain = sequence(steps.filter(isCurtain));
   const greeting = sequence(steps.filter((step) => !isCurtain(step)));
   const done = (controls: AnimationPlaybackControls | null) =>

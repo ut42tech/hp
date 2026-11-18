@@ -1,5 +1,5 @@
 import { defineCollection, defineContentConfig, z } from "@nuxt/content";
-import type { SkillIcon } from "./app/lib/icons";
+import { skills } from "./app/data/skills";
 
 // Entries live at content/<collection>/<lang>/<slug>.md.
 const source = (collection: string) => `${collection}/**/*.md`;
@@ -7,20 +7,6 @@ const source = (collection: string) => `${collection}/**/*.md`;
 const date = z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, "use YYYY-MM or YYYY-MM-DD");
 // Images live in public/works/<collection>/ and are referenced by their public path.
 const thumbnail = z.string().startsWith("/works/").optional();
-
-const skills = [
-  "typescript",
-  "python",
-  "swift",
-  "react",
-  "nextdotjs",
-  "vuedotjs",
-  "astro",
-  "threedotjs",
-  "unity",
-  "blender",
-  "figma",
-] as const satisfies readonly SkillIcon[];
 
 export default defineContentConfig({
   collections: {

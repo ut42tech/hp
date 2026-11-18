@@ -1,5 +1,5 @@
 import { expect, test } from "vite-plus/test";
-import { otherTheme, readStoredTheme, resolveTheme, storeTheme } from "./theme";
+import { otherTheme, storeTheme, themeGate } from "./theme";
 
 const throwing = {
   getItem: () => {
@@ -13,18 +13,54 @@ const throwing = {
   },
 };
 
-test("readStoredTheme returns a stored light or dark, otherwise nothing", () => {
-  expect(readStoredTheme(undefined)).toBeNull();
-  expect(readStoredTheme({ getItem: () => "sepia" })).toBeNull();
-  expect(readStoredTheme({ getItem: () => "auto" })).toBeNull();
-  expect(readStoredTheme(throwing)).toBeNull();
-  expect(readStoredTheme({ getItem: () => "dark" })).toBe("dark");
+function fakeMedia(matches: boolean) {
+  const listeners: (() => void)[] = [];
+  return {
+    matches,
+    addEventListener: (_: "change", listener: () => void) => listeners.push(listener),
+    change(next: boolean) {
+      this.matches = next;
+      for (const listener of listeners) listener();
+    },
+  };
+}
+
+const storageWith = (value: string | null) => ({ getItem: () => value });
+
+test("themeGate follows the OS when nothing usable is stored", () => {
+  for (const storage of [undefined, storageWith(null), storageWith("sepia"), throwing]) {
+    const root = { dataset: {} as DOMStringMap };
+    themeGate(root, storage, fakeMedia(true));
+    expect(root.dataset.theme).toBe("dark");
+  }
 });
 
-test("without a stored theme the page follows the OS", () => {
-  expect(resolveTheme(null, true)).toBe("dark");
-  expect(resolveTheme(null, false)).toBe("light");
-  expect(resolveTheme("light", true)).toBe("light");
+test("themeGate prefers the stored theme over the OS", () => {
+  const root = { dataset: {} as DOMStringMap };
+  themeGate(root, storageWith("light"), fakeMedia(true));
+  expect(root.dataset.theme).toBe("light");
+});
+
+test("themeGate keeps following the OS as it changes", () => {
+  const root = { dataset: {} as DOMStringMap };
+  const media = fakeMedia(false);
+  themeGate(root, storageWith(null), media);
+  media.change(true);
+  expect(root.dataset.theme).toBe("dark");
+});
+
+// The gate runs from its own source text, so it spells the key out; it must be the one storeTheme writes.
+test("themeGate reads what storeTheme writes", () => {
+  const data: Record<string, string> = {};
+  const storage = {
+    getItem: (key: string) => data[key] ?? null,
+    setItem: (key: string, value: string) => (data[key] = value),
+    removeItem: (key: string) => delete data[key],
+  };
+  storeTheme(storage, "dark", "light");
+  const root = { dataset: {} as DOMStringMap };
+  themeGate(root, storage, fakeMedia(false));
+  expect(root.dataset.theme).toBe("dark");
 });
 
 test("the toggle has two states", () => {

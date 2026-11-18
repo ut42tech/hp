@@ -9,7 +9,7 @@ function sourceFiles(dir: string): string[] {
   return readdirSync(dir).flatMap((name) => {
     const path = join(dir, name);
     if (statSync(path).isDirectory()) return sourceFiles(path);
-    return /\.(astro|vue|ts)$/.test(name) && !/\.test\.ts$/.test(name) ? [path] : [];
+    return /\.(vue|ts)$/.test(name) && !/\.test\.ts$/.test(name) ? [path] : [];
   });
 }
 
