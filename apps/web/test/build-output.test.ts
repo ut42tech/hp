@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { expect, test } from "vite-plus/test";
 import { loadPage } from "./html";
 
@@ -16,18 +16,16 @@ test("sets the theme before first paint", () => {
   expect(scripts.some((s) => s.textContent.includes("ut42tech:theme"))).toBe(true);
 });
 
-// The toggle is @theme-toggles/vue's Classic: its sun turns into a moon by CSS from a `.dark` class on the root,
-// which the inline script sets before first paint, so the icon is right before hydration too.
-test("the theme toggle is an animated sun and moon named as a dark mode switch", () => {
+// The toggle shows the Tabler outline sun and moon, like every other icon; CSS keyed on [data-theme] (set before
+// first paint) picks one, so it is right before hydration.
+test("the theme toggle is a dark mode switch with an outline sun and moon", () => {
   const toggle = hello.querySelector("header .theme-toggle")!;
   expect(toggle.tagName).toBe("BUTTON");
   expect(toggle.getAttribute("aria-label")).toBe("ダークモード");
-  expect(toggle.querySelector("svg")).not.toBeNull();
-  // Neither state pinned on the button itself, or it would override the root's class before hydration.
-  expect(toggle.classList.contains("light")).toBe(false);
-  expect(toggle.classList.contains("dark")).toBe(false);
-  const scripts = hello.querySelectorAll("head script").map((s) => s.textContent);
-  expect(scripts.some((s) => s.includes('classList.toggle("dark"'))).toBe(true);
+  const icons = toggle.querySelectorAll(".theme-icon");
+  expect(icons.map((i) => i.getAttribute("data-theme-icon"))).toEqual(["light", "dark"]);
+  for (const icon of icons)
+    expect(icon.querySelector("svg")!.getAttribute("stroke-width")).toBe("1.75");
 });
 
 test("hello greets without selecting a nav item", () => {
@@ -54,15 +52,4 @@ test("English is not published yet", () => {
 
 test("no language switch while only one locale is published", () => {
   expect(hello.querySelector('a[hreflang="en"]')).toBeNull();
-});
-
-// The toggle numbers its clip path from a counter in its module: prerendering counts across every page, the
-// browser starts again at 1, and after hydration the moon's cut-out pointed at a clip path that does not
-// exist. ThemeToggle.vue remounts it once mounted, so the browser numbers both ends.
-test("the theme toggle is remounted in the browser, so its clip path ids agree", () => {
-  const source = readFileSync(
-    new URL("../app/components/ThemeToggle.vue", import.meta.url),
-    "utf8",
-  );
-  expect(source).toMatch(/<Classic[^>]*:key="dark === undefined \? 'prerendered' : 'browser'"/);
 });

@@ -44,8 +44,8 @@ test("while the theme switches, the whole page is one snapshot without a cross-f
   );
 });
 
-// The owner's call (2026-11-18): a slow start that gathers pace, over a full second.
-test("the circle grows over 1000ms with an ease-in", () => {
-  expect(THEME_SWITCH.durationMs).toBe(1000);
-  expect(THEME_SWITCH.ease).toBe("ease-in");
+// The owner's call (2026-11-18): eased at both ends, over 800ms.
+test("the circle grows over 800ms with an ease-in-out", () => {
+  expect(THEME_SWITCH.durationMs).toBe(800);
+  expect(THEME_SWITCH.ease).toBe("ease-in-out");
 });

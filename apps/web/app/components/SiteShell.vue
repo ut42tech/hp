@@ -19,7 +19,7 @@ const narrow = useNarrow();
 // The greeting stays behind the sheets; the 404 stands on the Hello ground itself, so it gets none.
 const behindSheets = computed(() => !isHello.value && props.section !== "not-found");
 
-// Sets the theme before first paint. Keep the key and rules in sync with app/lib/theme.ts (applyTheme).
+// Sets the theme before first paint. Keep the key and rules in sync with app/lib/theme.ts.
 const themeScript = `(() => {
   const key = "ut42tech:theme";
   const media = matchMedia("(prefers-color-scheme: dark)");
@@ -28,11 +28,9 @@ const themeScript = `(() => {
     try {
       stored = localStorage.getItem(key);
     } catch {}
-    const theme = stored === "light" || stored === "dark" ? stored : media.matches ? "dark" : "light";
-    // The tokens read data-theme; the toggle's icon (components/ThemeToggle.vue) reads the dark class, so it
-    // is right before it hydrates.
-    document.documentElement.dataset.theme = theme;
-    document.documentElement.classList.toggle("dark", theme === "dark");
+    // Also read by components/ThemeToggle.vue's CSS to show the right icon before it hydrates.
+    document.documentElement.dataset.theme =
+      stored === "light" || stored === "dark" ? stored : media.matches ? "dark" : "light";
   };
   apply();
   media.addEventListener("change", apply);

@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import { Classic } from "@theme-toggles/vue";
-import "@theme-toggles/vue/styles/classic.css";
-import { THEME_SWITCH } from "@ut42tech/tokens/motion";
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import { applyTheme, otherTheme, storeTheme } from "../lib/theme";
+import { otherTheme, storeTheme } from "../lib/theme";
 import { switchTheme } from "../motion/theme-switch";
+import UiIcon from "./UiIcon.vue";
 
 defineProps<{ label: string }>();
 
-// The icon is @theme-toggles/vue's Classic: its sun turns into a moon by CSS. Until the page is in the browser,
-// `toggled` is passed as undefined and the icon follows the `.dark` class that the inline script in
-// SiteShell.vue puts on the root before first paint (left out, Vue would turn the Boolean prop into false and
-// pin the sun). Once mounted it is the theme, which also gives the button its aria-pressed.
+const icon = { light: "sun", dark: "moon" } as const;
+
+// A switch named "dark mode". Whether it is on is only known in the browser, so aria-pressed comes once mounted;
+// the icon is right before that, from [data-theme] (the inline script in SiteShell.vue sets it before first
+// paint, and follows the OS while nothing is stored).
 const dark = ref<boolean>();
 const sync = () => (dark.value = document.documentElement.dataset.theme === "dark");
-// Without a stored choice the inline script follows the OS as it changes; follow it here too.
 let media: MediaQueryList | undefined;
 onMounted(() => {
   sync();
@@ -41,7 +39,7 @@ function toggle(event: MouseEvent) {
   switchTheme(
     document,
     () => {
-      applyTheme(root, next);
+      root.dataset.theme = next;
       dark.value = next === "dark";
     },
     { x: box.left + box.width / 2, y: box.top + box.height / 2 },
@@ -50,29 +48,58 @@ function toggle(event: MouseEvent) {
 </script>
 
 <template>
-  <!-- Remounted once in the browser: the toggle numbers its clip path from a counter in its module, which
-       prerendering runs across every page, so the hydrated moon would point at a clip path that does not
-       exist. The fresh one is numbered by the browser at both ends. -->
-  <Classic
-    :key="dark === undefined ? 'prerendered' : 'browser'"
+  <button
+    type="button"
     class="theme-toggle text-fg"
-    :duration="THEME_SWITCH.iconMs"
-    :toggled="dark"
     :aria-label="label"
-    title=""
+    :aria-pressed="dark"
     data-cursor="block"
     @click="toggle"
-  />
+  >
+    <span v-for="(name, key) in icon" :key="key" class="theme-icon" :data-theme-icon="key">
+      <UiIcon :name="name" :size="20" />
+    </span>
+  </button>
 </template>
 
 <style scoped>
-/* A circle, so the pointer settles on it as on any other button; the icon is 1em. */
+/* A circle, so the pointer settles on it as on any other button. */
 .theme-toggle {
   display: grid;
   place-items: center;
   width: 44px;
   height: 44px;
   border-radius: var(--ut-radius-full);
-  font-size: 20px;
+}
+
+/* The sun and the moon share one cell and trade places: the outgoing one turns away and shrinks, the incoming
+   one turns in and settles with a little overshoot. */
+.theme-icon {
+  display: grid;
+  grid-area: 1 / 1;
+  transition:
+    rotate 500ms var(--ut-ease-overshoot),
+    scale 500ms var(--ut-ease-overshoot),
+    opacity 200ms linear;
+}
+
+.theme-icon[data-theme-icon="dark"],
+:root[data-theme="dark"] .theme-icon[data-theme-icon="light"] {
+  rotate: 90deg;
+  scale: 0.4;
+  opacity: 0;
+}
+
+:root[data-theme="dark"] .theme-icon[data-theme-icon="dark"] {
+  rotate: 0deg;
+  scale: 1;
+  opacity: 1;
+}
+
+/* Reduced motion: the icons just swap. */
+@media (prefers-reduced-motion: reduce) {
+  .theme-icon {
+    transition: none;
+  }
 }
 </style>

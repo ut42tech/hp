@@ -33,15 +33,6 @@ export function resolveTheme(stored: Theme | null, prefersDark: boolean): Theme 
   return stored ?? (prefersDark ? "dark" : "light");
 }
 
-// The tokens follow [data-theme]; the animated toggle (@theme-toggles/vue) follows a `.dark` class on the root.
-export function applyTheme(
-  root: { dataset: DOMStringMap; classList: { toggle(name: string, force: boolean): unknown } },
-  theme: Theme,
-): void {
-  root.dataset.theme = theme;
-  root.classList.toggle("dark", theme === "dark");
-}
-
 export function otherTheme(theme: Theme): Theme {
   return theme === "dark" ? "light" : "dark";
 }

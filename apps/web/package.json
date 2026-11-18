@@ -17,7 +17,6 @@
     "@nuxt/image": "2.2.1",
     "@tabler/icons-vue": "3.52.0",
     "@tailwindcss/vite": "^4.3.5",
-    "@theme-toggles/vue": "1.0.3",
     "@ut42tech/assets": "workspace:*",
     "@ut42tech/profile": "workspace:*",
     "@ut42tech/tokens": "workspace:*",

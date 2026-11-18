@@ -5,7 +5,7 @@
 ## いまの状態
 
 - デザイン（Figma）、設計書、実装まで終わっている。`apps/web` は Astro から Nuxt 4 + Motion for Vue に移した（[動きと Nuxt への移行の設計書](superpowers/specs/2026-11-18-portfolio-motion-design.md)の段階1）。
-- `vp run check` はエラーなし、`vp test` は 260/260 件が通る。
+- `vp run check` はエラーなし、`vp test` は 259/259 件が通る。
 - 動きの段階2（登場演出、あいさつ、パソコンのポインター）まで入っている。使い方と重さは README の「登場演出、あいさつ、ポインター」にある。
 - Vercel の `hp-v2` は `main` を本番として書き出す。ただし、まだ `ut42tech.com` を付けていない。今のドメインは `ut42tech-hp-v2.vercel.app` だけで、Vercel の認証で保護されている。
 

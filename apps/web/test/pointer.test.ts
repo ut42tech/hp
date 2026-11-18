@@ -35,3 +35,13 @@ test.each([
   expect(rule).toMatch(/^[^}]*border-radius: var\(--ut-radius-full\)/);
   expect(rule).toMatch(/^[^}]*(padding|width)/);
 });
+
+// The sun and the moon trade places: the outgoing one turns away and shrinks, the incoming one turns in and
+// settles with a little overshoot. Reduced motion just swaps them.
+test("the theme icons turn into each other, and simply swap with reduced motion", () => {
+  const source = read("components/ThemeToggle.vue");
+  expect(source).toMatch(/\.theme-icon \{[^}]*transition:[^}]*rotate[^}]*scale/);
+  expect(source).toMatch(/:root\[data-theme="dark"\] \.theme-icon\[data-theme-icon="light"\]/);
+  const reduced = source.slice(source.indexOf("@media (prefers-reduced-motion: reduce)"));
+  expect(reduced).toMatch(/transition: none/);
+});
