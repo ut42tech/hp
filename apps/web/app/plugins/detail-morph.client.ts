@@ -2,7 +2,7 @@ import { nextTick } from "vue";
 import { defineNuxtPlugin, useRouter } from "#imports";
 import { morphSlug } from "~/composables/use-morph";
 import { uaTransition } from "~/motion/history";
-import { detailMorph } from "~/motion/morph";
+import { detailMorph, morphDirection } from "~/motion/morph";
 
 // Desktop app detail (design §8.6): the card's thumbnail turns into the detail's image and back, and the rest
 // cross-fades. Hooked into the router, so links, the back capsule and the browser's back button all morph.
@@ -23,7 +23,10 @@ export default defineNuxtPlugin(() => {
     ) {
       return;
     }
-    // The card must carry the name before the old state is captured.
+    // The card must carry the name before the old state is captured; the direction picks how the corners
+    // change shape on the way (global.css).
+    const root = document.documentElement;
+    root.dataset.morph = morphDirection(from.path, to.path) ?? "";
     morphSlug.value = slug;
     await nextTick();
     await new Promise<void>((resolve) => {
@@ -40,6 +43,7 @@ export default defineNuxtPlugin(() => {
       });
       void transition.finished.finally(() => {
         if (morphSlug.value === slug) morphSlug.value = null;
+        delete root.dataset.morph;
       });
     });
   });

@@ -51,6 +51,8 @@
   --ut-ease-rise: cubic-bezier(0.2, 1, 0.3, 1);
   --ut-ease-curtain: cubic-bezier(0.76, 0, 0.24, 1);
   --ut-ease-in-out: cubic-bezier(0.7, 0, 0.3, 1);
+  /* Goes a little past the end and settles back: for small playful turns (the sort button). */
+  --ut-ease-overshoot: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ut-duration-fast: 180ms;
   --ut-duration-base: 250ms;
   --ut-duration-slow: 600ms;

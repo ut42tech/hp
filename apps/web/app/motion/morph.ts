@@ -14,3 +14,9 @@ export function detailMorph(from: string, to: string): string | null {
   }
   return null;
 }
+
+// Whether a morph opens the detail (card → detail image) or closes it (detail image → card), or null.
+export function morphDirection(from: string, to: string): "open" | "close" | null {
+  if (!detailMorph(from, to)) return null;
+  return appDetail.test(to) ? "open" : "close";
+}

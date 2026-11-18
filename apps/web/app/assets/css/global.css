@@ -105,12 +105,39 @@
 /* Desktop app detail (design §8.6): the thumbnail travels from the card to the detail image (360ms, as in the
    visual spec §9.4), and the rest of the page cross-fades. Durations from @ut42tech/tokens/motion. */
 ::view-transition-group(app-thumb) {
-  /* The card's thumbnail is captured with square corners (the card clips it) and the detail image with
-     round ones; clipping the travelling frame keeps the corners round instead of vanishing mid-way. */
-  overflow: clip;
-  border-radius: var(--ut-radius-card);
   animation-duration: 360ms;
   animation-timing-function: var(--ut-ease-out);
+}
+
+/* The card's thumbnail is round only at the top (the card's text continues below it); the detail image is
+   round all over. The travelling picture changes between the two shapes over the same 360ms, in the
+   direction of the move, so the corners never snap at the end. */
+:root[data-morph="open"]::view-transition-image-pair(app-thumb) {
+  overflow: clip;
+  animation: thumb-corners-open 360ms var(--ut-ease-out) both;
+}
+
+:root[data-morph="close"]::view-transition-image-pair(app-thumb) {
+  overflow: clip;
+  animation: thumb-corners-close 360ms var(--ut-ease-out) both;
+}
+
+@keyframes thumb-corners-open {
+  from {
+    border-radius: var(--ut-radius-card) var(--ut-radius-card) 0 0;
+  }
+  to {
+    border-radius: var(--ut-radius-card);
+  }
+}
+
+@keyframes thumb-corners-close {
+  from {
+    border-radius: var(--ut-radius-card);
+  }
+  to {
+    border-radius: var(--ut-radius-card) var(--ut-radius-card) 0 0;
+  }
 }
 
 ::view-transition-old(root),
