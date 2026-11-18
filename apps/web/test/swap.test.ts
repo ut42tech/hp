@@ -11,12 +11,23 @@ test("the swap's rise moves the page's children, never the page root", () => {
   expect(css).toMatch(/\.swap-enter-from > \* \{[^}]*translate: 0 8px/);
 });
 
-// The card's thumbnail is captured with square corners (the card clips it), the detail image with round ones;
-// cross-fading the two made the corners vanish and snap back. The travelling frame clips both to the card radius.
-test("the travelling thumbnail keeps rounded corners for the whole morph", () => {
-  const group = css.match(/::view-transition-group\(app-thumb\) \{([^}]*)\}/)?.[1] ?? "";
-  expect(group).toContain("border-radius: var(--ut-radius-card)");
-  expect(group).toMatch(/overflow: (clip|hidden)/);
+// The card's thumbnail is round only at the top, the detail image all round. The travelling frame changes
+// between those shapes over the same 360ms, in the direction of the move, so nothing snaps at the end.
+test("the travelling thumbnail turns its corners from one shape into the other", () => {
+  const card = "var(--ut-radius-card) var(--ut-radius-card) 0 0";
+  const pair = (direction: string) =>
+    css.match(
+      new RegExp(
+        `:root\\[data-morph="${direction}"\\]::view-transition-image-pair\\(app-thumb\\) \\{([^}]*)\\}`,
+      ),
+    )?.[1] ?? "";
+  expect(pair("open")).toMatch(/animation: thumb-corners-open 360ms/);
+  expect(pair("close")).toMatch(/animation: thumb-corners-close 360ms/);
+  expect(css).toMatch(
+    new RegExp(
+      `@keyframes thumb-corners-close \\{\\s*from \\{\\s*border-radius: var\\(--ut-radius-card\\);\\s*\\}\\s*to \\{\\s*border-radius: ${card.replace(/[()]/g, "\\$&")};`,
+    ),
+  );
 });
 
 // The marks slide as a compositor transform (app/motion/slide-mark.ts); Motion's JS-driven layout projection
