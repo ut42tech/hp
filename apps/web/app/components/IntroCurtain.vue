@@ -9,7 +9,8 @@ const bands = Array.from({ length: INTRO.bands.count }, (_, i) => i);
 </script>
 
 <template>
-  <div class="intro-curtain" aria-hidden="true">
+  <!-- popover="manual": the plugin raises it into the top layer, above a detail opened as a modal. -->
+  <div class="intro-curtain" popover="manual" aria-hidden="true">
     <span v-for="band in bands" :key="band" class="intro-band bg-curtain" data-intro-band />
     <span class="intro-name-window">
       <span class="intro-name-clip">

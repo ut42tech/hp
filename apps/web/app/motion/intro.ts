@@ -152,3 +152,24 @@ export function playIntro(
     },
   };
 }
+
+// Skipping can be asked for before the entrance starts (fonts still loading): remember it and skip as soon as
+// the entrance is attached; afterwards a request skips at once. Only the first request counts.
+export function createSkipSwitch(): {
+  request: () => void;
+  attach: (intro: { skip: () => void }) => void;
+} {
+  let requested = false;
+  let attached: { skip: () => void } | null = null;
+  return {
+    request: () => {
+      if (requested) return;
+      requested = true;
+      attached?.skip();
+    },
+    attach: (intro) => {
+      attached = intro;
+      if (requested) intro.skip();
+    },
+  };
+}

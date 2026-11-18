@@ -163,6 +163,17 @@ html[data-intro] .intro-curtain {
   inset: 0;
   z-index: 60;
   display: grid;
+  /* It is also a popover (raised into the top layer at start); undo the browser's popover box. */
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  /* Presses pass through to the page; the skip listens on the window. */
+  pointer-events: none;
   animation: intro-failsafe 0s 5000ms forwards;
 }
 
@@ -176,10 +187,20 @@ html[data-intro] .intro-curtain {
 html[data-intro="play"] .hello-stage:not(.is-decorative) .letter {
   opacity: 0;
   transform: translateY(0.35em);
+  animation: intro-reveal 0s 5000ms forwards;
 }
 
 html[data-intro="play"] .hello-stage:not(.is-decorative) .hello-sub {
   opacity: 0;
+  animation: intro-reveal 0s 5000ms forwards;
+}
+
+/* The greeting's own failsafe: if the app never starts, it shows itself with the curtain's. */
+@keyframes intro-reveal {
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* The desktop pointer (design §8.8, app/motion/pointer.ts). While it runs, the system pointer is hidden; the

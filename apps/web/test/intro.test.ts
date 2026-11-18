@@ -29,3 +29,25 @@ test("the curtain shows only while an intro plays and has a CSS failsafe", () =>
   );
   expect(css).toMatch(/@keyframes intro-failsafe \{[^}]*visibility: hidden/);
 });
+
+// A press during the entrance reaches what is under the curtain (the skip listens on the window).
+test("the curtain never catches presses", () => {
+  expect(css).toMatch(/html\[data-intro\] \.intro-curtain \{[^}]*pointer-events: none/);
+});
+
+// If the app never starts, the greeting must not stay hidden: it shows itself with the curtain's failsafe.
+test("the hidden greeting reveals itself with the failsafe", () => {
+  expect(css).toMatch(/\.letter \{[^}]*animation: intro-reveal 0s 5000ms forwards/);
+  expect(css).toMatch(/\.hello-sub \{[^}]*animation: intro-reveal 0s 5000ms forwards/);
+  expect(css).toMatch(/@keyframes intro-reveal \{[^}]*opacity: 1;[^}]*transform: none/);
+});
+
+// A shared link to an app detail opens it as a modal (top layer); the curtain must still cover it, so it is
+// raised into the top layer too, after the detail.
+test("the curtain can be raised into the top layer above a modal detail", () => {
+  expect(loadPage("/ja/").querySelector(".intro-curtain")!.getAttribute("popover")).toBe("manual");
+  const plugin = readFileSync(new URL("../app/plugins/intro.client.ts", import.meta.url), "utf8");
+  expect(plugin).toMatch(/showPopover\(\)/);
+  expect(plugin).toMatch(/hidePopover\(\)/);
+  expect(plugin).toMatch(/finally/);
+});

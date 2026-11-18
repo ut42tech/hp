@@ -1,6 +1,6 @@
 import { INTRO } from "@ut42tech/tokens/motion";
 import { expect, test } from "vite-plus/test";
-import { introSteps, type IntroStep } from "./intro";
+import { createSkipSwitch, introSteps, type IntroStep } from "./intro";
 
 const play = introSteps({ mode: "play", bands: 5, letters: 8 });
 const of = (steps: IntroStep[], target: IntroStep["target"]) =>
@@ -79,4 +79,23 @@ test("reduced motion only fades the curtain over 400ms", () => {
 test("the curtain's own steps end by removeAt", () => {
   const curtain = play.filter((s) => s.target === "name" || s.target === "band");
   expect(Math.max(...curtain.map((s) => s.at + s.duration))).toBeLessThanOrEqual(INTRO.removeAt);
+});
+
+// A key or press before the entrance has started (fonts still loading) still skips it, once it starts.
+test("a skip asked for before the entrance starts is honoured when it starts", () => {
+  let skipped = 0;
+  const switcher = createSkipSwitch();
+  switcher.request();
+  switcher.attach({ skip: () => skipped++ });
+  expect(skipped).toBe(1);
+});
+
+test("a skip asked for during the entrance skips it at once, only once", () => {
+  let skipped = 0;
+  const switcher = createSkipSwitch();
+  switcher.attach({ skip: () => skipped++ });
+  expect(skipped).toBe(0);
+  switcher.request();
+  switcher.request();
+  expect(skipped).toBe(1);
 });
