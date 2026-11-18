@@ -153,7 +153,7 @@
 
 /* The entrance (design §8.7). The curtain only exists while html[data-intro] is set: the inline gate in <head>
    sets it before first paint, and app/plugins/intro removes it when the entrance ends. If the app never
-   starts, the curtain still goes after INTRO.failsafeMs (3000ms). */
+   starts, the curtain still goes after INTRO.failsafeMs (5000ms). */
 .intro-curtain {
   display: none;
 }
@@ -163,7 +163,7 @@ html[data-intro] .intro-curtain {
   inset: 0;
   z-index: 60;
   display: grid;
-  animation: intro-failsafe 0s 3000ms forwards;
+  animation: intro-failsafe 0s 5000ms forwards;
 }
 
 @keyframes intro-failsafe {

@@ -47,5 +47,14 @@ export const INTRO = {
   removeAt: 1930,
   fontWaitMs: 1500,
   reducedFadeMs: 400,
-  failsafeMs: 3000,
+  // Longer than the slowest real start (fontWaitMs + removeAt + start-up), so it never cuts an intro short.
+  failsafeMs: 5000,
+} as const;
+
+// The --ut-ease-* curves as numbers, for animations started from script.
+export const EASE = {
+  "ease-out": [0.2, 0.8, 0.2, 1],
+  "ease-rise": [0.2, 1, 0.3, 1],
+  "ease-curtain": [0.76, 0, 0.24, 1],
+  "ease-in-out": [0.7, 0, 0.3, 1],
 } as const;

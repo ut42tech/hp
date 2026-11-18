@@ -25,7 +25,7 @@ test("the gate runs in <head> before first paint", () => {
 test("the curtain shows only while an intro plays and has a CSS failsafe", () => {
   expect(css).toMatch(/\.intro-curtain \{[^}]*display: none/);
   expect(css).toMatch(
-    /html\[data-intro\] \.intro-curtain \{[^}]*animation: intro-failsafe 0s 3000ms forwards/,
+    /html\[data-intro\] \.intro-curtain \{[^}]*animation: intro-failsafe 0s 5000ms forwards/,
   );
   expect(css).toMatch(/@keyframes intro-failsafe \{[^}]*visibility: hidden/);
 });
