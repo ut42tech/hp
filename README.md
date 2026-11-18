@@ -121,10 +121,17 @@ Nuxt 4 で全 URL を静的に書き出し（`nuxt generate`、出力は `apps/w
 3. `app/i18n/config.ts` の `publishedLocales` に `"en"` を足す。ページは `[locale]` から書き出され、言語の切り替え（表示の切り替えの左）が自動で出る。
 4. `apps/web/vercel.json` の `/` の振り分けを3本にする。上から順に、クッキー `ut42tech-lang` が `en` なら `/en/`、`Accept-Language` が英語で始まるなら `/en/`、それ以外は `/ja/`。
 
-### 次に足すもの（動きの段階2）
+### 登場演出、あいさつ、ポインター（動きの段階2）
 
-設計書の 8.7 と 8.8。
+- **登場演出**: そのタブで最初の読み込みだけ、幕と名前が上がり、Hello では「Welcome.」が1文字ずつ上がる。
+  - 見せるかどうかは `<head>` のインラインのスクリプトが決める（`app/motion/intro-gate.ts` を、そのまま文字列として埋め込む）。
+  - 時間割は `app/motion/intro.ts`、始めるのは `app/plugins/intro.client.ts`。キー、ホイール、タップでその場で完成する。
+  - 本体の読み込みに失敗しても、幕は 5 秒で CSS だけで消える。
+  - 同じタブでもう一度見たいときは、`sessionStorage` の `ut42tech:intro` を消す。
+- **あいさつ**: 「Welcome.」の文字がポインターに寄り、押すと弾む（`app/motion/greeting.ts`）。
+- **ポインター**: パソコンのマウスで、押せる要素（`data-cursor="block"`）に吸い付く（`app/motion/pointer.ts`）。タッチ端末と動きを減らす設定では読み込まない。
 
-- 登場演出（幕と名前、「Welcome.」が1文字ずつ上がる）
-- 「Welcome.」の文字がポインターに寄る動きと、押したときの弾み
-- パソコンのポインター（Motion の上に自分たちで書く。押せる要素にはもう `data-cursor="block"` が付いている）
+**重さ**（2026-11-18、書き出し後の gzip。中身が増えると変わる）
+
+- `/ja/` を最初に開くとき: JavaScript が 125KB、CSS が 208KB。CSS の大半は LINE Seed JP の書体の定義。
+- 書き出した JavaScript の合計: 318KB。
