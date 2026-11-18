@@ -43,3 +43,9 @@ test("while the theme switches, the whole page is one snapshot without a cross-f
     /:root\.theme-switching::view-transition-old\(root\),\s*:root\.theme-switching::view-transition-new\(root\) \{[^}]*animation: none;[^}]*mix-blend-mode: normal/,
   );
 });
+
+// The owner's call (2026-11-18): eased at both ends, over 800ms.
+test("the circle grows over 800ms with an ease-in-out", () => {
+  expect(THEME_SWITCH.durationMs).toBe(800);
+  expect(THEME_SWITCH.ease).toBe("ease-in-out");
+});

@@ -16,16 +16,16 @@ test("sets the theme before first paint", () => {
   expect(scripts.some((s) => s.textContent.includes("ut42tech:theme"))).toBe(true);
 });
 
-test("the theme toggle ships a light and a dark icon so CSS can show the current one before hydration", () => {
-  const themes = hello
-    .querySelectorAll("header .theme-icon")
-    .map((i) => i.getAttribute("data-theme-icon"));
-  expect(themes).toEqual(["light", "dark"]);
-  // Each state carries its own name, so the button is named correctly before hydration too.
-  expect(hello.querySelectorAll("header .theme-icon .sr-only").map((n) => n.textContent)).toEqual([
-    "表示: ライト",
-    "表示: ダーク",
-  ]);
+// The toggle shows the Tabler outline sun and moon, like every other icon; CSS keyed on [data-theme] (set before
+// first paint) picks one, so it is right before hydration.
+test("the theme toggle is a dark mode switch with an outline sun and moon", () => {
+  const toggle = hello.querySelector("header .theme-toggle")!;
+  expect(toggle.tagName).toBe("BUTTON");
+  expect(toggle.getAttribute("aria-label")).toBe("ダークモード");
+  const icons = toggle.querySelectorAll(".theme-icon");
+  expect(icons.map((i) => i.getAttribute("data-theme-icon"))).toEqual(["light", "dark"]);
+  for (const icon of icons)
+    expect(icon.querySelector("svg")!.getAttribute("stroke-width")).toBe("1.75");
 });
 
 test("hello greets without selecting a nav item", () => {

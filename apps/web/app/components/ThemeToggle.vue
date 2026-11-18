@@ -1,11 +1,25 @@
 <script setup lang="ts">
-import { otherTheme, storeTheme, type Theme } from "../lib/theme";
+import { onBeforeUnmount, onMounted, ref } from "vue";
+import { otherTheme, storeTheme } from "../lib/theme";
 import { switchTheme } from "../motion/theme-switch";
 import UiIcon from "./UiIcon.vue";
 
-const props = defineProps<{ labels: Record<Theme, string> }>();
+defineProps<{ label: string }>();
 
 const icon = { light: "sun", dark: "moon" } as const;
+
+// A switch named "dark mode". Whether it is on is only known in the browser, so aria-pressed comes once mounted;
+// the icon is right before that, from [data-theme] (the inline script in SiteShell.vue sets it before first
+// paint, and follows the OS while nothing is stored).
+const dark = ref<boolean>();
+const sync = () => (dark.value = document.documentElement.dataset.theme === "dark");
+let media: MediaQueryList | undefined;
+onMounted(() => {
+  sync();
+  media = window.matchMedia("(prefers-color-scheme: dark)");
+  media.addEventListener("change", sync);
+});
+onBeforeUnmount(() => media?.removeEventListener("change", sync));
 
 const safeStorage = (): Storage | undefined => {
   try {
@@ -15,29 +29,35 @@ const safeStorage = (): Storage | undefined => {
   }
 };
 
-// Flips between light and dark from whatever the page shows now (the inline script in SiteShell.vue set it
-// before first paint, from the stored choice or the OS). The new theme grows from the button's centre.
+// Flips between light and dark from whatever the page shows now. The new theme grows from the button's centre.
 function toggle(event: MouseEvent) {
   const root = document.documentElement;
   const next = otherTheme(root.dataset.theme === "dark" ? "dark" : "light");
   const os = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   storeTheme(safeStorage(), next, os);
   const box = (event.currentTarget as HTMLElement).getBoundingClientRect();
-  switchTheme(document, () => (root.dataset.theme = next), {
-    x: box.left + box.width / 2,
-    y: box.top + box.height / 2,
-  });
+  switchTheme(
+    document,
+    () => {
+      root.dataset.theme = next;
+      dark.value = next === "dark";
+    },
+    { x: box.left + box.width / 2, y: box.top + box.height / 2 },
+  );
 }
 </script>
 
 <template>
-  <button type="button" class="theme-toggle text-fg" data-cursor="block" @click="toggle">
-    <!-- Both are rendered and CSS picks one from [data-theme], which the inline script in SiteShell.vue sets
-         before first paint, so the icon and the name are right before this component hydrates. The hidden
-         one is display: none, so assistive tech reads only one name. -->
+  <button
+    type="button"
+    class="theme-toggle text-fg"
+    :aria-label="label"
+    :aria-pressed="dark"
+    data-cursor="block"
+    @click="toggle"
+  >
     <span v-for="(name, key) in icon" :key="key" class="theme-icon" :data-theme-icon="key">
       <UiIcon :name="name" :size="20" />
-      <span class="sr-only">{{ props.labels[key] }}</span>
     </span>
   </button>
 </template>
@@ -52,12 +72,34 @@ function toggle(event: MouseEvent) {
   border-radius: var(--ut-radius-full);
 }
 
+/* The sun and the moon share one cell and trade places: the outgoing one turns away and shrinks, the incoming
+   one turns in and settles with a little overshoot. */
 .theme-icon {
-  display: none;
+  display: grid;
+  grid-area: 1 / 1;
+  transition:
+    rotate 500ms var(--ut-ease-overshoot),
+    scale 500ms var(--ut-ease-overshoot),
+    opacity 200ms linear;
 }
 
-:root:not([data-theme="dark"]) .theme-icon[data-theme-icon="light"],
+.theme-icon[data-theme-icon="dark"],
+:root[data-theme="dark"] .theme-icon[data-theme-icon="light"] {
+  rotate: 90deg;
+  scale: 0.4;
+  opacity: 0;
+}
+
 :root[data-theme="dark"] .theme-icon[data-theme-icon="dark"] {
-  display: contents;
+  rotate: 0deg;
+  scale: 1;
+  opacity: 1;
+}
+
+/* Reduced motion: the icons just swap. */
+@media (prefers-reduced-motion: reduce) {
+  .theme-icon {
+    transition: none;
+  }
 }
 </style>

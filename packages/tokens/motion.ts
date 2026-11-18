@@ -70,5 +70,5 @@ export const GREETING = {
 } as const;
 
 // Switching between light and dark: the new theme grows from the toggle as a circle with a soft edge
-// (`feather` is the share of its radius that fades out).
-export const THEME_SWITCH = { durationMs: 800, feather: 0.25, ease: "ease-out" } as const;
+// (`feather` is the share of its radius that fades out). Eased at both ends (the owner's call).
+export const THEME_SWITCH = { durationMs: 800, feather: 0.25, ease: "ease-in-out" } as const;
