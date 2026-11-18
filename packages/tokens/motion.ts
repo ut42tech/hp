@@ -29,3 +29,7 @@ export const RECEDE = { insetPx: 12, liftPx: 10 } as const;
 export const SWAP_OUT_MS = 120;
 export const SWAP_IN_MS = 200;
 export const SWAP_IN_OFFSET_PX = 8;
+
+// The mark under the selected tab or category slides to a new item. Small and close, so it is stiffer
+// than a sheet; damping a touch above critical (2·√500 ≈ 44.7) keeps it from overshooting.
+export const SELECTION_SPRING = { type: "spring", stiffness: 500, damping: 45 } as const;

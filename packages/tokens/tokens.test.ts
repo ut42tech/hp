@@ -103,3 +103,10 @@ test("the sheet spring is critically damped, so it lands without wobbling", asyn
   expect(SHEET_SPRING.damping).toBeCloseTo(2 * Math.sqrt(SHEET_SPRING.stiffness), 0);
   expect(SHEET_SPRING.stiffness).toBe(380);
 });
+
+test("the selection mark slides without overshooting", async () => {
+  const { SELECTION_SPRING } = await import("./motion");
+  expect(SELECTION_SPRING.damping).toBeGreaterThanOrEqual(
+    2 * Math.sqrt(SELECTION_SPRING.stiffness),
+  );
+});

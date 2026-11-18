@@ -92,3 +92,15 @@
     translate: none;
   }
 }
+
+/* Desktop app detail (design §8.6): the thumbnail travels from the card to the detail image (360ms, as in the
+   visual spec §9.4), and the rest of the page cross-fades. Durations from @ut42tech/tokens/motion. */
+::view-transition-group(app-thumb) {
+  animation-duration: 360ms;
+  animation-timing-function: var(--ut-ease-out);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 200ms;
+}

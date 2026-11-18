@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { LayoutGroup } from "motion-v";
 import { computed } from "vue";
 import { NuxtLink } from "#components";
 import { useLocale, useT } from "~/composables/use-locale";
 import { localizePath } from "~/i18n/config";
 import { categories, type Category } from "~/lib/works";
+import SelectionMark from "./SelectionMark.vue";
 
 const props = withDefaults(
   defineProps<{
@@ -29,35 +31,41 @@ const items = computed(() =>
 <template>
   <!-- Mobile: one row of segments under the sheet heading. -->
   <nav v-if="part !== 'sidebar'" class="segmented" :aria-label="t('works.label')">
-    <NuxtLink
-      v-for="item in items"
-      :key="item.category"
-      :to="item.to"
-      class="segment text-callout"
-      :class="item.active ? 'bg-fg font-bold text-bg' : 'text-muted'"
-      :aria-current="item.active ? 'page' : undefined"
-      data-cursor="block"
-    >
-      {{ item.label }}
-    </NuxtLink>
+    <LayoutGroup id="works-segmented">
+      <NuxtLink
+        v-for="item in items"
+        :key="item.category"
+        :to="item.to"
+        class="segment text-callout"
+        :class="item.active ? 'font-bold text-bg' : 'text-muted'"
+        :aria-current="item.active ? 'page' : undefined"
+        data-cursor="block"
+      >
+        <SelectionMark v-if="item.active" id="segment-mark" class="bg-fg" />
+        {{ item.label }}
+      </NuxtLink>
+    </LayoutGroup>
   </nav>
 
   <!-- Desktop: a card fixed at the vertical centre of the left edge. -->
   <nav v-if="part !== 'segmented'" class="sidebar" :aria-label="t('works.label')">
-    <NuxtLink
-      v-for="item in items"
-      :key="item.category"
-      :to="item.to"
-      class="side-item"
-      :class="item.active ? 'bg-fg text-bg' : 'text-fg'"
-      :aria-current="item.active ? 'page' : undefined"
-      data-cursor="block"
-    >
-      <span class="text-headline">{{ item.label }}</span>
-      <span class="text-caption" :class="item.active ? 'text-bg' : 'text-muted'">{{
-        counts[item.category]
-      }}</span>
-    </NuxtLink>
+    <LayoutGroup id="works-sidebar">
+      <NuxtLink
+        v-for="item in items"
+        :key="item.category"
+        :to="item.to"
+        class="side-item"
+        :class="item.active ? 'text-bg' : 'text-fg'"
+        :aria-current="item.active ? 'page' : undefined"
+        data-cursor="block"
+      >
+        <SelectionMark v-if="item.active" id="side-mark" class="bg-fg" />
+        <span class="text-headline">{{ item.label }}</span>
+        <span class="text-caption" :class="item.active ? 'text-bg' : 'text-muted'">{{
+          counts[item.category]
+        }}</span>
+      </NuxtLink>
+    </LayoutGroup>
   </nav>
 </template>
 
@@ -72,6 +80,8 @@ const items = computed(() =>
 }
 
 .segment {
+  position: relative;
+  isolation: isolate;
   display: grid;
   flex: 1;
   place-items: center;
@@ -118,6 +128,8 @@ const items = computed(() =>
 }
 
 .side-item {
+  position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
   justify-content: space-between;

@@ -109,7 +109,7 @@ function onCancel(event: Event) {
       alt=""
       :initial="initialOf(entry.title, entry.initial)"
       sizes="720px"
-      class="aspect-[16/10] rounded-card"
+      class="detail-image aspect-[16/10] rounded-card"
       @pointerdown="onHandle"
     />
 
@@ -282,6 +282,11 @@ function onCancel(event: Event) {
   .top-row {
     display: flex;
     margin-bottom: 24px;
+  }
+
+  /* The card's thumbnail turns into this image and back (app/plugins/detail-morph.client.ts). */
+  .detail-image {
+    view-transition-name: app-thumb;
   }
 }
 </style>
