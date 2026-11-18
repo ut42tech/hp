@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { REORDER_SPRING } from "@ut42tech/tokens/motion";
+import { motion } from "motion-v";
 import { computed, ref } from "vue";
 import { useLocale, useT } from "~/composables/use-locale";
 import { morphSlug } from "~/composables/use-morph";
@@ -69,8 +71,14 @@ const items = computed<Item[]>(() =>
       :count="items.length"
       sort-list="works-list"
     />
+    <!-- Re-sorting slides each item to its new place (Motion layout). -->
     <ul v-if="category === 'career'" id="works-list" class="flex flex-col gap-3">
-      <li v-for="item in items" :key="item.key">
+      <motion.li
+        v-for="item in items"
+        :key="item.key"
+        layout
+        :transition="{ layout: REORDER_SPRING }"
+      >
         <RowCard
           :title="item.title"
           :period="item.meta"
@@ -79,10 +87,15 @@ const items = computed<Item[]>(() =>
           :initial="item.initial"
           :lang="item.lang"
         />
-      </li>
+      </motion.li>
     </ul>
     <ul v-else id="works-list" class="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-6">
-      <li v-for="item in items" :key="item.key">
+      <motion.li
+        v-for="item in items"
+        :key="item.key"
+        layout
+        :transition="{ layout: REORDER_SPRING }"
+      >
         <Card
           :to="item.to"
           :external="item.external"
@@ -93,7 +106,7 @@ const items = computed<Item[]>(() =>
           :lang="item.lang"
           :morph="category === 'apps' && morphSlug === item.key"
         />
-      </li>
+      </motion.li>
     </ul>
   </div>
 </template>

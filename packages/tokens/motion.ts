@@ -33,3 +33,6 @@ export const SWAP_IN_OFFSET_PX = 8;
 // The mark under the selected tab or category slides to a new item. Small and close, so it is stiffer
 // than a sheet; damping a touch above critical (2·√500 ≈ 44.7) keeps it from overshooting.
 export const SELECTION_SPRING = { type: "spring", stiffness: 500, damping: 45 } as const;
+
+// Items moving to their new place when a list is re-sorted (same feel as a sheet: no overshoot).
+export const REORDER_SPRING = { type: "spring", stiffness: 380, damping: 39 } as const;

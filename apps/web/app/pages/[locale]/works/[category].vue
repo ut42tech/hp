@@ -8,15 +8,20 @@ import WorksList from "~/components/WorksList.vue";
 import WorksNav from "~/components/WorksNav.vue";
 import { useDetail } from "~/composables/use-detail";
 import { useLocale, useT } from "~/composables/use-locale";
+import { useNarrow } from "~/composables/use-narrow";
 import { usePageMeta } from "~/composables/use-page-meta";
 import { useWorkCounts, useWorks } from "~/composables/use-works";
 import { localizePath } from "~/i18n/config";
+import { isCategorySwitch } from "~/lib/section";
 import { categories, type Category } from "~/lib/works";
 
 definePageMeta({
   validate: (route) => categories.includes(route.params.category as Category),
   // One page for every category, so switching categories swaps only the list (not the whole sheet).
   key: (route) => `works:${String(route.params.locale)}`,
+  // A category switch scrolls back up itself, once the old list has faded out (onListLeft), so the page
+  // does not jump while the old list is still on screen.
+  scrollToTop: (to, from) => !isCategorySwitch(from.path, to.path),
 });
 
 const route = useRoute();
@@ -36,6 +41,12 @@ const detail = computed(() => apps.value.find((entry) => entry.slug === shownSlu
 // With an app detail open, the detail's title is the page heading.
 const hasDetail = computed(() => Boolean(detail.value));
 usePageMeta({ title: () => detail.value?.title ?? t.value(`works.${category.value}`) });
+
+// Wide screens scroll the page itself; return to the top while the swap has nothing on screen.
+const narrow = useNarrow();
+function onListLeft() {
+  if (!narrow.value && window.scrollY > 0) window.scrollTo({ top: 0 });
+}
 </script>
 
 <template>
@@ -44,7 +55,7 @@ usePageMeta({ title: () => detail.value?.title ?? t.value(`works.${category.valu
     <WorksNav :current="category" :counts="counts" />
     <div class="works-region" :class="{ 'has-detail': hasDetail }">
       <div class="works-column">
-        <Transition name="swap" mode="out-in">
+        <Transition name="swap" mode="out-in" @after-leave="onListLeft">
           <WorksList :key="category" :category="category" />
         </Transition>
       </div>

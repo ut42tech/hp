@@ -106,3 +106,18 @@ test("only a detail that is open can be grabbed", () => {
   detail.closeByUser();
   expect(detail.canGrab()).toBe(false);
 });
+
+// Wide screens: the detail must still be on the page when the address changes, because the thumbnail
+// morph captures it as the "before" picture. So closing only leaves; the address change removes it.
+test("with animation skipped (wide screens), closing leaves first and keeps the detail until the address changes", async () => {
+  skip = true;
+  shown = "tangi";
+  const detail = createDetailController(deps(), { slug: "tangi" });
+  detail.closeByUser();
+  await Promise.resolve();
+  expect(leaves).toBe(1);
+  expect(shown).toBe("tangi");
+  detail.navigate(null);
+  await Promise.resolve();
+  expect(shown).toBeNull();
+});
