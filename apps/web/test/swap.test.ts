@@ -19,17 +19,32 @@ test("the travelling thumbnail keeps rounded corners for the whole morph", () =>
   expect(group).toMatch(/overflow: (clip|hidden)/);
 });
 
-// Motion measures layout in page coordinates. Inside a fixed container (the nav bar, the desktop sidebar) a
-// scroll change between measurements reads as movement, so the sliding mark starts from the wrong place
-// unless the fixed container is marked as a layout root.
-test.each([
-  ["components/NavBar.vue", "nav-bar"],
-  ["components/WorksNav.vue", "sidebar"],
-])("%s marks its fixed container as a Motion layout root", (file, className) => {
-  const source = readFileSync(new URL(`../app/${file}`, import.meta.url), "utf8");
-  expect(source).toMatch(
-    new RegExp(
-      `<motion\\.nav[^>]*layout-root[^>]*class="${className}"|<motion\\.nav[^>]*class="${className}"[^>]*layout-root`,
-    ),
+// The marks slide as a compositor transform (app/motion/slide-mark.ts); Motion's JS-driven layout projection
+// (layoutId) stalled while the next page rendered, so the mark stopped and then jumped, most visibly in Safari.
+test.each(["components/SelectionMark.vue", "components/NavBar.vue", "components/WorksNav.vue"])(
+  "%s does not use JS-driven layout animation",
+  (file) => {
+    const source = readFileSync(new URL(`../app/${file}`, import.meta.url), "utf8");
+    expect(source).not.toMatch(/layout-id|layoutId|LayoutGroup|layout-root/);
+  },
+);
+
+// The header and the nav bar stay above everything during a view transition (the travelling thumbnail
+// used to pass over the header, then drop under it when the transition ended).
+test("the header and the nav bar sit above the travelling thumbnail", () => {
+  for (const name of ["site-header", "nav-bar"]) {
+    expect(css).toMatch(new RegExp(`::view-transition-group\\(${name}\\)[^{]*\\{[^}]*z-index`));
+  }
+  const header = readFileSync(new URL("../app/components/SiteHeader.vue", import.meta.url), "utf8");
+  const nav = readFileSync(new URL("../app/components/NavBar.vue", import.meta.url), "utf8");
+  expect(header).toContain("view-transition-name: site-header");
+  expect(nav).toContain("view-transition-name: nav-bar");
+});
+
+test("the desktop header is a translucent, frosted layer", () => {
+  const header = readFileSync(new URL("../app/components/SiteHeader.vue", import.meta.url), "utf8");
+  expect(header).toMatch(
+    /background: color-mix\(in srgb, var\(--ut-color-bg\) \d+%, transparent\)/,
   );
+  expect(header).toContain("backdrop-filter");
 });

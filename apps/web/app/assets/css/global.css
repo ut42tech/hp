@@ -117,3 +117,9 @@
 ::view-transition-new(root) {
   animation-duration: 200ms;
 }
+
+/* The header and the nav bar always stay on top, also above the thumbnail travelling between them. */
+::view-transition-group(site-header),
+::view-transition-group(nav-bar) {
+  z-index: 1;
+}

@@ -44,7 +44,7 @@ useHead({
 </script>
 
 <template>
-  <!-- With "reduce motion", Motion skips movement (the sliding marks) and keeps fades. -->
+  <!-- With "reduce motion", Motion skips movement (re-sorted lists sliding) and keeps fades. -->
   <MotionConfig reduced-motion="user">
     <a
       href="#content"

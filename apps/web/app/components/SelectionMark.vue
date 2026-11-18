@@ -1,20 +1,7 @@
-<script setup lang="ts">
-import { SELECTION_SPRING } from "@ut42tech/tokens/motion";
-import { motion } from "motion-v";
-
-// The surface behind the selected item. One per navigation (its LayoutGroup), so Motion slides it from the
-// previous item to the new one. The colour comes from the caller's class.
-defineProps<{ id: string }>();
-</script>
-
+<!-- The surface behind the selected item. Its container slides it from the previous item when the selection
+     changes (composables/use-sliding-mark.ts). The colour comes from the caller's class. -->
 <template>
-  <motion.span
-    :layout-id="id"
-    :transition="SELECTION_SPRING"
-    class="selection-mark"
-    data-indicator
-    aria-hidden="true"
-  />
+  <span class="selection-mark" data-indicator aria-hidden="true" />
 </template>
 
 <style scoped>
