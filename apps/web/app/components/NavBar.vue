@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { LayoutGroup, motion } from "motion-v";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { NuxtLink } from "#components";
 import { useLocale, useT } from "~/composables/use-locale";
+import { useSlidingMark } from "~/composables/use-sliding-mark";
 import { localizePath } from "~/i18n/config";
 import type { Section } from "~/lib/section";
 import SelectionMark from "./SelectionMark.vue";
 
-defineProps<{ current: Section }>();
+const props = defineProps<{ current: Section }>();
+const nav = ref<HTMLElement>();
+useSlidingMark(nav, () => props.current);
 const locale = useLocale();
 const t = useT();
 const items = computed(
@@ -25,25 +27,22 @@ const items = computed(
 </script>
 
 <template>
-  <!-- Fixed to the screen: a layout root, so page scroll is not mistaken for the mark moving. -->
-  <motion.nav layout-root class="nav-bar" :aria-label="t('nav.label')">
-    <LayoutGroup id="nav">
-      <ul class="flex gap-1">
-        <li v-for="item in items" :key="item.section">
-          <NuxtLink
-            :to="item.to"
-            class="nav-item text-callout"
-            :class="item.section === current ? 'font-bold text-on-bar' : 'text-on-bar-muted'"
-            :aria-current="item.section === current ? 'page' : undefined"
-            data-cursor="block"
-          >
-            <SelectionMark v-if="item.section === current" id="nav-mark" class="bg-bar-active" />
-            {{ item.label }}
-          </NuxtLink>
-        </li>
-      </ul>
-    </LayoutGroup>
-  </motion.nav>
+  <nav ref="nav" class="nav-bar" :aria-label="t('nav.label')">
+    <ul class="flex gap-1">
+      <li v-for="item in items" :key="item.section">
+        <NuxtLink
+          :to="item.to"
+          class="nav-item text-callout"
+          :class="item.section === current ? 'font-bold text-on-bar' : 'text-on-bar-muted'"
+          :aria-current="item.section === current ? 'page' : undefined"
+          data-cursor="block"
+        >
+          <SelectionMark v-if="item.section === current" class="bg-bar-active" />
+          {{ item.label }}
+        </NuxtLink>
+      </li>
+    </ul>
+  </nav>
 </template>
 
 <style scoped>
@@ -57,6 +56,8 @@ const items = computed(
   border-radius: var(--ut-radius-full);
   background: var(--ut-color-bar);
   box-shadow: var(--ut-shadow-float);
+  /* Its own layer during view transitions, kept above the travelling thumbnail (global.css). */
+  view-transition-name: nav-bar;
 }
 
 .nav-item {

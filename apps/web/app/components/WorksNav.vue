@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { LayoutGroup, motion } from "motion-v";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { NuxtLink } from "#components";
 import { useLocale, useT } from "~/composables/use-locale";
+import { useSlidingMark } from "~/composables/use-sliding-mark";
 import { localizePath } from "~/i18n/config";
 import { categories, type Category } from "~/lib/works";
 import SelectionMark from "./SelectionMark.vue";
@@ -16,6 +16,10 @@ const props = withDefaults(
   }>(),
   { part: "both" },
 );
+const segmented = ref<HTMLElement>();
+const sidebar = ref<HTMLElement>();
+useSlidingMark(segmented, () => props.current);
+useSlidingMark(sidebar, () => props.current);
 const locale = useLocale();
 const t = useT();
 const items = computed(() =>
@@ -30,49 +34,39 @@ const items = computed(() =>
 
 <template>
   <!-- Mobile: one row of segments under the sheet heading. -->
-  <nav v-if="part !== 'sidebar'" class="segmented" :aria-label="t('works.label')">
-    <LayoutGroup id="works-segmented">
-      <NuxtLink
-        v-for="item in items"
-        :key="item.category"
-        :to="item.to"
-        class="segment text-callout"
-        :class="item.active ? 'font-bold text-bg' : 'text-muted'"
-        :aria-current="item.active ? 'page' : undefined"
-        data-cursor="block"
-      >
-        <SelectionMark v-if="item.active" id="segment-mark" class="bg-fg" />
-        {{ item.label }}
-      </NuxtLink>
-    </LayoutGroup>
+  <nav v-if="part !== 'sidebar'" ref="segmented" class="segmented" :aria-label="t('works.label')">
+    <NuxtLink
+      v-for="item in items"
+      :key="item.category"
+      :to="item.to"
+      class="segment text-callout"
+      :class="item.active ? 'font-bold text-bg' : 'text-muted'"
+      :aria-current="item.active ? 'page' : undefined"
+      data-cursor="block"
+    >
+      <SelectionMark v-if="item.active" class="bg-fg" />
+      {{ item.label }}
+    </NuxtLink>
   </nav>
 
   <!-- Desktop: a card fixed at the vertical centre of the left edge. -->
-  <!-- Fixed to the screen: a layout root, so page scroll is not mistaken for the mark moving. -->
-  <motion.nav
-    v-if="part !== 'segmented'"
-    layout-root
-    class="sidebar"
-    :aria-label="t('works.label')"
-  >
-    <LayoutGroup id="works-sidebar">
-      <NuxtLink
-        v-for="item in items"
-        :key="item.category"
-        :to="item.to"
-        class="side-item"
-        :class="item.active ? 'text-bg' : 'text-fg'"
-        :aria-current="item.active ? 'page' : undefined"
-        data-cursor="block"
-      >
-        <SelectionMark v-if="item.active" id="side-mark" class="bg-fg" />
-        <span class="text-headline">{{ item.label }}</span>
-        <span class="text-caption" :class="item.active ? 'text-bg' : 'text-muted'">{{
-          counts[item.category]
-        }}</span>
-      </NuxtLink>
-    </LayoutGroup>
-  </motion.nav>
+  <nav v-if="part !== 'segmented'" ref="sidebar" class="sidebar" :aria-label="t('works.label')">
+    <NuxtLink
+      v-for="item in items"
+      :key="item.category"
+      :to="item.to"
+      class="side-item"
+      :class="item.active ? 'text-bg' : 'text-fg'"
+      :aria-current="item.active ? 'page' : undefined"
+      data-cursor="block"
+    >
+      <SelectionMark v-if="item.active" class="bg-fg" />
+      <span class="text-headline">{{ item.label }}</span>
+      <span class="text-caption" :class="item.active ? 'text-bg' : 'text-muted'">{{
+        counts[item.category]
+      }}</span>
+    </NuxtLink>
+  </nav>
 </template>
 
 <style scoped>
