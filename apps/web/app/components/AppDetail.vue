@@ -108,7 +108,7 @@ function onCancel(event: Event) {
       :src="entry.thumbnail"
       alt=""
       :initial="initialOf(entry.title, entry.initial)"
-      sizes="100vw lg:720px"
+      sizes="720px"
       class="aspect-[16/10] rounded-card"
       @pointerdown="onHandle"
     />

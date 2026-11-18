@@ -44,7 +44,9 @@ export default defineNuxtConfig({
     },
   },
   image: {
-    provider: "ipxStatic",
+    // "ipx" becomes the prebuilt images when generating and the on-demand server in `nuxt dev`
+    // ("ipxStatic" never serves /_ipx in dev). Naming it also keeps Vercel's runtime provider from being picked.
+    provider: "ipx",
     format: ["webp"],
     screens: { lg: 1024 },
     // The profile photo stays in the shared assets package. Each listed folder is also published as is,

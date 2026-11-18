@@ -60,14 +60,21 @@
   opacity: 0;
 }
 
+/* The root only fades and its children rise: a transform on the page root would become the containing
+   block for fixed children (the Works sidebar), which would then jump into place when the swap ends. */
 .swap-enter-active {
-  transition:
-    opacity 200ms var(--ut-ease-out),
-    translate 200ms var(--ut-ease-out);
+  transition: opacity 200ms var(--ut-ease-out);
+}
+
+.swap-enter-active > * {
+  transition: translate 200ms var(--ut-ease-out);
 }
 
 .swap-enter-from {
   opacity: 0;
+}
+
+.swap-enter-from > * {
   translate: 0 8px;
 }
 
@@ -81,7 +88,7 @@
     transition: opacity 150ms linear;
   }
 
-  .swap-enter-from {
+  .swap-enter-from > * {
     translate: none;
   }
 }

@@ -34,7 +34,7 @@ const linkProps = computed(() => {
       alt=""
       :initial="initial"
       :brand="brand"
-      sizes="50vw lg:264px"
+      sizes="360px lg:264px"
       class="aspect-[16/10]"
     />
     <div class="flex flex-col gap-1 p-3">
